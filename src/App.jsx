@@ -1,48 +1,51 @@
 import React from 'react';
 import { 
+  Heart, 
   ShieldCheck, 
-  Stethoscope, 
+  Video,
   Pill, 
-  Upload, 
-  Activity, 
-  Lock, 
-  Smartphone, 
-  FileText, 
-  CheckCircle2, 
-  ChevronRight,
-  Menu
+  User,
+  Lock,
+  Menu,
+  Stethoscope,
+  FolderOpen
 } from 'lucide-react';
 
 export default function App() {
+  const scrollToEntry = (e) => {
+    e.preventDefault();
+    document.getElementById('entry-section').scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+    <div className="min-h-screen bg-white font-sans text-slate-900">
       
-      {/* Sticky Navbar */}
-      <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
+      {/* 1. Sticky Navigation Bar */}
+      <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-              <div className="bg-blue-600 p-2 rounded-xl text-white">
-                <Activity size={24} />
+              <div className="text-[#1E40AF]">
+                <Heart fill="currentColor" size={28} />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold text-slate-800">
                 MediVault
               </span>
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#records" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">My Records</a>
-              <a href="#consult" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Consult Doctor</a>
-              <a href="#pharmacy" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Pharmacy</a>
+            <div className="hidden md:flex items-center space-x-10">
+              <a href="#about" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">About</a>
+              <a href="#features" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Features</a>
+              <a href="#security" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Security</a>
               
               <div className="flex items-center space-x-4 ml-4">
-                <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                <button 
+                  onClick={scrollToEntry}
+                  className="bg-[#1E40AF] hover:bg-blue-900 text-white px-6 py-2.5 rounded-md text-sm font-medium shadow-sm transition-all"
+                >
                   Login
-                </button>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-md shadow-blue-600/20 transition-all hover:shadow-lg hover:shadow-blue-600/30">
-                  Sign Up
                 </button>
               </div>
             </div>
@@ -57,254 +60,184 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white pt-16 pb-32">
+      {/* 2. Hero Section (The Hook) */}
+      <section id="about" className="relative overflow-hidden bg-white pt-20 pb-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-sm font-medium mb-6 border border-teal-100">
-                <ShieldCheck size={16} />
-                <span>ABHA Compliant & Secure</span>
-              </div>
-              <h1 className="text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                Your Entire <span className="text-blue-600">Medical History</span>, 
-                <br />Now in Your Pocket.
+              <h1 className="text-5xl lg:text-5xl font-black tracking-tight text-slate-800 mb-6 leading-tight">
+                Your Complete Medical History, <span className="text-[#1E40AF]">Secured Digitally.</span>
               </h1>
-              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Securely digitize, manage, and share your health records. 
-                Seamlessly integrated with ABHA and protected by bank-level encryption.
+              <p className="text-xl text-slate-600 mb-8 leading-relaxed">
+                The central vault for your medical reports, connecting you instantly to doctors and pharmacies using national standards like ABHA.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-0.5">
-                  <Upload size={20} />
-                  Upload First Report
-                </button>
-                <button className="flex items-center justify-center gap-2 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 px-8 py-4 rounded-full text-lg font-semibold transition-all">
-                  How it Works
-                  <ChevronRight size={20} />
+                <button 
+                  onClick={scrollToEntry} 
+                  className="flex items-center justify-center bg-[#1E40AF] hover:bg-blue-900 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg transition-all hover:-translate-y-0.5"
+                >
+                  Learn How It Works
                 </button>
               </div>
             </div>
 
             {/* Right Illustration */}
-            <div className="relative lg:ml-auto w-full max-w-lg aspect-square">
-              {/* Abstract decorative elements */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-blue-50 to-teal-50 rounded-full blur-3xl -z-10" />
-              
-              {/* Mockup Card */}
-              <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden absolute inset-0 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-                <div className="bg-blue-600 p-6 flex items-center justify-between text-white">
-                  <div>
-                    <p className="text-blue-100 text-sm font-medium mb-1">Digital Health Card</p>
-                    <p className="text-xl font-bold">Ayushman Bharat ID</p>
-                  </div>
-                  <Activity size={32} className="opacity-80" />
-                </div>
-                <div className="p-6">
-                  <div className="w-full h-32 bg-slate-50 rounded-xl mb-4 border border-dashed border-slate-200 flex items-center justify-center">
-                    <Smartphone className="text-slate-400" size={48} />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="h-4 bg-slate-100 rounded-full w-3/4"></div>
-                    <div className="h-4 bg-slate-100 rounded-full w-1/2"></div>
-                    <div className="h-4 bg-slate-100 rounded-full w-5/6"></div>
-                  </div>
-                  <div className="mt-6 flex gap-3">
-                    <div className="flex-1 bg-teal-50 text-teal-700 py-2 rounded-lg text-center text-sm font-medium flex items-center justify-center gap-2">
-                      <Lock size={14} /> encrypted
-                    </div>
-                    <div className="flex-1 bg-blue-50 text-blue-700 py-2 rounded-lg text-center text-sm font-medium">Verify</div>
-                  </div>
-                </div>
-              </div>
+            <div className="lg:ml-auto w-full max-w-lg">
+              <img 
+                src="/hero_illustration.png" 
+                alt="Doctor with patient looking at digital clipboard" 
+                className="w-full h-auto rounded-3xl object-cover mix-blend-multiply drop-shadow-2xl" 
+                style={{ filter: 'drop-shadow(0 10px 15px rgba(30, 64, 175, 0.2))' }}
+              />
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* Trust/Security Banner */}
-      <div className="bg-slate-900 overflow-hidden transform skew-y-1 my-[-4rem] relative z-20 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transform -skew-y-1">
-          <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8 text-white/80">
-            <div className="flex items-center gap-3">
-              <Lock className="text-teal-400" size={28} />
-              <div>
-                <p className="font-bold text-white text-lg">AES-256 Encryption</p>
-                <p className="text-sm">Bank-grade security</p>
-              </div>
-            </div>
-            <div className="hidden md:block w-px h-12 bg-white/10"></div>
-            <div className="flex items-center gap-3">
-              <ShieldCheck className="text-blue-400" size={28} />
-              <div>
-                <p className="font-bold text-white text-lg">ABHA Ready</p>
-                <p className="text-sm">Govt. compliant health locker</p>
-              </div>
-            </div>
-            <div className="hidden md:block w-px h-12 bg-white/10"></div>
-            <div className="flex items-center gap-3">
-              <FileText className="text-purple-400" size={28} />
-              <div>
-                <p className="font-bold text-white text-lg">HIPAA Standards</p>
-                <p className="text-sm">Privacy guaranteed</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Feature Grid */}
-      <section className="py-24 bg-slate-50 mt-16">
+      {/* 3. "How MediVault Helps You" Section (Features) */}
+      <section id="features" className="py-24 bg-slate-50 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Complete Healthcare Ecosystem</h2>
-            <p className="text-slate-600 text-lg">Everything you need to manage your health, connected in one secure platform.</p>
+            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">How MediVault Helps You</h2>
+            <div className="w-20 h-1 bg-[#14B8A6] mx-auto rounded-full"></div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-10">
             {/* Feature 1 */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:border-blue-100 transition-all duration-300 group">
-              <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                <FileText size={28} />
+            <div className="bg-white rounded-2xl p-10 shadow-sm border border-gray-100 hover:shadow-xl hover:border-[#1E40AF]/20 transition-all duration-300">
+              <div className="w-16 h-16 bg-blue-50 text-[#1E40AF] rounded-xl flex items-center justify-center mb-6">
+                <FolderOpen size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Secure Digital Vault</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-4">Secure Digital Wallet</h3>
               <p className="text-slate-600 leading-relaxed">
-                Smart OCR automatically reads and categorizes your physical lab reports, prescriptions, and scans into a searchable digital archive.
+                Upload PDFs or photos of old reports. Our AI organizes them for instant access.
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:border-teal-100 transition-all duration-300 group">
-              <div className="w-14 h-14 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-white transition-all">
-                <Stethoscope size={28} />
+            <div className="bg-white rounded-2xl p-10 shadow-sm border border-gray-100 hover:shadow-xl hover:border-[#14B8A6]/20 transition-all duration-300">
+              <div className="w-16 h-16 bg-teal-50 text-[#14B8A6] rounded-xl flex items-center justify-center mb-6">
+                <Video size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Doctor Connect</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-4">Online Consultations</h3>
               <p className="text-slate-600 leading-relaxed">
-                24/7 online video consultations with top specialists. Share your digital records instantly and securely with a single tap.
+                Connect with verified doctors anywhere, anytime, using secure video calls.
               </p>
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:border-purple-100 transition-all duration-300 group">
-              <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all">
-                <Pill size={28} />
+            <div className="bg-white rounded-2xl p-10 shadow-sm border border-gray-100 hover:shadow-xl hover:border-[#1E40AF]/20 transition-all duration-300">
+              <div className="w-16 h-16 bg-blue-50 text-[#1E40AF] rounded-xl flex items-center justify-center mb-6">
+                <Pill size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Smart Pharmacy</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-4">Smart Pharmacy Ordering</h3>
               <p className="text-slate-600 leading-relaxed">
-                Seamlessly convert prescriptions into orders via integrations with PharmEasy and Apollo. Get medicines delivered to your doorstep.
+                Get digital prescriptions fulfilled directly via PharmEasy or Apollo with deep-linking technology.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How it Works Section */}
-      <section className="py-24 bg-white border-t border-slate-100">
+      {/* 4. Dual-Entry Portal Section (The Core of Phase 1) */}
+      <section id="entry-section" className="py-24 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">How it Works</h2>
-            <p className="text-slate-600 text-lg">Digitizing your wellness journey is as easy as 1-2-3.</p>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">Access Your Dashboard</h2>
+            <div className="w-20 h-1 bg-[#1E40AF] mx-auto rounded-full"></div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 relative">
-            {/* Connecting line for desktop */}
-            <div className="hidden md:block absolute top-[2.5rem] left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-blue-100 via-teal-100 to-blue-100" />
-            
-            {/* Step 1 */}
-            <div className="relative text-center">
-              <div className="w-20 h-20 mx-auto bg-white border-4 border-slate-50 flex items-center justify-center rounded-full shadow-lg relative z-10 mb-6">
-                <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                  <Upload size={28} />
-                </div>
+          <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            {/* Card A (Patient) */}
+            <div className="bg-white rounded-3xl p-12 shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center">
+              <div className="w-20 h-20 bg-blue-50 text-[#1E40AF] rounded-full flex items-center justify-center mb-8">
+                <User size={40} />
               </div>
-              <div className="absolute top-0 right-0 -mr-3 mt-3 w-8 h-8 bg-slate-900 text-white font-bold rounded-full flex items-center justify-center shadow-md">1</div>
-              <h4 className="text-xl font-bold mb-3">Upload Records</h4>
-              <p className="text-slate-500">Snap a photo of your prescription or upload PDF reports directly.</p>
+              <h3 className="text-2xl font-black text-slate-800 mb-6">For Patients</h3>
+              <ul className="text-slate-600 mb-10 space-y-4 text-[17px]">
+                <li className="flex items-center justify-center gap-2">
+                  <Lock size={18} className="text-[#1E40AF]" /> View Medical Records
+                </li>
+                <li className="flex items-center justify-center gap-2">
+                  <Lock size={18} className="text-[#1E40AF]" /> Order Medicines
+                </li>
+                <li className="flex items-center justify-center gap-2">
+                  <Lock size={18} className="text-[#1E40AF]" /> Book Tele-Consults
+                </li>
+              </ul>
+              <button className="w-full mt-auto bg-[#1E40AF] hover:bg-blue-900 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
+                Patient Login / Sign Up
+              </button>
             </div>
 
-            {/* Step 2 */}
-            <div className="relative text-center">
-              <div className="w-20 h-20 mx-auto bg-white border-4 border-slate-50 flex items-center justify-center rounded-full shadow-lg relative z-10 mb-6">
-                <div className="w-16 h-16 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center">
-                  <Activity size={28} />
-                </div>
+            {/* Card B (Doctor) */}
+            <div className="bg-white rounded-3xl p-12 shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center">
+              <div className="w-20 h-20 bg-teal-50 text-[#14B8A6] rounded-full flex items-center justify-center mb-8">
+                <Stethoscope size={40} />
               </div>
-              <div className="absolute top-0 right-0 -mr-3 mt-3 w-8 h-8 bg-slate-900 text-white font-bold rounded-full flex items-center justify-center shadow-md">2</div>
-              <h4 className="text-xl font-bold mb-3">AI Analysis</h4>
-              <p className="text-slate-500">Our medical OCR algorithms extract and structure your health data automatically.</p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="relative text-center">
-              <div className="w-20 h-20 mx-auto bg-white border-4 border-slate-50 flex items-center justify-center rounded-full shadow-lg relative z-10 mb-6">
-                <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                  <CheckCircle2 size={28} />
-                </div>
-              </div>
-              <div className="absolute top-0 right-0 -mr-3 mt-3 w-8 h-8 bg-slate-900 text-white font-bold rounded-full flex items-center justify-center shadow-md">3</div>
-              <h4 className="text-xl font-bold mb-3">Instant Sharing</h4>
-              <p className="text-slate-500">Share securely with doctors, pharmacies, and family via timed access links.</p>
+              <h3 className="text-2xl font-black text-slate-800 mb-6">For Healthcare Providers</h3>
+              <ul className="text-slate-600 mb-10 space-y-4 text-[17px]">
+                <li className="flex items-center justify-center gap-2">
+                  <Lock size={18} className="text-[#14B8A6]" /> View Patient History (Consent-Based)
+                </li>
+                <li className="flex items-center justify-center gap-2">
+                  <Lock size={18} className="text-[#14B8A6]" /> Write Digital Prescriptions
+                </li>
+                <li className="flex items-center justify-center gap-2">
+                  <Lock size={18} className="text-[#14B8A6]" /> Schedule Appointments
+                </li>
+              </ul>
+              <button className="w-full mt-auto bg-[#14B8A6] hover:bg-teal-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
+                Doctor Login / Portal
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-50 border-t border-slate-200 pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
-            <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="bg-blue-600 p-1.5 rounded-lg text-white">
-                  <Activity size={20} />
-                </div>
-                <span className="text-xl font-bold text-slate-900">MediVault</span>
-              </div>
-              <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                Your trusted partner in digital health management. Empowering patients and connecting the healthcare ecosystem.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-bold text-slate-900 mb-4">Platform</h4>
-              <ul className="space-y-3 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Digital Locker</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Teleconsultation</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Pharmacy Sync</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Health Pass</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-bold text-slate-900 mb-4">Company</h4>
-              <ul className="space-y-3 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-blue-600 transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Press</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Contact</a></li>
-              </ul>
-            </div>
+      {/* 5. Security Footer (Crucial for Medical Sites) */}
+      <div id="security" className="bg-slate-900 py-6 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-emerald-400 font-semibold flex flex-col sm:flex-row items-center justify-center gap-4 text-sm md:text-base">
+          <span className="flex items-center gap-2 justify-center">
+            <Lock size={18} />
+            AES-256 Encrypted
+          </span>
+          <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-emerald-400/50"></span>
+          <span className="flex items-center gap-2 justify-center">
+            <ShieldCheck size={18} />
+            ABHA (ABDM) Integration Sandbox Ready
+          </span>
+          <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-emerald-400/50"></span>
+          <span className="flex items-center gap-2 justify-center">
+            <FolderOpen size={18} />
+            HIPAA Compliant Architecture
+          </span>
+        </div>
+      </div>
 
-            <div>
-              <h4 className="font-bold text-slate-900 mb-4">Legal</h4>
-              <ul className="space-y-3 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">HIPAA Compliance</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Security</a></li>
-              </ul>
+      {/* 6. Final Footer */}
+      <footer className="bg-slate-900 pt-16 pb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+            <div className="flex items-center gap-2 text-white">
+              <Heart fill="currentColor" size={24} className="text-[#14B8A6]" />
+              <span className="text-xl font-bold">MediVault</span>
+            </div>
+            <div className="flex gap-6 text-sm text-slate-400 font-medium">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Contact</a>
             </div>
           </div>
           
-          <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-slate-500 text-sm font-medium">
-              Made with <span className="text-red-500 mx-1">❤️</span> for Digital Health
-            </p>
+          <div className="text-center md:text-left border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-slate-400 text-sm">
               © {new Date().getFullYear()} MediVault Inc. All rights reserved.
+            </p>
+            <p className="text-slate-500 text-sm">
+              Designed for Secure Health Management
             </p>
           </div>
         </div>
