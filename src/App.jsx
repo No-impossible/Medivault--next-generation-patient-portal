@@ -39,6 +39,7 @@ export default function App() {
               <a href="#about" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">About</a>
               <a href="#features" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Features</a>
               <a href="#security" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Security</a>
+              <a href="#contact" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Contact</a>
               
               <div className="flex items-center space-x-4 ml-4">
                 <button 
@@ -61,7 +62,7 @@ export default function App() {
       </nav>
 
       {/* 2. Hero Section (The Hook) */}
-      <section id="about" className="relative overflow-hidden bg-white pt-20 pb-32">
+      <section id="home" className="relative overflow-hidden bg-white pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
@@ -91,6 +92,36 @@ export default function App() {
                 className="w-full h-auto rounded-3xl object-cover mix-blend-multiply drop-shadow-2xl" 
                 style={{ filter: 'drop-shadow(0 10px 15px rgba(30, 64, 175, 0.2))' }}
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+            <div className="flex-1">
+              <h2 className="text-3xl font-extrabold text-slate-800 mb-6">About MediVault</h2>
+              <div className="w-20 h-1 bg-[#1E40AF] mb-8 rounded-full"></div>
+              <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                MediVault is a comprehensive digital health platform designed to bridge the gap between patients, healthcare providers, and pharmacies. We believe that accessing and managing your medical history should be secure, intuitive, and universally accessible.
+              </p>
+              <p className="text-lg text-slate-600 leading-relaxed">
+                Our mission is to empower individuals with complete control over their health data while providing doctors with the insights they need to deliver better care. From securely storing medical records to facilitating online consultations and seamless pharmacy ordering, MediVault is your trusted partner in health management.
+              </p>
+            </div>
+            <div className="flex-1 grid grid-cols-2 gap-6">
+              <div className="bg-blue-50 p-8 rounded-2xl text-center">
+                <ShieldCheck size={40} className="text-[#1E40AF] mx-auto mb-4" />
+                <h4 className="font-bold text-slate-800">Secure Storage</h4>
+                <p className="text-sm text-slate-600 mt-2">Military-grade encryption for all your medical records.</p>
+              </div>
+              <div className="bg-teal-50 p-8 rounded-2xl text-center mt-8">
+                <Heart size={40} className="text-[#14B8A6] mx-auto mb-4" />
+                <h4 className="font-bold text-slate-800">Better Care</h4>
+                <p className="text-sm text-slate-600 mt-2">Instant access to medical history enables precise diagnoses.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -197,6 +228,48 @@ export default function App() {
         </div>
       </section>
 
+      {/* Contact Section */}
+      <section id="contact" className="py-24 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">Contact Customer Service</h2>
+            <div className="w-20 h-1 bg-[#1E40AF] mx-auto rounded-full"></div>
+            <p className="text-lg text-slate-600 mt-6">We're here to help! Reach out to us for any support, inquiries, or feedback.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            {/* Address */}
+            <div className="bg-slate-50 rounded-2xl p-10 text-center shadow-sm border border-gray-100 hover:shadow-md transition-all">
+              <div className="w-16 h-16 bg-blue-100 text-[#1E40AF] rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3">Office Address</h3>
+              <p className="text-slate-600">123 HealthTech Avenue,<br/>Silicon Valley, CA 94025<br/>United States</p>
+            </div>
+
+            {/* Email */}
+            <div className="bg-slate-50 rounded-2xl p-10 text-center shadow-sm border border-gray-100 hover:shadow-md transition-all">
+              <div className="w-16 h-16 bg-teal-100 text-[#14B8A6] rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3">Email Support</h3>
+              <p className="text-slate-600 mb-2">For general queries:</p>
+              <a href="mailto:support@medivault.com" className="text-[#1E40AF] font-medium hover:underline">support@medivault.com</a>
+            </div>
+
+            {/* Phone */}
+            <div className="bg-slate-50 rounded-2xl p-10 text-center shadow-sm border border-gray-100 hover:shadow-md transition-all">
+              <div className="w-16 h-16 bg-blue-100 text-[#1E40AF] rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3">Phone Support</h3>
+              <p className="text-slate-600 mb-2">Mon-Fri from 8am to 5pm.</p>
+              <a href="tel:+18001234567" className="text-[#1E40AF] font-medium hover:underline">+1 (800) 123-4567</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5. Security Footer (Crucial for Medical Sites) */}
       <div id="security" className="bg-slate-900 py-6 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-emerald-400 font-semibold flex flex-col sm:flex-row items-center justify-center gap-4 text-sm md:text-base">
@@ -228,7 +301,7 @@ export default function App() {
             <div className="flex gap-6 text-sm text-slate-400 font-medium">
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-white transition-colors">Contact</a>
+              <a href="#contact" className="hover:text-white transition-colors">Contact</a>
             </div>
           </div>
           
