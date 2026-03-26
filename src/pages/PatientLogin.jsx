@@ -30,7 +30,7 @@ export default function PatientLogin({ onBack, onSignUp }) {
   };
 
   return (
-    <div className="min-h-screen flex font-sans">
+    <div className="h-screen flex overflow-hidden font-sans">
 
       {/* ───── LEFT PANEL ───── */}
       <div
@@ -91,7 +91,7 @@ export default function PatientLogin({ onBack, onSignUp }) {
       </div>
 
       {/* ───── RIGHT PANEL ───── */}
-      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-white">
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white">
         
         {/* Mobile back button */}
         <button

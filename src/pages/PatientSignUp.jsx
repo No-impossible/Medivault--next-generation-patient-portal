@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, CheckCircle, Loader, Info } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, CheckCircle, Loader } from 'lucide-react';
 
 // ── Mock ABHA data: simulates API response ──
 const MOCK_ABHA_DATA = {
@@ -20,6 +20,14 @@ const MOCK_ABHA_DATA = {
     address: '22 MG Road, Bengaluru, Karnataka – 560001',
   },
 };
+
+// Password requirements checker
+const validatePassword = (pass) => ({
+  length: pass.length >= 8,
+  upper: /[A-Z]/.test(pass),
+  lower: /[a-z]/.test(pass),
+  special: /[!@#$%^&*(),.?":{}|<>]/.test(pass),
+});
 
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -66,15 +74,32 @@ export default function PatientSignUp({ onBack, onLogin }) {
   const [abhaFetching, setAbhaFetching] = useState(false);
   const [abhaError, setAbhaError] = useState('');
   const [abhaFetched, setAbhaFetched] = useState(false);
+  const [abhaPopup, setAbhaPopup] = useState(false);
+  const abhaPopupRef = useRef(null);
+
+  // Close popup on outside click
+  useEffect(() => {
+    if (!abhaPopup) return;
+    const handler = (e) => {
+      if (abhaPopupRef.current && !abhaPopupRef.current.contains(e.target)) {
+        setAbhaPopup(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [abhaPopup]);
 
   // Form fields
   const [form, setForm] = useState({
     name: '', dob: '', gender: '', bloodGroup: '', mobile: '', address: '',
-    email: '', password: '', confirmPassword: '', emergencyContact: '',
+    email: '', password: '', confirmPassword: '',
   });
   const [autoFilledFields, setAutoFilledFields] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  const pwdValidation = validatePassword(form.password);
+  const isPasswordValid = Object.values(pwdValidation).every(Boolean);
 
   const setField = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
@@ -112,7 +137,7 @@ export default function PatientSignUp({ onBack, onLogin }) {
   };
 
   return (
-    <div className="min-h-screen flex font-sans">
+    <div className="h-screen flex overflow-hidden font-sans">
 
       {/* ───── LEFT PANEL ───── */}
       <div
@@ -149,12 +174,6 @@ export default function PatientSignUp({ onBack, onLogin }) {
           <p className="text-slate-500 text-sm leading-relaxed">
             Use your ABHA ID to instantly populate your profile, or fill in your details manually.
           </p>
-        </div>
-
-        {/* ABHA info blurb on left panel */}
-        <div className="mt-8 bg-white/60 backdrop-blur rounded-2xl p-5 text-xs text-slate-600 max-w-xs border border-white/80">
-          <p className="font-bold text-indigo-600 mb-1 flex items-center gap-1"><Info size={13}/> What is ABHA?</p>
-          <p>ABHA (Ayushman Bharat Health Account) is your 14-digit government health ID under India's Ayushman Bharat Digital Mission. It securely links all your medical records across providers.</p>
         </div>
 
         <div className="absolute bottom-8 flex items-center gap-4 text-xs text-indigo-400 font-medium">
@@ -204,17 +223,41 @@ export default function PatientSignUp({ onBack, onLogin }) {
               className="rounded-2xl p-5 mb-2 border"
               style={{ background: abhaFetched ? '#f0fdf4' : '#f5f6ff', borderColor: abhaFetched ? '#6ee7b7' : '#c7ccff' }}
             >
-              <div className="flex items-start gap-2 mb-3">
-                <ShieldCheck size={18} className={abhaFetched ? 'text-emerald-500 mt-0.5' : 'text-indigo-400 mt-0.5'} />
-                <div>
-                  <p className="text-sm font-bold text-slate-800">
-                    {abhaFetched ? '✅ ABHA details fetched!' : 'Have an ABHA ID? Auto-fill your details'}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    {abhaFetched
-                      ? 'Your profile has been pre-filled. You can still edit any field below.'
-                      : 'Enter your 14-digit Ayushman Bharat Health Account number to auto-fill your profile. This is optional.'}
-                  </p>
+              {/* Header row */}
+              <div className="flex items-center gap-2 mb-3">
+                <ShieldCheck size={16} className={abhaFetched ? 'text-emerald-500' : 'text-indigo-400'} />
+                <p className="text-sm font-bold text-slate-800 flex-1">
+                  {abhaFetched ? '✅ ABHA details fetched!' : 'Have an ABHA ID? Auto-fill your details'}
+                </p>
+
+                {/* ABHA ? info button + popup */}
+                <div className="relative" ref={abhaPopupRef}>
+                  <button
+                    type="button"
+                    onClick={() => setAbhaPopup((v) => !v)}
+                    className="w-5 h-5 rounded-full border text-xs font-bold flex items-center justify-center transition-colors"
+                    style={{
+                      borderColor: abhaPopup ? '#7C83FD' : '#a5b4fc',
+                      color: abhaPopup ? '#7C83FD' : '#818cf8',
+                      background: abhaPopup ? '#eef0ff' : 'transparent',
+                    }}
+                    title="What is ABHA?"
+                  >
+                    ?
+                  </button>
+
+                  {/* Popup tooltip */}
+                  {abhaPopup && (
+                    <div
+                      className="absolute right-0 top-7 z-50 w-64 rounded-xl shadow-xl border border-indigo-100 p-4 text-xs text-slate-600"
+                      style={{ background: 'white' }}
+                    >
+                      <p className="font-bold text-indigo-600 mb-1.5">🪪 What is ABHA?</p>
+                      <p className="leading-relaxed">
+                        <strong>ABHA</strong> (Ayushman Bharat Health Account) is your <strong>14-digit</strong> government health ID under India's Ayushman Bharat Digital Mission. It securely links all your medical records across providers.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -297,6 +340,28 @@ export default function PatientSignUp({ onBack, onLogin }) {
                   {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                 </button>
               </div>
+
+              {/* Password Requirements Guide */}
+              {form.password && (
+                <div className="mt-3 grid grid-cols-2 gap-y-2 p-3 bg-slate-50 border border-slate-100 rounded-xl">
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.length ? 'text-emerald-600' : 'text-slate-400'}`}>
+                     <CheckCircle size={10} fill={pwdValidation.length ? 'currentColor' : 'none'} className={pwdValidation.length ? 'opacity-100' : 'opacity-30'} />
+                     At least 8 characters
+                   </div>
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.upper ? 'text-emerald-600' : 'text-slate-400'}`}>
+                     <CheckCircle size={10} fill={pwdValidation.upper ? 'currentColor' : 'none'} className={pwdValidation.upper ? 'opacity-100' : 'opacity-30'} />
+                     Uppercase letter
+                   </div>
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.lower ? 'text-emerald-600' : 'text-slate-400'}`}>
+                     <CheckCircle size={10} fill={pwdValidation.lower ? 'currentColor' : 'none'} className={pwdValidation.lower ? 'opacity-100' : 'opacity-30'} />
+                     Lowercase letter
+                   </div>
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.special ? 'text-emerald-600' : 'text-slate-400'}`}>
+                     <CheckCircle size={10} fill={pwdValidation.special ? 'currentColor' : 'none'} className={pwdValidation.special ? 'opacity-100' : 'opacity-30'} />
+                     Special character
+                   </div>
+                </div>
+              )}
             </div>
 
             <div>
@@ -312,13 +377,16 @@ export default function PatientSignUp({ onBack, onLogin }) {
               </div>
             </div>
 
-            <Field label="Emergency Contact (optional)" id="emergency" type="tel" value={form.emergencyContact} onChange={setField('emergencyContact')} placeholder="Name & phone number" />
+
 
             {/* Submit */}
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
-              style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
+              disabled={!isPasswordValid}
+              className={`w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg transition-all mt-2 ${
+                isPasswordValid ? 'hover:opacity-90 hover:-translate-y-0.5' : 'opacity-50 cursor-not-allowed'
+              }`}
+              style={{ background: isPasswordValid ? 'linear-gradient(135deg, #7C83FD, #6366f1)' : '#cbd5e1' }}
             >
               Create My Patient Account
             </button>
