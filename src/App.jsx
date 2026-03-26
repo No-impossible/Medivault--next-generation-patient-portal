@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import PatientLogin from './pages/PatientLogin';
+import PatientSignUp from './pages/PatientSignUp';
 import { 
   Heart, 
   ShieldCheck, 
@@ -12,10 +14,50 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  const [currentView, setCurrentView] = useState('landing');
+
+  // Slow smooth scroll with custom duration (1200ms)
   const scrollToEntry = (e) => {
     e.preventDefault();
-    document.getElementById('entry-section').scrollIntoView({ behavior: 'smooth' });
+    const target = document.getElementById('entry-section');
+    if (!target) return;
+    const startY = window.scrollY;
+    const targetY = target.getBoundingClientRect().top + window.scrollY - 20; // small offset so section fits fully
+    const distance = targetY - startY;
+    const duration = 1200; // ms — adjust for slower/faster
+    let startTime = null;
+
+    const easeInOutCubic = (t) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+
+    requestAnimationFrame(step);
   };
+
+  if (currentView === 'patientLogin') {
+    return (
+      <PatientLogin
+        onBack={() => setCurrentView('landing')}
+        onSignUp={() => setCurrentView('patientSignUp')}
+      />
+    );
+  }
+
+  if (currentView === 'patientSignUp') {
+    return (
+      <PatientSignUp
+        onBack={() => setCurrentView('landing')}
+        onLogin={() => setCurrentView('patientLogin')}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
@@ -167,7 +209,7 @@ export default function App() {
                   <Lock size={18} className="text-[#1E40AF]" /> Book Tele-Consults
                 </li>
               </ul>
-              <button className="w-full mt-auto bg-[#1E40AF] hover:bg-blue-900 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
+              <button onClick={() => setCurrentView('patientLogin')} className="w-full mt-auto bg-[#1E40AF] hover:bg-blue-900 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
                 Patient Login / Sign Up
               </button>
             </div>
