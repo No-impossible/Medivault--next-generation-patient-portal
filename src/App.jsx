@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import PatientLogin from './pages/PatientLogin';
 import PatientSignUp from './pages/PatientSignUp';
+import { seedMockAbhaUsers } from './services/healthService';
 import { 
   Heart, 
   ShieldCheck, 
@@ -10,11 +12,18 @@ import {
   Lock,
   Menu,
   Stethoscope,
-  FolderOpen
+  FolderOpen,
+  Globe,
+  X
 } from 'lucide-react';
 
 export default function App() {
+  const { t, i18n } = useTranslation();
   const [currentView, setCurrentView] = useState('landing');
+
+  useEffect(() => {
+    seedMockAbhaUsers().then(() => console.log('Seeding attempted on load'));
+  }, []);
 
   // Slow smooth scroll with custom duration (1200ms)
   const scrollToEntry = (e) => {
@@ -78,17 +87,31 @@ export default function App() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-10">
-              <a href="#about" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">About</a>
-              <a href="#features" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Features</a>
-              <a href="#security" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Security</a>
-              <a href="#contact" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">Contact</a>
+              <a href="#about" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">{t('About')}</a>
+              <a href="#features" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">{t('Features')}</a>
+              <a href="#security" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">{t('Security')}</a>
+              <a href="#contact" className="text-sm font-medium text-slate-600 hover:text-[#1E40AF] transition-colors">{t('Contact')}</a>
               
-              <div className="flex items-center space-x-4 ml-4">
+              <div className="flex items-center ml-4 gap-2 border-l border-gray-200 pl-4">
+                <Globe size={18} className="text-[#1E40AF]" />
+                <select 
+                  onChange={(e) => i18n.changeLanguage(e.target.value)}
+                  value={i18n.language}
+                  className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer hover:text-[#1E40AF] transition-colors"
+                >
+                  <option value="en">English</option>
+                  <option value="hi">हिंदी</option>
+                  <option value="mr">मराठी</option>
+                  <option value="ta">தமிழ்</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-4 ml-2">
                 <button 
                   onClick={scrollToEntry}
                   className="bg-[#1E40AF] hover:bg-blue-900 text-white px-6 py-2.5 rounded-md text-sm font-medium shadow-sm transition-all"
                 >
-                  Login
+                  {t('Login')}
                 </button>
               </div>
             </div>
@@ -110,10 +133,10 @@ export default function App() {
             {/* Left Content */}
             <div className="max-w-2xl">
               <h1 className="text-5xl lg:text-5xl font-black tracking-tight text-slate-800 mb-6 leading-tight">
-                Your Complete Medical History, <span className="text-[#1E40AF]">Secured Digitally.</span>
+                {t('Title1')}<span className="text-[#1E40AF]">{t('Title2')}</span>
               </h1>
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                The central vault for your medical reports, connecting you instantly to doctors and pharmacies using national standards like ABHA.
+                {t('Subtitle')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
@@ -121,7 +144,7 @@ export default function App() {
                   onClick={scrollToEntry} 
                   className="flex items-center justify-center bg-[#1E40AF] hover:bg-blue-900 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg transition-all hover:-translate-y-0.5"
                 >
-                  Learn How It Works
+                  {t('LearnHow')}
                 </button>
               </div>
             </div>
@@ -144,25 +167,25 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="flex-1">
-              <h2 className="text-3xl font-extrabold text-slate-800 mb-6">About MediVault</h2>
+              <h2 className="text-3xl font-extrabold text-slate-800 mb-6">{t('AboutTitle')}</h2>
               <div className="w-20 h-1 bg-[#1E40AF] mb-8 rounded-full"></div>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                MediVault is a comprehensive digital health platform designed to bridge the gap between patients, healthcare providers, and pharmacies. We believe that accessing and managing your medical history should be secure, intuitive, and universally accessible.
+                {t('AboutDesc1')}
               </p>
               <p className="text-lg text-slate-600 leading-relaxed">
-                Our mission is to empower individuals with complete control over their health data while providing doctors with the insights they need to deliver better care. From securely storing medical records to facilitating online consultations and seamless pharmacy ordering, MediVault is your trusted partner in health management.
+                {t('AboutDesc2')}
               </p>
             </div>
             <div className="flex-1 grid grid-cols-2 gap-6">
               <div className="bg-blue-50 p-8 rounded-2xl text-center">
                 <ShieldCheck size={40} className="text-[#1E40AF] mx-auto mb-4" />
-                <h4 className="font-bold text-slate-800">Secure Storage</h4>
-                <p className="text-sm text-slate-600 mt-2">Military-grade encryption for all your medical records.</p>
+                <h4 className="font-bold text-slate-800">{t('SecureStorage')}</h4>
+                <p className="text-sm text-slate-600 mt-2">{t('SecureStorageDesc')}</p>
               </div>
               <div className="bg-teal-50 p-8 rounded-2xl text-center mt-8">
                 <Heart size={40} className="text-[#14B8A6] mx-auto mb-4" />
-                <h4 className="font-bold text-slate-800">Better Care</h4>
-                <p className="text-sm text-slate-600 mt-2">Instant access to medical history enables precise diagnoses.</p>
+                <h4 className="font-bold text-slate-800">{t('BetterCare')}</h4>
+                <p className="text-sm text-slate-600 mt-2">{t('BetterCareDesc')}</p>
               </div>
             </div>
           </div>
@@ -173,7 +196,7 @@ export default function App() {
       <section id="features" className="py-24 bg-slate-50 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">How MediVault Helps You</h2>
+            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">{t('HowItHelps')}</h2>
             <div className="w-20 h-1 bg-[#14B8A6] mx-auto rounded-full"></div>
           </div>
 
@@ -183,9 +206,9 @@ export default function App() {
               <div className="w-16 h-16 bg-blue-50 text-[#1E40AF] rounded-xl flex items-center justify-center mb-6">
                 <FolderOpen size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-4">Secure Digital Wallet</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-4">{t('Feature1Title')}</h3>
               <p className="text-slate-600 leading-relaxed">
-                Upload PDFs or photos of old reports. Our AI organizes them for instant access.
+                {t('Feature1Desc')}
               </p>
             </div>
 
@@ -194,9 +217,9 @@ export default function App() {
               <div className="w-16 h-16 bg-teal-50 text-[#14B8A6] rounded-xl flex items-center justify-center mb-6">
                 <Video size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-4">Online Consultations</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-4">{t('Feature2Title')}</h3>
               <p className="text-slate-600 leading-relaxed">
-                Connect with verified doctors anywhere, anytime, using secure video calls.
+                {t('Feature2Desc')}
               </p>
             </div>
 
@@ -205,9 +228,9 @@ export default function App() {
               <div className="w-16 h-16 bg-blue-50 text-[#1E40AF] rounded-xl flex items-center justify-center mb-6">
                 <Pill size={32} />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-4">Smart Pharmacy Ordering</h3>
+              <h3 className="text-xl font-bold text-slate-800 mb-4">{t('Feature3Title')}</h3>
               <p className="text-slate-600 leading-relaxed">
-                Get digital prescriptions fulfilled directly via PharmEasy or Apollo with deep-linking technology.
+                {t('Feature3Desc')}
               </p>
             </div>
           </div>
@@ -218,7 +241,7 @@ export default function App() {
       <section id="entry-section" className="py-24 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">Access Your Dashboard</h2>
+            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">{t('DashboardTitle')}</h2>
             <div className="w-20 h-1 bg-[#1E40AF] mx-auto rounded-full"></div>
           </div>
 
@@ -228,20 +251,20 @@ export default function App() {
               <div className="w-20 h-20 bg-blue-50 text-[#1E40AF] rounded-full flex items-center justify-center mb-8">
                 <User size={40} />
               </div>
-              <h3 className="text-2xl font-black text-slate-800 mb-6">For Patients</h3>
+              <h3 className="text-2xl font-black text-slate-800 mb-6">{t('ForPatients')}</h3>
               <ul className="text-slate-600 mb-10 space-y-4 text-[17px]">
                 <li className="flex items-center justify-center gap-2">
-                  <Lock size={18} className="text-[#1E40AF]" /> View Medical Records
+                  <Lock size={18} className="text-[#1E40AF]" /> {t('PatientList1')}
                 </li>
                 <li className="flex items-center justify-center gap-2">
-                  <Lock size={18} className="text-[#1E40AF]" /> Order Medicines
+                  <Lock size={18} className="text-[#1E40AF]" /> {t('PatientList2')}
                 </li>
                 <li className="flex items-center justify-center gap-2">
-                  <Lock size={18} className="text-[#1E40AF]" /> Book Tele-Consults
+                  <Lock size={18} className="text-[#1E40AF]" /> {t('PatientList3')}
                 </li>
               </ul>
               <button onClick={() => setCurrentView('patientLogin')} className="w-full mt-auto bg-[#1E40AF] hover:bg-blue-900 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
-                Patient Login / Sign Up
+                {t('PatientBtn')}
               </button>
             </div>
 
@@ -250,20 +273,20 @@ export default function App() {
               <div className="w-20 h-20 bg-teal-50 text-[#14B8A6] rounded-full flex items-center justify-center mb-8">
                 <Stethoscope size={40} />
               </div>
-              <h3 className="text-2xl font-black text-slate-800 mb-6">For Healthcare Providers</h3>
+              <h3 className="text-2xl font-black text-slate-800 mb-6">{t('ForDoctors')}</h3>
               <ul className="text-slate-600 mb-10 space-y-4 text-[17px]">
                 <li className="flex items-center justify-center gap-2">
-                  <Lock size={18} className="text-[#14B8A6]" /> View Patient History (Consent-Based)
+                  <Lock size={18} className="text-[#14B8A6]" /> {t('DoctorList1')}
                 </li>
                 <li className="flex items-center justify-center gap-2">
-                  <Lock size={18} className="text-[#14B8A6]" /> Write Digital Prescriptions
+                  <Lock size={18} className="text-[#14B8A6]" /> {t('DoctorList2')}
                 </li>
                 <li className="flex items-center justify-center gap-2">
-                  <Lock size={18} className="text-[#14B8A6]" /> Schedule Appointments
+                  <Lock size={18} className="text-[#14B8A6]" /> {t('DoctorList3')}
                 </li>
               </ul>
               <button className="w-full mt-auto bg-[#14B8A6] hover:bg-teal-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
-                Doctor Login / Portal
+                {t('DoctorBtn')}
               </button>
             </div>
           </div>
@@ -274,9 +297,9 @@ export default function App() {
       <section id="contact" className="py-24 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">Contact Customer Service</h2>
+            <h2 className="text-3xl font-extrabold text-slate-800 mb-4">{t('ContactTitle')}</h2>
             <div className="w-20 h-1 bg-[#1E40AF] mx-auto rounded-full"></div>
-            <p className="text-lg text-slate-600 mt-6">We're here to help! Reach out to us for any support, inquiries, or feedback.</p>
+            <p className="text-lg text-slate-600 mt-6">{t('ContactDesc')}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-10">
@@ -341,9 +364,9 @@ export default function App() {
               <span className="text-xl font-bold">MediVault</span>
             </div>
             <div className="flex gap-6 text-sm text-slate-400 font-medium">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-              <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+              <a href="#" className="hover:text-white transition-colors">{t('Privacy')}</a>
+              <a href="#" className="hover:text-white transition-colors">{t('Terms')}</a>
+              <a href="#contact" className="hover:text-white transition-colors">{t('Contact')}</a>
             </div>
           </div>
           
