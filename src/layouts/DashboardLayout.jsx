@@ -8,12 +8,33 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  Plus,
+  ShieldAlert,
+  QrCode
 } from 'lucide-react';
 
-export default function DashboardLayout({ role, onLogout }) {
+export default function DashboardLayout({ role, onLogout, user }) {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const [isSosModalOpen, setIsSosModalOpen] = React.useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = React.useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
+  const [quoteIdx, setQuoteIdx] = React.useState(0);
   const navigate = useNavigate();
+
+  const quotes = [
+    "Your health is an investment, not an expense.",
+    "Every day is another chance to get stronger.",
+    "Take care of your body. It's the only place you have to live.",
+    "Healing takes time, and asking for help is a courageous step."
+  ];
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setQuoteIdx((prev) => (prev + 1) % quotes.length);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     onLogout();
@@ -27,8 +48,13 @@ export default function DashboardLayout({ role, onLogout }) {
     { name: 'Settings', path: `/dashboard/${role}/settings`, icon: <Settings size={20} /> },
   ];
 
+  const quickActions = [
+    { name: 'Book Consult', icon: <Plus size={16} />, color: 'blue' },
+    { name: 'Order Medicine', icon: <Plus size={16} />, color: 'teal' },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
+    <div className="h-screen overflow-hidden bg-slate-50 flex font-sans text-slate-900">
       
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
@@ -44,7 +70,7 @@ export default function DashboardLayout({ role, onLogout }) {
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/dashboard/${role}`)}>
             <div className={`text-${role === 'patient' ? '[#1E40AF]' : '[#14B8A6]'}`}>
               <Heart fill="currentColor" size={28} />
             </div>
@@ -81,8 +107,23 @@ export default function DashboardLayout({ role, onLogout }) {
             ))}
           </nav>
 
+          {/* Quick Actions in Sidebar */}
+          {role === 'patient' && (
+            <div className="mt-8 space-y-4 px-2">
+              <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quick Actions</div>
+              <div className="grid grid-cols-1 gap-2">
+                {quickActions.map((action) => (
+                  <button key={action.name} className={`flex items-center gap-3 w-full p-3 rounded-xl bg-${action.color}-50 text-${action.color}-700 text-xs font-bold hover:bg-${action.color}-100 transition-colors`}>
+                    <div className={`p-1 rounded-lg bg-${action.color}-100`}>{action.icon}</div>
+                    {action.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <button 
-            onClick={handleLogout}
+            onClick={() => setShowLogoutConfirm(true)}
             className="flex items-center justify-center gap-2 w-full mt-auto text-slate-500 hover:text-red-600 hover:bg-red-50 p-4 rounded-xl font-semibold transition-all"
           >
             <LogOut size={20} />
@@ -92,7 +133,7 @@ export default function DashboardLayout({ role, onLogout }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Top Navbar */}
         <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
           <button 
@@ -103,23 +144,191 @@ export default function DashboardLayout({ role, onLogout }) {
           </button>
           
           <div className="ml-auto flex items-center gap-4">
+            {/* SOS Button */}
+            <button 
+              onClick={() => setIsSosModalOpen(true)}
+              className="group relative flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-full font-black text-xs uppercase tracking-widest shadow-lg shadow-red-200 transition-all hover:-translate-y-0.5"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
+              SOS
+            </button>
+
+            {/* QR Code Button */}
+            {role === 'patient' && (
+              <button 
+                onClick={() => setIsQrModalOpen(true)}
+                className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-2.5 rounded-full font-bold text-xs transition-all hover:-translate-y-0.5"
+              >
+                <QrCode size={16} className="text-indigo-600" />
+                <span className="hidden sm:inline">Check-in</span>
+              </button>
+            )}
+
+            <div 
+              className="flex items-center gap-4 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-colors"
+              onClick={() => navigate(`/dashboard/${role}/settings`)}
+            >
             <div className={`w-10 h-10 rounded-full bg-${role === 'patient' ? 'blue' : 'teal'}-100 flex items-center justify-center text-${role === 'patient' ? '[#1E40AF]' : '[#14B8A6]'} font-bold`}>
-              {role === 'patient' ? 'P' : 'Dr'}
+              {user?.name?.[0] || (role === 'patient' ? 'P' : 'Dr')}
             </div>
-            <div className="hidden sm:block">
-              <p className="text-sm font-bold text-slate-800 leading-tight">
-                {role === 'patient' ? 'Patient Profile' : 'Dr. Dashboard'}
-              </p>
-              <p className="text-xs text-slate-500 capitalize">{role}</p>
+              <div className="hidden sm:block">
+                <p className="text-sm font-bold text-slate-800 leading-tight">
+                  {user?.name || (role === 'patient' ? 'Patient' : 'Doctor')}
+                </p>
+                <p className="text-xs text-slate-500 capitalize">{role}</p>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Dashboard Pages */}
-        <div className="flex-1 overflow-auto p-6 md:p-8">
-          <Outlet />
+        <div className="flex-1 overflow-auto bg-slate-50 flex flex-col justify-between p-6 md:p-8">
+          <div>
+            <Outlet />
+          </div>
+          
+          {/* Motivational Footer */}
+          <footer className="mt-12 text-center text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-2 duration-700 pb-4">
+            "{quotes[quoteIdx]}"
+          </footer>
         </div>
       </main>
+
+      {/* SOS Modal */}
+      {isSosModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300"
+            onClick={() => setIsSosModalOpen(false)}
+          />
+          <div className="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+              <ShieldAlert size={32} />
+            </div>
+            <h2 className="text-2xl font-black text-center text-slate-800 mb-2">Emergency SOS</h2>
+            <p className="text-slate-500 text-center mb-6 leading-relaxed">
+              This will instantly alert emergency services and share your medical vault location with authorized responders. Use this only in critical situations.
+            </p>
+            <div className="bg-slate-50 rounded-2xl p-4 mb-6 space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-slate-700 font-medium">Automatic call to 102/112</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-slate-700 font-medium">
+                  Alerting emergency contacts:<br/>
+                  <span className="font-bold">Rahul Sharma, Dr. Amit Patel</span>
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-slate-700 font-medium">Sharing current health profile & live location</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <button 
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-2xl font-black shadow-xl shadow-red-100 transition-all hover:scale-[1.02]"
+                onClick={() => {
+                  alert('Emergency signals sent. Emergency services are being notified.');
+                  setIsSosModalOpen(false);
+                }}
+              >
+                CONFIRM EMERGENCY
+              </button>
+              <button 
+                className="w-full py-3 text-slate-500 font-bold hover:text-slate-700"
+                onClick={() => setIsSosModalOpen(false)}
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR Code Modal for Check-in */}
+      {isQrModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300"
+            onClick={() => setIsQrModalOpen(false)}
+          />
+          <div className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center">
+            <button 
+              onClick={() => setIsQrModalOpen(false)}
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-50 transition-colors"
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 mt-2">
+              <QrCode size={32} />
+            </div>
+            
+            <h2 className="text-xl font-black text-slate-800 text-center mb-1">Instant Check-in</h2>
+            <p className="text-slate-500 text-center text-sm mb-6 leading-relaxed">
+              Let the doctor scan this QR code to grant temporary access to your health vault.
+            </p>
+            
+            <div className="bg-white border-2 border-indigo-100 p-4 rounded-3xl shadow-sm mb-6">
+              {/* Dummy QR Code Pattern using generic div grid */}
+              <div className="w-48 h-48 bg-slate-900 flex flex-wrap content-start rounded-xl overflow-hidden p-2 opacity-90">
+                <div className="w-full h-full border-4 border-dashed border-white/40 flex items-center justify-center text-white/50 text-xs text-center px-4 font-mono leading-tight">
+                  [QR CODE PLACEHOLDER]<br/>Scanning initiates OTP...
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full bg-slate-50 rounded-2xl p-4 space-y-2">
+              <div className="flex items-center gap-3 text-sm text-slate-700">
+                <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                <span>1-Hour Access pass</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-slate-700">
+                <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                <span>Requires OTP confirmation</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300"
+            onClick={() => setShowLogoutConfirm(false)}
+          />
+          <div className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center">
+            <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
+              <LogOut size={32} />
+            </div>
+            <h2 className="text-xl font-black text-slate-800 text-center mb-2">Sign Out?</h2>
+            <p className="text-slate-500 text-center text-sm mb-8 leading-relaxed">
+              Are you sure you want to securely log out of your MediVault account? You will need to re-authenticate to access your vault.
+            </p>
+            <div className="flex flex-col gap-3 w-full">
+              <button 
+                onClick={handleLogout}
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 rounded-xl font-bold tracking-wide shadow-lg shadow-red-200 transition-all hover:-translate-y-0.5"
+              >
+                Yes, Sign Out
+              </button>
+              <button 
+                onClick={() => setShowLogoutConfirm(false)}
+                className="w-full py-3.5 text-slate-500 font-bold hover:text-slate-800 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

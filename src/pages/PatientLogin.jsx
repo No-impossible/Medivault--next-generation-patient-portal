@@ -19,7 +19,7 @@ const FacebookIcon = () => (
   </svg>
 );
 
-export default function PatientLogin({ onBack, onSignUp, language, setLanguage }) {
+export default function PatientLogin({ onBack, onSignUp, language, setLanguage, onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,8 +30,14 @@ export default function PatientLogin({ onBack, onSignUp, language, setLanguage }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: wire up real auth
-    alert('Login functionality will be connected to the backend.');
+    // Simulate login for demonstration
+    onLoginSuccess({ 
+      name: email.split('@')[0], 
+      email: email,
+      dob: '1990-01-01',
+      mobile: '+91-9876543210',
+      isAbhaLinked: false 
+    });
   };
 
   return (
@@ -156,10 +162,41 @@ export default function PatientLogin({ onBack, onSignUp, language, setLanguage }
             </button>
           </div>
 
+          {/* ABHA Login */}
+          <div className="bg-indigo-50/50 rounded-2xl p-5 mb-6 border border-indigo-100">
+            <div className="flex items-center gap-2 mb-3">
+              <ShieldCheck size={16} className="text-indigo-500" />
+              <p className="text-sm font-bold text-slate-800">Login with ABHA Account</p>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="14-digit ABHA ID"
+                className="flex-1 border border-indigo-200 bg-white rounded-xl px-4 py-2.5 text-sm transition-all focus:border-indigo-400 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => onLoginSuccess({ 
+                  name: 'Raghu Sharma', 
+                  email: 'raghu@sharma.in',
+                  dob: '1982-05-14',
+                  mobile: '+91-9988776655',
+                  isAbhaLinked: true, 
+                  abhaId: '1234 5678 9012 34' 
+                })}
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md hover:translate-y-[-1px] transition-all"
+                style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
+              >
+                Login
+              </button>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-2">🧪 Demo: Use any 14 digits</p>
+          </div>
+
           {/* Divider */}
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400 font-medium">{t('login_or')}</span>
+            <span className="text-xs text-gray-400 font-medium">OR USE EMAIL</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
