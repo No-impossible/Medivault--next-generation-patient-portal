@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, Languages } from 'lucide-react';
+import { translations } from '../translations';
 
 // Google & Facebook icon SVGs (inline)
 const GoogleIcon = () => (
@@ -18,15 +19,21 @@ const FacebookIcon = () => (
   </svg>
 );
 
-export default function PatientLogin({ onBack, onSignUp }) {
+export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: wire up real auth
-    alert('Login functionality will be connected to the backend.');
+    // Simulate login for demonstration
+    onLoginSuccess({ 
+      name: email.split('@')[0], 
+      email: email,
+      dob: '1990-01-01',
+      mobile: '+91-9876543210',
+      isAbhaLinked: false 
+    });
   };
 
   return (
@@ -43,7 +50,7 @@ export default function PatientLogin({ onBack, onSignUp }) {
           className="absolute top-8 left-8 flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors group"
         >
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-          Back to Home
+          {t('login_back')}
         </button>
 
         {/* Logo */}
@@ -91,7 +98,22 @@ export default function PatientLogin({ onBack, onSignUp }) {
       </div>
 
       {/* ───── RIGHT PANEL ───── */}
-      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white">
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white relative">
+        
+        {/* Language Switcher */}
+        <div className="absolute top-8 right-8 z-10 flex items-center gap-2">
+          <Globe size={18} className="text-indigo-600" />
+          <select 
+            onChange={(e) => i18n.changeLanguage(e.target.value)}
+            value={i18n.language}
+            className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer hover:text-indigo-600 transition-colors"
+          >
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="mr">मराठी</option>
+            <option value="ta">தமிழ்</option>
+          </select>
+        </div>
         
         {/* Mobile back button */}
         <button
@@ -109,24 +131,55 @@ export default function PatientLogin({ onBack, onSignUp }) {
               <Heart fill="#7C83FD" size={20} />
               <span className="text-lg font-bold text-slate-800">MediVault</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-900">Welcome back 👋</h1>
-            <p className="text-slate-500 mt-1 text-sm">Sign in to your patient portal</p>
+            <h1 className="text-3xl font-black text-slate-900">{t('login_welcome')}</h1>
+            <p className="text-slate-500 mt-1 text-sm">{t('login_subtitle')}</p>
           </div>
 
           {/* Social Buttons */}
           <div className="flex flex-col gap-3 mb-6">
             <button className="flex items-center justify-center gap-3 w-full border border-gray-200 rounded-xl py-3 text-sm font-medium text-slate-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm">
-              <GoogleIcon /> Continue with Google
+              <GoogleIcon /> {t('login_google')}
             </button>
             <button className="flex items-center justify-center gap-3 w-full border border-gray-200 rounded-xl py-3 text-sm font-medium text-slate-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm">
-              <FacebookIcon /> Continue with Facebook
+              <FacebookIcon /> {t('login_facebook')}
             </button>
+          </div>
+
+          {/* ABHA Login */}
+          <div className="bg-indigo-50/50 rounded-2xl p-5 mb-6 border border-indigo-100">
+            <div className="flex items-center gap-2 mb-3">
+              <ShieldCheck size={16} className="text-indigo-500" />
+              <p className="text-sm font-bold text-slate-800">Login with ABHA Account</p>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="14-digit ABHA ID"
+                className="flex-1 border border-indigo-200 bg-white rounded-xl px-4 py-2.5 text-sm transition-all focus:border-indigo-400 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => onLoginSuccess({ 
+                  name: 'Raghu Sharma', 
+                  email: 'raghu@sharma.in',
+                  dob: '1982-05-14',
+                  mobile: '+91-9988776655',
+                  isAbhaLinked: true, 
+                  abhaId: '1234 5678 9012 34' 
+                })}
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md hover:translate-y-[-1px] transition-all"
+                style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
+              >
+                Login
+              </button>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-2">🧪 Demo: Use any 14 digits</p>
           </div>
 
           {/* Divider */}
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400 font-medium">OR</span>
+            <span className="text-xs text-gray-400 font-medium">OR USE EMAIL</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
@@ -134,7 +187,7 @@ export default function PatientLogin({ onBack, onSignUp }) {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">{t('login_email')}</label>
               <input
                 id="patient-email"
                 type="email"
@@ -152,9 +205,9 @@ export default function PatientLogin({ onBack, onSignUp }) {
             {/* Password */}
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-sm font-semibold text-slate-700">Password</label>
+                <label className="block text-sm font-semibold text-slate-700">{t('login_password')}</label>
                 <button type="button" className="text-xs font-medium" style={{ color: '#7C83FD' }}>
-                  Forgot Password?
+                  {t('login_forgot')}
                 </button>
               </div>
               <div className="relative">
@@ -185,19 +238,19 @@ export default function PatientLogin({ onBack, onSignUp }) {
               className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
               style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
             >
-              Sign In to Patient Portal
+              {t('login_submit')}
             </button>
           </form>
 
           {/* Footer */}
           <p className="text-center text-sm text-slate-500 mt-6">
-            New to MediVault?{' '}
+            {t('login_new')}{' '}
             <button
               onClick={onSignUp}
               className="font-semibold hover:underline transition-colors"
               style={{ color: '#7C83FD' }}
             >
-              Create an Account
+              {t('login_create')}
             </button>
           </p>
         </div>

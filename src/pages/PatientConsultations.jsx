@@ -1,0 +1,99 @@
+import React from 'react';
+import { useOutletContext, useNavigate } from 'react-router-dom';
+import { Calendar, Clock, Video, VideoOff, ChevronRight, Activity, CalendarPlus, Building } from 'lucide-react';
+
+export default function PatientConsultations() {
+  const { consultations } = useOutletContext();
+  const navigate = useNavigate();
+
+  return (
+    <div className="max-w-6xl w-full mx-auto space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
+        <div>
+          <h1 className="text-2xl font-black text-slate-800">My Consultations</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage your upcoming and past medical appointments.</p>
+        </div>
+        <button 
+          onClick={() => navigate('/dashboard/patient/book-consultation')}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5"
+        >
+          <CalendarPlus size={20} />
+          Book New Consult
+        </button>
+      </div>
+
+      {!consultations || consultations.length === 0 ? (
+        <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-16 flex flex-col items-center justify-center text-center">
+          <div className="w-20 h-20 bg-indigo-50 text-indigo-300 rounded-full flex items-center justify-center mb-6">
+            <Calendar size={40} />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">No active consultations</h3>
+          <p className="text-slate-500 max-w-sm mb-8 leading-relaxed">
+            You don't have any upcoming or past appointments in your record. Book a specialist to get started.
+          </p>
+          <button 
+            onClick={() => navigate('/dashboard/patient/book-consultation')}
+            className="text-slate-700 font-bold bg-white border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 px-8 py-3 rounded-xl transition-all"
+          >
+            Find a Doctor
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <Activity className="text-indigo-500" /> Upcoming Appointments
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {consultations.map(consult => (
+              <div key={consult.id} className="bg-white border border-slate-200 rounded-3xl p-6 relative overflow-hidden group hover:border-indigo-300 hover:shadow-xl hover:-translate-y-1 transition-all">
+                
+                {/* Status Badge */}
+                <div className="absolute top-6 right-6 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold flex items-center gap-1.5 border border-emerald-100">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Upcoming
+                </div>
+                
+                <div className="flex items-center gap-4 mb-6 pr-24">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-xl font-black text-slate-400">
+                    {consult.doctorName[4]}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-lg">{consult.doctorName}</h4>
+                    <p className="text-indigo-600 text-sm font-semibold">{consult.department}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-3">
+                    <Calendar size={20} className="text-slate-400" />
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Date</p>
+                      <p className="text-sm font-bold text-slate-800">{consult.date}</p>
+                    </div>
+                  </div>
+                  <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-3">
+                    <Clock size={20} className="text-slate-400" />
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Time</p>
+                      <p className="text-sm font-bold text-slate-800">{consult.time}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+                  <div className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                     {consult.type === 'Online Video Consult' ? <Video size={16} className="text-blue-500" /> : <Building size={16} className="text-emerald-500" />}
+                     {consult.type}
+                  </div>
+                  <button className="text-indigo-600 font-bold text-sm bg-indigo-50 hover:bg-indigo-600 hover:text-white px-5 py-2 rounded-xl transition-all flex items-center gap-1 group-hover:shadow-md">
+                    {consult.type === 'Online Video Consult' ? 'Join Call' : 'View Details'} <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

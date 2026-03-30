@@ -50,7 +50,7 @@ function Field({ label, id, type = 'text', value, onChange, placeholder, autoFil
   );
 }
 
-export default function PatientSignUp({ onBack, onLogin }) {
+export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
   // ABHA
   const [abhaId, setAbhaId] = useState('');
   const [abhaFetching, setAbhaFetching] = useState(false);
@@ -148,7 +148,14 @@ export default function PatientSignUp({ onBack, onLogin }) {
       alert('Passwords do not match.');
       return;
     }
-    alert('Account creation will be connected to the backend. Details collected successfully!');
+    onSignUpSuccess({
+      name: form.name,
+      email: form.email,
+      dob: form.dob,
+      mobile: form.mobile,
+      isAbhaLinked: abhaFetched,
+      abhaId: abhaId
+    });
   };
 
   return (
