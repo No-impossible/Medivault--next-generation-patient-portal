@@ -11,18 +11,54 @@ import {
   ChevronRight,
   Plus
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import PatientSearch from '../components/doctor/PatientSearch';
 import AppointmentCalendar from '../components/doctor/AppointmentCalendar';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const doctorData = location.state || {
+    name: 'Dr. Sarah Jenkins',
+    email: 'sarah@example.com',
+    specialization: 'Cardiologist'
+  };
+
+  const getInitials = (name) => {
+    if (!name) return 'DR';
+    const cleanName = name.replace(/^Dr\.\s*/i, '').trim();
+    if (!cleanName) return 'DR';
+    const parts = cleanName.split(' ');
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return cleanName.substring(0, 2).toUpperCase();
+  };
+
+  const initials = getInitials(doctorData.name);
+
   const [activeTab, setActiveTab] = useState('patients');
   const [isBooking, setIsBooking] = useState(false);
-  const [appointments, setAppointments] = useState([
-    { patientName: 'Arjun Sharma', date: new Date(), time: '09:00 AM' },
-    { patientName: 'Priya Patel', date: new Date(new Date().setDate(new Date().getDate() + 1)), time: '02:30 PM' }
-  ]);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  
+  // Load appointments specific to this doctor
+  const storageKey = `medivault_appointments_${doctorData.email}`;
+  const [appointments, setAppointments] = useState(() => {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      return JSON.parse(saved).map(apt => ({
+        ...apt,
+        date: new Date(apt.date)
+      }));
+    }
+    // Default empty array for new doctors to manage their own schedules
+    return [];
+  });
+
+  const handleAddAppointment = (newApt) => {
+    const updated = [...appointments, newApt];
+    setAppointments(updated);
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    setIsBooking(false);
+  };
 
   return (
     <div className="flex h-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
@@ -32,7 +68,7 @@ export default function DoctorDashboard() {
         <div className="h-20 flex items-center px-6 border-b border-slate-800">
           <div className="flex items-center gap-2 text-emerald-400 cursor-pointer" onClick={() => navigate('/')}>
             <Stethoscope size={28} />
-            <span className="text-xl font-bold text-white tracking-wide">MediPortal</span>
+            <span className="text-xl font-bold text-white tracking-wide">Medivault</span>
           </div>
         </div>
 
@@ -79,7 +115,7 @@ export default function DoctorDashboard() {
             <span className="font-medium">Settings</span>
           </button>
           <button 
-            onClick={() => navigate('/')}
+            onClick={() => setShowLogoutConfirm(true)}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-xl hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-all mt-2"
           >
             <LogOut size={20} />
@@ -99,7 +135,7 @@ export default function DoctorDashboard() {
               {activeTab === 'appointments' && "Today's Appointments"}
               {activeTab === 'prescriptions' && 'Manage Prescriptions'}
             </h1>
-            <p className="text-sm text-slate-500">Welcome back, Dr. Sarah Jenkins</p>
+            <p className="text-sm text-slate-500">Welcome back, {doctorData.name}</p>
           </div>
 
           <div className="flex items-center gap-6">
@@ -119,11 +155,11 @@ export default function DoctorDashboard() {
 
             <div className="flex items-center gap-3 pl-6 border-l border-gray-200 cursor-pointer">
               <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold border border-emerald-200">
-                SJ
+                {initials}
               </div>
               <div className="hidden md:block">
-                <p className="text-sm font-semibold text-slate-800">Dr. Sarah Jenkins</p>
-                <p className="text-xs text-slate-500">Cardiologist</p>
+                <p className="text-sm font-semibold text-slate-800">{doctorData.name}</p>
+                <p className="text-xs text-slate-500">{doctorData.specialization}</p>
               </div>
             </div>
           </div>
@@ -196,10 +232,7 @@ export default function DoctorDashboard() {
           {activeTab === 'appointments' && isBooking && (
             <AppointmentCalendar 
               onCancel={() => setIsBooking(false)} 
-              onBooked={(newApt) => {
-                setAppointments([...appointments, newApt]);
-                setIsBooking(false);
-              }}
+              onBooked={handleAddAppointment}
             />
           )}
 
@@ -214,6 +247,35 @@ export default function DoctorDashboard() {
         </div>
 
       </main>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200 border border-slate-100">
+            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-red-50/50">
+              <LogOut size={32} />
+            </div>
+            <h3 className="text-2xl font-black text-center text-slate-800 mb-2">Sign Out</h3>
+            <p className="text-center text-slate-500 mb-8 font-medium">Are you sure you want to securely log out of your provider dashboard?</p>
+            
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 py-3.5 px-4 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => navigate('/')}
+                className="flex-1 py-3.5 px-4 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 shadow-md shadow-red-500/20 transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

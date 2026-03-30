@@ -193,7 +193,7 @@ export default function LandingPage() {
                 </li>
               </ul>
               <button 
-                onClick={() => navigate('/doctor')}
+                onClick={() => navigate('/doctor/login')}
                 className="w-full mt-auto bg-[#14B8A6] hover:bg-teal-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all cursor-pointer"
               >
                 Doctor Login / Portal
