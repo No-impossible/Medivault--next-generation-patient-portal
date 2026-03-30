@@ -14,6 +14,15 @@ import {
   Phone
 } from 'lucide-react';
 
+const Toggle = ({ enabled, onClick }) => (
+  <button 
+    onClick={onClick}
+    className={`w-11 h-6 rounded-full transition-colors relative ${enabled ? 'bg-indigo-600' : 'bg-slate-200'}`}
+  >
+    <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+  </button>
+);
+
 export default function PatientSettings({ user }) {
   const [notifications, setNotifications] = useState({
     email: true,
@@ -24,14 +33,6 @@ export default function PatientSettings({ user }) {
   const isAbhaLinked = !!user?.isAbhaLinked;
   const abhaId = user?.abhaId || 'Not Linked';
 
-  const Toggle = ({ enabled, onClick }) => (
-    <button 
-      onClick={onClick}
-      className={`w-11 h-6 rounded-full transition-colors relative ${enabled ? 'bg-indigo-600' : 'bg-slate-200'}`}
-    >
-      <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
-    </button>
-  );
 
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">

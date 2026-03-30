@@ -37,7 +37,7 @@ export default function DashboardLayout({ role, onLogout, user }) {
       setQuoteIdx((prev) => (prev + 1) % quotes.length);
     }, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [quotes.length]);
 
   const handleLogout = () => {
     onLogout();

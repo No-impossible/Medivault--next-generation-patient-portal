@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, Languages } from 'lucide-react';
-import { translations } from '../translations';
+import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, Languages, Globe } from 'lucide-react';
 
 // Google & Facebook icon SVGs (inline)
 const GoogleIcon = () => (

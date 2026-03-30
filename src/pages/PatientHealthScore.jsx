@@ -134,7 +134,7 @@ export default function PatientHealthScore() {
             { year: '2024', value: 125, label: 'High Risk', color: 'from-red-400 to-red-500' },
             { year: '2025', value: 108, label: 'Borderline', color: 'from-amber-400 to-amber-500' },
             { year: '2026', value: 92, label: 'Optimal', color: 'from-emerald-400 to-emerald-500' }
-          ].map((trend, index) => {
+          ].map((trend) => {
             const heightPercent = (trend.value / 140) * 100;
             return (
               <div key={trend.year} className="flex flex-col items-center gap-3 relative z-10 w-full group">
