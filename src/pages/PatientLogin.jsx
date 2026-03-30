@@ -19,14 +19,10 @@ const FacebookIcon = () => (
   </svg>
 );
 
-export default function PatientLogin({ onBack, onSignUp, language, setLanguage, onLoginSuccess }) {
+export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showLangDropdown, setShowLangDropdown] = useState(false);
-
-  const languages = ['English', 'Hindi', 'Spanish', 'French'];
-  const t = (key) => translations[language][key] || key;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -105,31 +101,18 @@ export default function PatientLogin({ onBack, onSignUp, language, setLanguage, 
       <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white relative">
         
         {/* Language Switcher */}
-        <div className="absolute top-8 right-8 z-10">
-          <button 
-            onClick={() => setShowLangDropdown(!showLangDropdown)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all text-sm font-medium text-slate-600"
+        <div className="absolute top-8 right-8 z-10 flex items-center gap-2">
+          <Globe size={18} className="text-indigo-600" />
+          <select 
+            onChange={(e) => i18n.changeLanguage(e.target.value)}
+            value={i18n.language}
+            className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer hover:text-indigo-600 transition-colors"
           >
-            <Languages size={16} className="text-indigo-500" />
-            {language}
-          </button>
-          
-          {showLangDropdown && (
-            <div className="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-1 animate-in fade-in slide-in-from-top-2 duration-200">
-              {languages.map((lang) => (
-                <button
-                  key={lang}
-                  onClick={() => {
-                    setLanguage(lang);
-                    setShowLangDropdown(false);
-                  }}
-                  className={`w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 transition-colors ${language === lang ? 'text-indigo-600 font-semibold' : 'text-slate-600'}`}
-                >
-                  {lang}
-                </button>
-              ))}
-            </div>
-          )}
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="mr">मराठी</option>
+            <option value="ta">தமிழ்</option>
+          </select>
         </div>
         
         {/* Mobile back button */}

@@ -9,10 +9,10 @@ import {
   Menu,
   Stethoscope,
   FolderOpen,
-  Languages
+  Globe
 } from 'lucide-react';
 
-export default function LandingPage({ t, language, languages, setLanguage, setShowLangDropdown, showLangDropdown, scrollToEntry, onPatientLogin }) {
+export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       
@@ -39,31 +39,18 @@ export default function LandingPage({ t, language, languages, setLanguage, setSh
               
               <div className="flex items-center space-x-4 ml-4">
                 {/* Language Switcher */}
-                <div className="relative">
-                  <button 
-                    onClick={() => setShowLangDropdown(!showLangDropdown)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md border border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 transition-all text-sm font-medium text-slate-600"
+                <div className="flex items-center gap-2 border-l border-gray-100 pl-4 ml-2">
+                  <Globe size={18} className="text-[#1E40AF]" />
+                  <select 
+                    onChange={(e) => i18n.changeLanguage(e.target.value)}
+                    value={i18n.language}
+                    className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer hover:text-[#1E40AF] transition-colors"
                   >
-                    <Languages size={16} className="text-[#1E40AF]" />
-                    {language}
-                  </button>
-                  
-                  {showLangDropdown && (
-                    <div className="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-1 z-50">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang}
-                          onClick={() => {
-                            setLanguage(lang);
-                            setShowLangDropdown(false);
-                          }}
-                          className={`w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors ${language === lang ? 'text-[#1E40AF] font-semibold' : 'text-slate-600'}`}
-                        >
-                          {lang}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="mr">मराठी</option>
+                    <option value="ta">தமிழ்</option>
+                  </select>
                 </div>
 
                 <button 

@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { seedMockAbhaUsers } from './services/healthService';
+
 import LandingPage from './pages/LandingPage';
 import PatientLogin from './pages/PatientLogin';
 import PatientSignUp from './pages/PatientSignUp';
@@ -10,16 +13,18 @@ import PatientHealthScore from './pages/PatientHealthScore';
 import PatientConsultations from './pages/PatientConsultations';
 import PatientBookConsultation from './pages/PatientBookConsultation';
 import DashboardLayout from './layouts/DashboardLayout';
-import { translations } from './translations';
 
 export default function App() {
-  const [language, setLanguage] = useState('English');
-  const [showLangDropdown, setShowLangDropdown] = useState(false);
+  const { t, i18n } = useTranslation();
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  const languages = ['English', 'Hindi', 'Spanish', 'French'];
-  const t = (key) => translations[language][key] || key;
+  useEffect(() => {
+    // Graceful optional chaining incase healthService hasn't been merged fully from main
+    if (typeof seedMockAbhaUsers === 'function') {
+      seedMockAbhaUsers().then(() => console.log('Seeding attempted on load')).catch(()=>console.log('Seed error'));
+    }
+  }, []);
 
   const scrollToEntry = (e) => {
     e.preventDefault();
@@ -53,11 +58,7 @@ export default function App() {
         element={
           <LandingPage 
             t={t} 
-            language={language} 
-            languages={languages}
-            setLanguage={setLanguage}
-            showLangDropdown={showLangDropdown}
-            setShowLangDropdown={setShowLangDropdown}
+            i18n={i18n}
             scrollToEntry={scrollToEntry}
             onPatientLogin={() => navigate('/login/patient')}
           />
@@ -70,8 +71,8 @@ export default function App() {
           <PatientLogin 
             onBack={() => navigate('/')}
             onSignUp={() => navigate('/signup/patient')}
-            language={language}
-            setLanguage={setLanguage}
+            t={t}
+            i18n={i18n}
             onLoginSuccess={handleLoginSuccess}
           />
         } 

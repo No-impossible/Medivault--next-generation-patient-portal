@@ -1,25 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, CheckCircle, Loader } from 'lucide-react';
-
-// ── Mock ABHA data: simulates API response ──
-const MOCK_ABHA_DATA = {
-  '123456789012345': {
-    name: 'Raghu Sharma',
-    dob: '1990-05-14',
-    gender: 'Male',
-    bloodGroup: 'B+',
-    mobile: '9876543210',
-    address: 'Flat 4B, Sunrise Apartments, Pune, Maharashtra – 411001',
-  },
-  '987654321098765': {
-    name: 'Priya Nair',
-    dob: '1995-11-02',
-    gender: 'Female',
-    bloodGroup: 'O+',
-    mobile: '9123456780',
-    address: '22 MG Road, Bengaluru, Karnataka – 560001',
-  },
-};
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 
 // Password requirements checker
 const validatePassword = (pass) => ({
@@ -103,28 +85,61 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
 
   const setField = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
-  // ── ABHA ID fetch (simulated) ──
-  const handleAbhaFetch = () => {
-    const trimmed = abhaId.replace(/\s|-/g, '');
-    if (trimmed.length !== 14 && trimmed.length !== 15) {
+  // ── ABHA ID fetch (from Firestore) ──
+  const handleAbhaFetch = async () => {
+    const digits = abhaId.replace(/\D/g, '');
+    if (digits.length !== 14) {
       setAbhaError('Please enter a valid 14-digit ABHA ID.');
       return;
     }
     setAbhaError('');
     setAbhaFetching(true);
-    setTimeout(() => {
-      setAbhaFetching(false);
-      const data = MOCK_ABHA_DATA[trimmed];
-      if (data) {
-        setForm((prev) => ({ ...prev, ...data }));
-        setAutoFilledFields({ name: true, dob: true, gender: true, bloodGroup: true, mobile: true, address: true });
+    
+    try {
+      // The Seed formatting has format like 'xx-xxxx-xxxx-xxxx'
+      const formattedAbha = `${digits.slice(0,2)}-${digits.slice(2,6)}-${digits.slice(6,10)}-${digits.slice(10,14)}`;
+
+      const usersRef = collection(db, 'mock_abha_users');
+      // querying our firestore collection
+      const q = query(usersRef, where('abhaId', '==', formattedAbha));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const docSnap = querySnapshot.docs[0];
+        const data = docSnap.data();
+        
+        setForm((prev) => ({ 
+          ...prev, 
+          name: data.name || '', 
+          gender: data.gender || '',
+          bloodGroup: data.bloodGroup || '',
+          dob: data.dob || '',
+          mobile: data.mobile || '',
+          address: data.address || ''
+        }));
+        
+        setAutoFilledFields({ 
+          name: !!data.name, 
+          gender: !!data.gender, 
+          bloodGroup: !!data.bloodGroup,
+          dob: !!data.dob,
+          mobile: !!data.mobile,
+          address: !!data.address 
+        });
+        
         setAbhaFetched(true);
         setAbhaError('');
       } else {
         setAbhaError('No ABHA record found for this ID. Please fill details manually.');
         setAbhaFetched(false);
       }
-    }, 1800);
+    } catch (err) {
+      console.error('Error fetching ABHA data:', err);
+      setAbhaError('Failed to fetch from database. Please try again.');
+      setAbhaFetched(false);
+    } finally {
+      setAbhaFetching(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -293,7 +308,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
 
               {/* Demo hint */}
               <p className="text-[11px] text-slate-400 mt-2">
-                🧪 Demo IDs: <code className="bg-white px-1 rounded">123456789012345</code> or <code className="bg-white px-1 rounded">987654321098765</code>
+                🧪 Demo IDs: <code className="bg-white px-1 rounded">91-1122-3344-5566</code> or <code className="bg-white px-1 rounded">82-2233-4455-6677</code>
               </p>
             </div>
 
