@@ -5,6 +5,10 @@ import PatientLogin from './pages/PatientLogin';
 import PatientSignUp from './pages/PatientSignUp';
 import PatientDashboard from './pages/PatientDashboard';
 import PatientSettings from './pages/PatientSettings';
+import PatientRecords from './pages/PatientRecords';
+import PatientHealthScore from './pages/PatientHealthScore';
+import PatientConsultations from './pages/PatientConsultations';
+import PatientBookConsultation from './pages/PatientBookConsultation';
 import DashboardLayout from './layouts/DashboardLayout';
 import { translations } from './translations';
 
@@ -90,8 +94,10 @@ export default function App() {
         element={<DashboardLayout role="patient" onLogout={handleLogout} user={user} />}
       >
         <Route path="patient" element={<PatientDashboard user={user} />} />
-        <Route path="patient/records" element={<div className="p-8"><h2 className="text-2xl font-bold">My Medical Records</h2><p className="text-slate-500 mt-2">No records found yet.</p></div>} />
-        <Route path="patient/consultations" element={<div className="p-8"><h2 className="text-2xl font-bold">My Consultations</h2><p className="text-slate-500 mt-2">No upcoming consultations.</p></div>} />
+        <Route path="patient/records" element={<PatientRecords />} />
+        <Route path="patient/health-score" element={<PatientHealthScore />} />
+        <Route path="patient/consultations" element={<PatientConsultations />} />
+        <Route path="patient/book-consultation" element={<PatientBookConsultation />} />
         <Route path="patient/settings" element={<PatientSettings user={user} />} />
       </Route>
 

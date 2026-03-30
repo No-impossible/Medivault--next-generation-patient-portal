@@ -20,6 +20,9 @@ export default function DashboardLayout({ role, onLogout, user }) {
   const [isQrModalOpen, setIsQrModalOpen] = React.useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
   const [quoteIdx, setQuoteIdx] = React.useState(0);
+  const [records, setRecords] = React.useState([]);
+  const [fullBodyReport, setFullBodyReport] = React.useState(null);
+  const [consultations, setConsultations] = React.useState([]);
   const navigate = useNavigate();
 
   const quotes = [
@@ -49,8 +52,8 @@ export default function DashboardLayout({ role, onLogout, user }) {
   ];
 
   const quickActions = [
-    { name: 'Book Consult', icon: <Plus size={16} />, color: 'blue' },
-    { name: 'Order Medicine', icon: <Plus size={16} />, color: 'teal' },
+    { name: 'Book Consult', icon: <Plus size={16} />, color: 'blue', action: () => navigate(`/dashboard/patient/book-consultation`) },
+    { name: 'Order Medicine', icon: <Plus size={16} />, color: 'teal', action: () => alert('Order Medicine capability incoming!') },
   ];
 
   return (
@@ -113,7 +116,7 @@ export default function DashboardLayout({ role, onLogout, user }) {
               <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quick Actions</div>
               <div className="grid grid-cols-1 gap-2">
                 {quickActions.map((action) => (
-                  <button key={action.name} className={`flex items-center gap-3 w-full p-3 rounded-xl bg-${action.color}-50 text-${action.color}-700 text-xs font-bold hover:bg-${action.color}-100 transition-colors`}>
+                  <button onClick={action.action} key={action.name} className={`flex items-center gap-3 w-full p-3 rounded-xl bg-${action.color}-50 text-${action.color}-700 text-xs font-bold hover:bg-${action.color}-100 transition-colors`}>
                     <div className={`p-1 rounded-lg bg-${action.color}-100`}>{action.icon}</div>
                     {action.name}
                   </button>
@@ -187,7 +190,7 @@ export default function DashboardLayout({ role, onLogout, user }) {
         {/* Dashboard Pages */}
         <div className="flex-1 overflow-auto bg-slate-50 flex flex-col justify-between p-6 md:p-8">
           <div>
-            <Outlet />
+            <Outlet context={{ user, records, setRecords, fullBodyReport, setFullBodyReport, consultations, setConsultations }} />
           </div>
           
           {/* Motivational Footer */}
