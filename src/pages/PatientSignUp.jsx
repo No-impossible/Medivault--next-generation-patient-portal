@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, CheckCircle, Loader } from 'lucide-react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
+import { supabase } from '../supabaseClient';
 
 // Password requirements checker
 const validatePassword = (pass) => ({
@@ -99,14 +98,15 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
       // The Seed formatting has format like 'xx-xxxx-xxxx-xxxx'
       const formattedAbha = `${digits.slice(0,2)}-${digits.slice(2,6)}-${digits.slice(6,10)}-${digits.slice(10,14)}`;
 
-      const usersRef = collection(db, 'mock_abha_users');
-      // querying our firestore collection
-      const q = query(usersRef, where('abhaId', '==', formattedAbha));
-      const querySnapshot = await getDocs(q);
+      const { data: dbData, error } = await supabase
+        .from('mock_abha_users')
+        .select('*')
+        .eq('abhaId', formattedAbha);
 
-      if (!querySnapshot.empty) {
-        const docSnap = querySnapshot.docs[0];
-        const data = docSnap.data();
+      if (error) throw error;
+
+      if (dbData && dbData.length > 0) {
+        const data = dbData[0];
         
         setForm((prev) => ({ 
           ...prev, 

@@ -1,54 +1,116 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, Activity, BrainCircuit } from 'lucide-react';
+import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, Activity, BrainCircuit, ExternalLink, X, Loader2 } from 'lucide-react';
+import { uploadReport, addPatientRecord, fetchPatientRecords, deletePatientRecord } from '../supabaseClient';
 
 export default function PatientRecords() {
-  const { records, setRecords, setFullBodyReport } = useOutletContext();
+  const { user, records, setRecords, setFullBodyReport } = useOutletContext();
   const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedAIReport, setSelectedAIReport] = useState(null);
 
-  const handleFileUpload = (e) => {
+  // Fetch real records on mount
+  useEffect(() => {
+    if (user?.id) {
+      fetchPatientRecords(user.id).then(fetched => {
+        if (fetched.length > 0) {
+          setRecords(prev => {
+            const newIds = new Set(fetched.map(f => f.id));
+            const distinctPrev = prev.filter(p => !newIds.has(p.id));
+            return [...distinctPrev, ...fetched].sort((a,b) => new Date(b.date) - new Date(a.date));
+          });
+        }
+      });
+    }
+  }, [user?.id, setRecords]);
+
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Simulate creating a record entry
-    const newRecord = {
-      id: Date.now().toString(),
-      name: file.name,
-      size: (file.size / 1024).toFixed(1) + ' KB',
-      date: new Date().toLocaleString('en-US', { 
-        year: 'numeric', month: 'short', day: 'numeric', 
-        hour: '2-digit', minute: '2-digit' 
-      }),
-      type: file.type || 'Document'
-    };
+    try {
+      setIsUploading(true);
+      
+      // Upload to Firebase Storage
+      let fileURL = '';
+      try {
+        fileURL = await uploadReport(file, user?.id || 'guest');
+      } catch (err) {
+        console.error("Storage error:", err);
+        // Fallback for demo if storage is not cleanly configured
+        fileURL = URL.createObjectURL(file);
+      }
 
-    setRecords(prev => [newRecord, ...prev]);
-    
-    // Simulate AI extraction if the file name contains 'checkup' or 'report'
-    if (file.name.toLowerCase().includes('checkup') || file.name.toLowerCase().includes('report') || file.name.toLowerCase().includes('blood')) {
-      // Create a mock full body extraction
-      setTimeout(() => {
-        setFullBodyReport({
-          date: new Date().toISOString().split('T')[0],
-          score: 84, // 0-100
-          metrics: {
-            bmi: { value: 24.2, status: 'Normal', benchmark: '18.5 - 24.9' },
-            bloodPressure: { value: '125/82', status: 'Borderline', benchmark: '120/80 mmHg' },
-            fastingSugar: { value: 92, status: 'Optimal', benchmark: '<100 mg/dL' },
-            cholesterol: { value: 185, status: 'Optimal', benchmark: '<200 mg/dL' },
-            hemoglobin: { value: 14.5, status: 'Normal', benchmark: '13.8 - 17.2 g/dL' }
-          }
-        });
-        alert('MediVault AI instantly analyzed your Full Body Checkup! Your Health Score is now updated.');
-      }, 1500);
+      // Generate a mock AI brief to save doctor's time
+      const mockAISummary = {
+        brief: `This ${file.type.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation for ${user?.name || 'the patient'}. Overall indicators are mostly within normal limits, though continued monitoring is recommended.`,
+        keyFindings: [
+           "No acute abnormalities detected.",
+           "Vitals and primary markers are stable.",
+           "Follow-up suggested in 3-6 months if symptoms persist."
+        ],
+        confidence: "92%"
+      };
+
+      const newRecordData = {
+        name: file.name,
+        size: (file.size / 1024).toFixed(1) + ' KB',
+        date: new Date().toLocaleString('en-US', { 
+          year: 'numeric', month: 'short', day: 'numeric', 
+          hour: '2-digit', minute: '2-digit' 
+        }),
+        type: file.type || 'Document',
+        fileURL,
+        aiSummary: mockAISummary
+      };
+
+      // Save to Firestore
+      let savedId = Date.now().toString();
+      if (user?.id) {
+         savedId = await addPatientRecord(user.id, newRecordData);
+      }
+      
+      const newRecord = { id: savedId, ...newRecordData };
+      setRecords(prev => [newRecord, ...prev]);
+
+      // Simulate full body extraction for specific files
+      if (file.name.toLowerCase().includes('checkup') || file.name.toLowerCase().includes('report') || file.name.toLowerCase().includes('blood')) {
+        setTimeout(() => {
+          setFullBodyReport({
+            date: new Date().toISOString().split('T')[0],
+            score: 84, // 0-100
+            metrics: {
+              bmi: { value: 24.2, status: 'Normal', benchmark: '18.5 - 24.9' },
+              bloodPressure: { value: '125/82', status: 'Borderline', benchmark: '120/80 mmHg' },
+              fastingSugar: { value: 92, status: 'Optimal', benchmark: '<100 mg/dL' },
+              cholesterol: { value: 185, status: 'Optimal', benchmark: '<200 mg/dL' },
+              hemoglobin: { value: 14.5, status: 'Normal', benchmark: '13.8 - 17.2 g/dL' }
+            }
+          });
+          alert('MediVault AI instantly analyzed your Full Body Checkup! Your Health Score is now updated.');
+        }, 1500);
+      }
+
+    } catch (error) {
+       console.error("Upload error:", error);
+       alert("Failed to upload the document. Please try again.");
+    } finally {
+      setIsUploading(false);
+      e.target.value = null;
     }
-    
-    // reset input
-    e.target.value = null;
   };
 
-  const deleteRecord = (id) => {
-    setRecords(prev => prev.filter(r => r.id !== id));
+  const handleDeleteRecord = async (record) => {
+    // Instantly remove from UI
+    setRecords(prev => prev.filter(r => r.id !== record.id));
+    
+    // Permanently remove from DB and Storage bucket
+    try {
+      await deletePatientRecord(record.id, record.fileURL);
+    } catch (error) {
+      console.error("Failed to delete record from Supabase:", error);
+      alert("Failed to permanently delete the file.");
+    }
   };
 
   return (
@@ -60,17 +122,17 @@ export default function PatientRecords() {
         </div>
         <button 
           onClick={() => fileInputRef.current?.click()}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5"
+          disabled={isUploading}
+          className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 disabled:hover:translate-y-0 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5"
         >
-          <UploadCloud size={20} />
-          Upload Document
+          {isUploading ? <Loader2 size={20} className="animate-spin" /> : <UploadCloud size={20} />}
+          {isUploading ? 'Uploading & Analyzing...' : 'Upload Document'}
         </button>
         <input 
           type="file" 
           ref={fileInputRef} 
           onChange={handleFileUpload} 
           className="hidden" 
-          accept=".pdf,.png,.jpg,.jpeg"
         />
       </div>
 
@@ -102,24 +164,107 @@ export default function PatientRecords() {
                 <div className="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
                   <File size={24} />
                 </div>
-                <button 
-                  onClick={() => deleteRecord(record.id)}
-                  className="text-slate-300 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
-                >
-                  <Trash2 size={18} />
-                </button>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => record.fileURL && window.open(record.fileURL, '_blank')}
+                    className="text-slate-400 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 transition-colors opacity-0 group-hover:opacity-100"
+                    title="View Document"
+                  >
+                    <ExternalLink size={18} />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteRecord(record)}
+                    className="text-slate-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                    title="Delete"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
               </div>
               <h4 className="font-bold text-slate-800 truncate mb-1" title={record.name}>{record.name}</h4>
               <div className="flex items-center gap-4 text-xs font-medium text-slate-500 mb-4">
                 <span className="flex items-center gap-1"><ShieldCheck size={14} className="text-emerald-500"/> Secured</span>
                 <span>{record.size}</span>
               </div>
-              <div className="border-t border-slate-100 pt-4 flex items-center text-xs text-slate-400 gap-1.5">
-                <Calendar size={14} />
-                {record.date}
+              <div className="border-t border-slate-100 pt-4 flex items-center justify-between">
+                <div className="flex items-center text-xs text-slate-400 gap-1.5">
+                  <Calendar size={14} />
+                  {record.date}
+                </div>
+                {record.aiSummary && (
+                  <button 
+                    onClick={() => setSelectedAIReport(record)}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors"
+                  >
+                    <BrainCircuit size={12} /> AI Brief
+                  </button>
+                )}
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* AI Summary Modal */}
+      {selectedAIReport && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
+            onClick={() => setSelectedAIReport(null)}
+          />
+          <div className="relative bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setSelectedAIReport(null)}
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-50 transition-colors"
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+                <BrainCircuit size={24} />
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-slate-800">AI Medical Brief</h2>
+                <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider flex items-center gap-1">
+                  Confidence: {selectedAIReport.aiSummary?.confidence || 'N/A'}
+                </p>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-bold text-slate-800 mb-2 border-b border-slate-100 pb-2">Short Brief</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  {selectedAIReport.aiSummary?.brief}
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-bold text-slate-800 mb-2 border-b border-slate-100 pb-2">Key Findings (Doctor Summary)</h4>
+                <ul className="space-y-2">
+                  {selectedAIReport.aiSummary?.keyFindings?.map((finding, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-slate-600">
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
+                      {finding}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
+              <span className="text-xs text-slate-400">For informational purposes only.</span>
+              <button 
+                onClick={() => {
+                  if(selectedAIReport?.fileURL) window.open(selectedAIReport.fileURL, '_blank');
+                }}
+                className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all"
+              >
+                <ExternalLink size={16} className="text-indigo-600" /> View Original
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

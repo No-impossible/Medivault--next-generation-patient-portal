@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, Languages, Globe } from 'lucide-react';
 
+import { fetchPatientByAbha } from '../services/healthService';
+
 // Google & Facebook icon SVGs (inline)
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -22,6 +24,22 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [abhaIdInput, setAbhaIdInput] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  const handleAbhaLogin = async () => {
+    try {
+      setLoginError('');
+      const patient = await fetchPatientByAbha(abhaIdInput.trim());
+      onLoginSuccess({
+        ...patient,
+        isAbhaLinked: true,
+        email: email || `${patient.name.toLowerCase().replace(' ', '')}@medivault.com`,
+      });
+    } catch (err) {
+      setLoginError('Invalid ABHA ID or Patient not found');
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -153,26 +171,22 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             <div className="flex gap-2">
               <input
                 type="text"
+                value={abhaIdInput}
+                onChange={(e) => setAbhaIdInput(e.target.value)}
                 placeholder="14-digit ABHA ID"
                 className="flex-1 border border-indigo-200 bg-white rounded-xl px-4 py-2.5 text-sm transition-all focus:border-indigo-400 focus:outline-none"
               />
               <button
                 type="button"
-                onClick={() => onLoginSuccess({ 
-                  name: 'Raghu Sharma', 
-                  email: 'raghu@sharma.in',
-                  dob: '1982-05-14',
-                  mobile: '+91-9988776655',
-                  isAbhaLinked: true, 
-                  abhaId: '1234 5678 9012 34' 
-                })}
+                onClick={handleAbhaLogin}
                 className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md hover:translate-y-[-1px] transition-all"
                 style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
               >
                 Login
               </button>
             </div>
-            <p className="text-[10px] text-slate-400 mt-2">🧪 Demo: Use any 14 digits</p>
+            {loginError && <p className="text-xs text-red-500 mt-2 font-medium">{loginError}</p>}
+            <p className="text-[10px] text-slate-400 mt-2">🧪 Demo: Use any 14 digits from database</p>
           </div>
 
           {/* Divider */}

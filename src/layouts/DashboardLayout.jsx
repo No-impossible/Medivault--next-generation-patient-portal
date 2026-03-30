@@ -22,8 +22,40 @@ export default function DashboardLayout({ role, onLogout, user }) {
   const [quoteIdx, setQuoteIdx] = React.useState(0);
   const [records, setRecords] = React.useState([]);
   const [fullBodyReport, setFullBodyReport] = React.useState(null);
-  const [consultations, setConsultations] = React.useState([]);
+  const [consultations, setConsultations] = React.useState(() => {
+    if (user?.lastVisit) {
+      return [{
+        id: 'consult-1',
+        doctorName: 'Dr. Specialist',
+        department: 'General Checkup',
+        date: new Date(user.lastVisit).toLocaleDateString(),
+        time: '10:00 AM',
+        status: 'past',
+        type: 'In-person'
+      }];
+    }
+    return [];
+  });
   const navigate = useNavigate();
+
+  // Reset states when user changes
+  React.useEffect(() => {
+    setRecords([]);
+    if (user?.lastVisit) {
+      setConsultations([{
+        id: 'consult-1',
+        doctorName: 'Dr. Specialist',
+        department: 'General Checkup',
+        date: new Date(user.lastVisit).toLocaleDateString(),
+        time: '10:00 AM',
+        status: 'past',
+        type: 'In-person'
+      }]);
+    } else {
+      setConsultations([]);
+    }
+    setFullBodyReport(null);
+  }, [user]);
 
   const quotes = [
     "Your health is an investment, not an expense.",
@@ -224,7 +256,11 @@ export default function DashboardLayout({ role, onLogout, user }) {
                 <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-slate-700 font-medium">
                   Alerting emergency contacts:<br/>
-                  <span className="font-bold">Rahul Sharma, Dr. Amit Patel</span>
+                  <span className="font-bold">
+                    {user?.emergencyContacts?.length > 0 
+                      ? user.emergencyContacts.map(c => c.name).join(', ') 
+                      : 'Rahul Sharma, Dr. Amit Patel'}
+                  </span>
                 </p>
               </div>
               <div className="flex items-start gap-3">

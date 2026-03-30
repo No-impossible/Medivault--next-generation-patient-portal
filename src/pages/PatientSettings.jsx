@@ -140,31 +140,24 @@ export default function PatientSettings({ user }) {
             These contacts will be instantly notified with your medical profile and location when you trigger the <strong>dashboard SOS button</strong>.
           </p>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between group hover:border-red-200 transition-colors cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-                  <User size={18} />
+            {user?.emergencyContacts?.length > 0 ? (
+              user.emergencyContacts.map((contact, idx) => (
+                <div key={idx} className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between group hover:border-red-200 transition-colors cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 ${idx === 0 ? 'bg-red-100 text-red-600' : 'bg-indigo-100 text-indigo-600'} rounded-full flex items-center justify-center`}>
+                      {idx === 0 ? <User size={18} /> : <Phone size={18} />}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-800 text-sm">{contact.name} ({contact.relation})</h4>
+                      <p className="text-xs text-slate-500">{contact.phone}</p>
+                    </div>
+                  </div>
+                  <ChevronRight size={18} className="text-slate-300 group-hover:text-red-400 group-hover:translate-x-1 transition-all" />
                 </div>
-                <div>
-                  <h4 className="font-bold text-slate-800 text-sm">Rahul Sharma (Brother)</h4>
-                  <p className="text-xs text-slate-500">+91 91234 56789</p>
-                </div>
-              </div>
-              <ChevronRight size={18} className="text-slate-300 group-hover:text-red-400 group-hover:translate-x-1 transition-all" />
-            </div>
-
-            <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between group hover:border-red-200 transition-colors cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
-                  <Phone size={18} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-800 text-sm">Dr. Amit Patel</h4>
-                  <p className="text-xs text-slate-500">+91 99887 77665</p>
-                </div>
-              </div>
-              <ChevronRight size={18} className="text-slate-300 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all" />
-            </div>
+              ))
+            ) : (
+              <p className="text-sm text-slate-500 italic col-span-2">No emergency contacts configured.</p>
+            )}
           </div>
           <button className="text-sm font-bold text-red-600 hover:text-red-700 mt-2 px-1">+ Add New Contact</button>
         </div>

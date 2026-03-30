@@ -219,7 +219,11 @@ export const seedMockAbhaUsers = async () => {
   
   try {
     const uploadPromises = mockPatients.map(async (patient) => {
-      await addDoc(usersCollectionRef, patient);
+      const emergencyContacts = [
+        { name: `${patient.name.split(' ')[0]}'s Primary Contact`, phone: '+91 90000 11111', relation: 'Family' },
+        { name: `${patient.name.split(' ')[0]}'s Secondary Contact`, phone: '+91 90000 22222', relation: 'Friend' }
+      ];
+      await addDoc(usersCollectionRef, { ...patient, emergencyContacts });
       successCount++;
     });
 
