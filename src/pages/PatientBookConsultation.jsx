@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { 
   HeartPulse, 
@@ -14,6 +14,7 @@ import {
   Video, 
   Building
 } from 'lucide-react';
+import { fetchDoctors, seedMockDoctors } from '../services/healthService';
 
 const DEPARTMENTS = [
   { id: 'general', name: 'General Physician', icon: <Stethoscope size={32} />, exp: 'Fevers, Colds, General Health' },
@@ -24,28 +25,7 @@ const DEPARTMENTS = [
   { id: 'opthalmo', name: 'Ophthalmology', icon: <Eye size={32} />, exp: 'Eye Care, Vision' },
 ];
 
-const MOCK_DOCTORS = {
-  general: [
-    { id: 'd1', name: 'Dr. Sarah Jenkins', exp: '12 Years', rating: 4.9, img: 'S', fee: '₹500', nextSlot: 'Today, 4:00 PM', clinic: true },
-    { id: 'd2', name: 'Dr. Arun Kumar', exp: '8 Years', rating: 4.7, img: 'A', fee: '₹400', nextSlot: 'Tomorrow, 10:00 AM', clinic: false }
-  ],
-  cardio: [
-    { id: 'd3', name: 'Dr. Ramesh Gupta', exp: '20 Years', rating: 4.8, img: 'R', fee: '₹1200', nextSlot: 'Today, 6:30 PM', clinic: true },
-    { id: 'd4', name: 'Dr. Emily Chen', exp: '15 Years', rating: 4.9, img: 'E', fee: '₹1500', nextSlot: 'Wed, 9:00 AM', clinic: false }
-  ],
-  neuro: [
-    { id: 'd5', name: 'Dr. Vikram Singh', exp: '18 Years', rating: 4.6, img: 'V', fee: '₹1800', nextSlot: 'Thu, 2:00 PM', clinic: true }
-  ],
-  ortho: [
-    { id: 'd6', name: 'Dr. Priya Desai', exp: '10 Years', rating: 4.8, img: 'P', fee: '₹900', nextSlot: 'Tomorrow, 11:30 AM', clinic: true }
-  ],
-  pedia: [
-    { id: 'd7', name: 'Dr. John Doe', exp: '6 Years', rating: 4.5, img: 'J', fee: '₹600', nextSlot: 'Today, 5:00 PM', clinic: false }
-  ],
-  opthalmo: [
-    { id: 'd8', name: 'Dr. Lisa Ray', exp: '14 Years', rating: 4.7, img: 'L', fee: '₹800', nextSlot: 'Fri, 10:15 AM', clinic: true }
-  ]
-};
+// MOCK_DOCTORS replaced with Supabase data
 
 export default function PatientBookConsultation() {
   const navigate = useNavigate();
@@ -56,6 +36,14 @@ export default function PatientBookConsultation() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedMode, setSelectedMode] = useState('Online Video Consult');
+  const [doctorsList, setDoctorsList] = useState([]);
+  const [loadingDoctors, setLoadingDoctors] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  // OPTIONAL: Auto-seed on component mount (for development only, you can remove later)
+  useEffect(() => {
+    // seedMockDoctors();
+  }, []);
 
   const generateAvailableDates = () => {
     const dates = ['Today', 'Tomorrow'];
@@ -82,9 +70,18 @@ export default function PatientBookConsultation() {
   const availableDates = generateAvailableDates();
   const availableTimes = ['10:00 AM', '11:30 AM', '2:00 PM', '4:30 PM', '6:00 PM'];
 
-  const handleDeptSelect = (deptId) => {
+  const handleDeptSelect = async (deptId) => {
     setSelectedDept(deptId);
+    setLoadingDoctors(true);
     setStep('doctors');
+    try {
+      const docs = await fetchDoctors(deptId);
+      setDoctorsList(docs);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingDoctors(false);
+    }
   };
 
   const handleDoctorSelect = (doc) => {
@@ -108,7 +105,11 @@ export default function PatientBookConsultation() {
     };
     
     setConsultations(prev => [newConsultation, ...prev]);
-    alert(`Appointment Confirmed with ${selectedDoctor.name}! Check your Consultations tab.`);
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
     navigate('/dashboard/patient/consultations');
   };
 
@@ -160,7 +161,11 @@ export default function PatientBookConsultation() {
 
       {step === 'doctors' && (
         <div className="grid md:grid-cols-2 gap-6">
-          {MOCK_DOCTORS[selectedDept]?.map((doc) => (
+          {loadingDoctors ? (
+            <div className="col-span-2 text-center py-10 text-slate-500 font-bold">Loading specialists...</div>
+          ) : doctorsList.length === 0 ? (
+            <div className="col-span-2 text-center py-10 text-slate-500 font-bold">No specialists found for this department. Please ensure the 'doctors' table is populated in Supabase.</div>
+          ) : doctorsList.map((doc) => (
             <div key={doc.id} className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col md:flex-row gap-6 items-center md:items-start group hover:shadow-lg transition-all">
               <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-3xl font-black text-slate-300 shrink-0 border-4 border-white shadow-sm">
                 {doc.img}
@@ -304,6 +309,33 @@ export default function PatientBookConsultation() {
               }`}
             >
               {selectedDate && selectedTime ? 'Confirm & Book Appointment' : 'Select Date & Time to Proceed'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {showModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-300"
+          onClick={handleModalClose}
+        >
+          <div 
+            className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl relative animate-in zoom-in-95 duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-20 h-20 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle size={40} />
+            </div>
+            <h3 className="text-2xl font-black text-slate-800 mb-2">Appointment Confirmed!</h3>
+            <p className="text-slate-500 mb-8">
+              Your consultation with <span className="font-bold text-indigo-600">{selectedDoctor?.name}</span> is confirmed for {selectedDate} at {selectedTime}.
+            </p>
+            <button 
+              onClick={handleModalClose}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md shadow-indigo-200"
+            >
+              Okay, View Consultations
             </button>
           </div>
         </div>
