@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Heart, 
   ShieldCheck, 
@@ -13,6 +14,7 @@ import {
 } from 'lucide-react';
 
 export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       
@@ -231,7 +233,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                   <Lock size={18} className="text-[#14B8A6]" /> Schedule Appointments
                 </li>
               </ul>
-              <button className="w-full mt-auto bg-[#14B8A6] hover:bg-teal-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
+              <button onClick={() => navigate('/doctor/login')} className="w-full mt-auto bg-[#14B8A6] hover:bg-teal-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-md transition-all">
                 {t('dash_doctor_btn')}
               </button>
             </div>

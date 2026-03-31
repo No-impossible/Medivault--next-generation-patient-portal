@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import DoctorDashboard from './pages/DoctorDashboard';
+import DoctorLogin from './pages/DoctorLogin';
 import { seedMockAbhaUsers } from './services/healthService';
 
 import LandingPage from './pages/LandingPage';
@@ -101,6 +103,11 @@ export default function App() {
         <Route path="patient/book-consultation" element={<PatientBookConsultation />} />
         <Route path="patient/settings" element={<PatientSettings user={user} />} />
       </Route>
+
+      {/* Doctor Routes */}
+      <Route path="/doctor/login" element={<DoctorLogin />} />
+      <Route path="/doctor" element={<DoctorDashboard />} />
+      <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
