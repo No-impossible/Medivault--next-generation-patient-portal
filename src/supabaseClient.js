@@ -41,7 +41,7 @@ export const uploadReport = async (file, patientId) => {
     // Note: ensure 'medivault-bucket' bucket exists and is public in Supabase Storage!
     const filePath = `reports/${patientId}/${Date.now()}_${file.name}`;
     
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from('medivault-bucket')
       .upload(filePath, file, {
         cacheControl: '3600',

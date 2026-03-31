@@ -36,7 +36,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         isAbhaLinked: true,
         email: email || `${patient.name.toLowerCase().replace(' ', '')}@medivault.com`,
       });
-    } catch (err) {
+    } catch {
       setLoginError('Invalid ABHA ID or Patient not found');
     }
   };
