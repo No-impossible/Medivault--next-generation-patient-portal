@@ -1,16 +1,26 @@
-# React + Vite
+# MediVault
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MediVault is a comprehensive patient portal and medical registry system designed to streamline healthcare access and document management.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Multilingual Support**: Fully translated into English, Hindi, Marathi, and Tamil using `i18next`.
+- **Authentication & Backend**: Powered by Supabase, migrating away from Firebase for robust data persistence and PostgreSQL capabilities.
+- **Patient Registry**: Integrates ABHA registry search for easy sign-ups and verification.
+- **Consultation Booking**: Dynamic doctor database showcasing diverse medical specialists for users to book appointments.
+- **Document Management**: Allows upload of medical reports and documents with AI-driven summarization for clinical insights.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React, Vite, Tailwind CSS
+- **Backend & Database**: Supabase (PostgreSQL), with Row Level Security (RLS) policies
+- **Internationalization**: `i18next`, `react-i18next`
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+To run the project locally:
+
+1. Clone the repository.
+2. Install dependencies: `npm install`
+3. Set up your `.env` file with your Supabase credentials.
+4. Start the development server: `npm run dev`
