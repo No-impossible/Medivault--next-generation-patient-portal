@@ -41,15 +41,38 @@ export default function PatientRecords() {
         fileURL = URL.createObjectURL(file);
       }
 
-      // Generate a mock AI brief to save doctor's time
+      // Generate a mock AI dynamic brief
+      const isBlood = file.name.toLowerCase().includes('blood');
+      const isXray = file.name.toLowerCase().includes('xray') || file.name.toLowerCase().includes('x-ray');
+      const isCheckup = file.name.toLowerCase().includes('checkup');
+      const isPrescription = file.name.toLowerCase().includes('prescription');
+      
+      let aiBrief = `This ${file.type.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation for ${user?.name || 'this patient'}. Overall indicators are mostly within normal limits, though continued monitoring is recommended.`;
+      let aiFindings = [
+         "No acute abnormalities detected.",
+         "Vitals and primary markers are stable.",
+         "Follow-up suggested in 3-6 months if symptoms persist."
+      ];
+      let confidenceStr = "92%";
+      
+      if (isBlood) {
+         aiBrief = `Complete Blood Count (CBC) and lipid panels have been analyzed. Hemoglobin and differential counts are stable.`;
+         aiFindings = ["RBC and WBC counts within optimal range.", "Mild variation in cholesterol levels detected.", "Consider dietary adjustments and hydration."];
+         confidenceStr = "96%";
+      } else if (isXray) {
+         aiBrief = `Radiological imaging analysis completed. Bone structures and joint spaces are preserved.`;
+         aiFindings = ["No fractures, dislocations, or lytic lesions seen.", "Soft tissues appear unremarkable.", "Suggest clinical correlation for localized pain."];
+         confidenceStr = "89%";
+      } else if (isPrescription) {
+         aiBrief = `Medical prescription scanned and mapped. Detected active pharmaceutical ingredients and dosages.`;
+         aiFindings = ["Prescribed medications logged successfully.", "No major drug-drug interactions detected among listed items.", "Adhere strictly to prescribed schedule."];
+         confidenceStr = "98%";
+      }
+
       const mockAISummary = {
-        brief: `This ${file.type.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation for ${user?.name || 'the patient'}. Overall indicators are mostly within normal limits, though continued monitoring is recommended.`,
-        keyFindings: [
-           "No acute abnormalities detected.",
-           "Vitals and primary markers are stable.",
-           "Follow-up suggested in 3-6 months if symptoms persist."
-        ],
-        confidence: "92%"
+        brief: aiBrief,
+        keyFindings: aiFindings,
+        confidence: confidenceStr
       };
 
       const newRecordData = {
@@ -76,12 +99,14 @@ export default function PatientRecords() {
       // Simulate full body extraction for specific files
       if (file.name.toLowerCase().includes('checkup') || file.name.toLowerCase().includes('report') || file.name.toLowerCase().includes('blood')) {
         setTimeout(() => {
+          // Dynamic random-looking but deterministic score based on date and filename length
+          const dynamicScore = 75 + (file.name.length % 20);
           setFullBodyReport({
             date: new Date().toISOString().split('T')[0],
-            score: 84, // 0-100
+            score: dynamicScore, // 0-100
             metrics: {
               bmi: { value: 24.2, status: 'Normal', benchmark: '18.5 - 24.9' },
-              bloodPressure: { value: '125/82', status: 'Borderline', benchmark: '120/80 mmHg' },
+              bloodPressure: { value: dynamicScore > 85 ? '120/80' : '135/88', status: dynamicScore > 85 ? 'Optimal' : 'Borderline', benchmark: '120/80 mmHg' },
               fastingSugar: { value: 92, status: 'Optimal', benchmark: '<100 mg/dL' },
               cholesterol: { value: 185, status: 'Optimal', benchmark: '<200 mg/dL' },
               hemoglobin: { value: 14.5, status: 'Normal', benchmark: '13.8 - 17.2 g/dL' }

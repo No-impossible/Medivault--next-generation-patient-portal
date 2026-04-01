@@ -109,7 +109,7 @@ export default function PatientDashboard({ user }) {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg hidden sm:block">{record.size}</span>
-                    <button className="text-slate-400 hover:text-indigo-600 p-2 bg-transparent hover:bg-indigo-50 rounded-lg transition-colors"><Download size={18} /></button>
+                    <button onClick={() => record.fileURL && window.open(record.fileURL, '_blank')} className="text-slate-400 hover:text-indigo-600 p-2 bg-transparent hover:bg-indigo-50 rounded-lg transition-colors"><Download size={18} /></button>
                   </div>
                 </div>
               ))}

@@ -149,6 +149,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
       return;
     }
     onSignUpSuccess({
+      id: form.email,
       name: form.name,
       email: form.email,
       dob: form.dob,

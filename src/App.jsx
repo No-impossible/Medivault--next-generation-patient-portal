@@ -12,13 +12,17 @@ import PatientDashboard from './pages/PatientDashboard';
 import PatientSettings from './pages/PatientSettings';
 import PatientRecords from './pages/PatientRecords';
 import PatientHealthScore from './pages/PatientHealthScore';
+import HospitalView from './pages/HospitalView';
 import PatientConsultations from './pages/PatientConsultations';
 import PatientBookConsultation from './pages/PatientBookConsultation';
 import DashboardLayout from './layouts/DashboardLayout';
 
 export default function App() {
   const { t, i18n } = useTranslation();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('medivault_patient_session');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,16 +48,21 @@ export default function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
+    localStorage.setItem('medivault_patient_session', JSON.stringify(userData));
     navigate('/dashboard/patient');
   };
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem('medivault_patient_session');
     navigate('/');
   };
 
   return (
     <Routes>
+      {/* Public Share Route */}
+      <Route path="/share/:token" element={<HospitalView />} />
+
       {/* Public Pages */}
       <Route 
         path="/" 
@@ -94,7 +103,7 @@ export default function App() {
       {/* Dashboard Routes */}
       <Route 
         path="/dashboard" 
-        element={<DashboardLayout role="patient" onLogout={handleLogout} user={user} />}
+        element={<DashboardLayout role="patient" onLogout={handleLogout} user={user} setUser={setUser} />}
       >
         <Route path="patient" element={<PatientDashboard user={user} />} />
         <Route path="patient/records" element={<PatientRecords />} />

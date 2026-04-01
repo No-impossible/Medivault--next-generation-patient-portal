@@ -15,6 +15,7 @@ import {
   Building
 } from 'lucide-react';
 import { fetchDoctors, seedMockDoctors } from '../services/healthService';
+import { addConsultation } from '../supabaseClient';
 
 const DEPARTMENTS = [
   { id: 'general', name: 'General Physician', icon: <Stethoscope size={32} />, exp: 'Fevers, Colds, General Health' },
@@ -29,7 +30,7 @@ const DEPARTMENTS = [
 
 export default function PatientBookConsultation() {
   const navigate = useNavigate();
-  const { setConsultations } = useOutletContext();
+  const { user, setConsultations } = useOutletContext();
   const [step, setStep] = useState('department'); // department -> doctors -> confirm
   const [selectedDept, setSelectedDept] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -92,20 +93,30 @@ export default function PatientBookConsultation() {
     setStep('confirm');
   };
 
-  const confirmBooking = () => {
-    // Generate a mock confirmed consultation
-    const newConsultation = {
-      id: Date.now().toString(),
-      doctorName: selectedDoctor.name,
-      department: DEPARTMENTS.find(d => d.id === selectedDept).name,
-      date: selectedDate,
-      time: selectedTime,
-      type: selectedMode,
-      status: 'upcoming'
-    };
-    
-    setConsultations(prev => [newConsultation, ...prev]);
-    setShowModal(true);
+  const confirmBooking = async () => {
+    try {
+      const newConsultation = {
+        doctorName: selectedDoctor.name,
+        department: DEPARTMENTS.find(d => d.id === selectedDept).name,
+        date: selectedDate,
+        time: selectedTime,
+        type: selectedMode,
+        status: 'upcoming'
+      };
+      
+      let savedConsultation = newConsultation;
+      if (user?.id) {
+        savedConsultation = await addConsultation(user.id, newConsultation);
+      } else {
+        savedConsultation.id = Date.now().toString();
+      }
+      
+      setConsultations(prev => [savedConsultation, ...prev]);
+      setShowModal(true);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to book. Please try again or refresh.');
+    }
   };
 
   const handleModalClose = () => {

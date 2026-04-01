@@ -45,6 +45,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
     e.preventDefault();
     // Simulate login for demonstration
     onLoginSuccess({ 
+      id: email,
       name: email.split('@')[0], 
       email: email,
       dob: '1990-01-01',

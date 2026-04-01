@@ -9,9 +9,17 @@ import {
   LogOut,
   Stethoscope,
   ChevronRight,
-  Plus
+  Plus,
+  ShieldCheck,
+  Clock,
+  Loader2,
+  QrCode,
+  X,
+  Save,
+  UserCheck
 } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { supabase, fetchPatientRecords } from '../supabaseClient';
 import PatientSearch from '../components/doctor/PatientSearch';
 import AppointmentCalendar from '../components/doctor/AppointmentCalendar';
 
@@ -38,6 +46,119 @@ export default function DoctorDashboard() {
   const [activeTab, setActiveTab] = useState('patients');
   const [isBooking, setIsBooking] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [qrInputValue, setQrInputValue] = useState("");
+  
+  // Public QR Access state
+  const [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  const [qrPatientData, setQrPatientData] = useState(null);
+  const [qrRecords, setQrRecords] = useState([]);
+  const [qrLoading, setQrLoading] = useState(!!token);
+  const [qrError, setQrError] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  const handleSavePatient = () => {
+    if (!qrPatientData) return;
+    const existingSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]');
+    if (!existingSaved.some(p => p.abhaId === qrPatientData.abhaId)) {
+        existingSaved.push({
+            name: qrPatientData.name,
+            abhaId: qrPatientData.abhaId,
+            dob: qrPatientData.dob,
+            gender: qrPatientData.gender,
+            contact: qrPatientData.phone || qrPatientData.email,
+            savedAt: new Date().toISOString()
+        });
+        localStorage.setItem(`medivault_saved_${doctorData.email}`, JSON.stringify(existingSaved));
+    }
+    // Simple visual feedback
+    const btn = document.getElementById('save-patient-btn');
+    if (btn) {
+       btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check w-4 h-4"><polyline points="20 6 9 17 4 12"/></svg> Saved!`;
+       btn.classList.add('bg-emerald-100', 'text-emerald-700');
+       setTimeout(() => {
+          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save w-4 h-4"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg> Save to Practice`;
+          btn.classList.remove('bg-emerald-100', 'text-emerald-700');
+       }, 3000);
+    }
+  };
+
+  // Validate Token Hook
+  React.useEffect(() => {
+    if (!token) return;
+    
+    let interval;
+    const verifyToken = async () => {
+      try {
+        setQrLoading(true);
+        let tokenData;
+        const { data, error: tokenError } = await supabase
+          .from('share_tokens')
+          .select('*')
+          .eq('id', token)
+          .single();
+          
+        if (tokenError || !data) {
+          // If Supabase rejected the insert due to foreign key constraints, 
+          // look for the token in LocalStorage where the Patient UI cached it
+          const localFallback = localStorage.getItem(`mock_token_${token}`);
+          if (localFallback) {
+             tokenData = JSON.parse(localFallback);
+          } else {
+             throw new Error('This secure link has expired for your protection. Please ask the patient to generate a new QR code.');
+          }
+        } else {
+          tokenData = data;
+        }
+        
+        const expiresAt = new Date(tokenData.expires_at).getTime();
+        if (Date.now() > expiresAt) {
+          throw new Error('This secure link has expired for your protection. Please ask the patient to generate a new QR code.');
+        }
+
+        const patientId = tokenData.patient_id;
+        let { data: profileData } = await supabase
+          .from('mock_abha_users')
+          .select('*')
+          .eq('abhaId', patientId)
+          .single();
+
+        // Local prototype fallback for rich data when users are signed up via email/guest locally
+        if (!profileData) {
+            const pSessStr = localStorage.getItem('medivault_patient_session');
+            if (pSessStr) {
+               const pSess = JSON.parse(pSessStr);
+               if (pSess.id === patientId || pSess.email === patientId || pSess.abhaId === patientId || patientId === 'guest') {
+                  profileData = pSess;
+               }
+            }
+        }
+
+        const recs = await fetchPatientRecords(patientId);
+        
+        setQrPatientData(profileData || { abhaId: patientId, name: 'Secure Patient', bloodGroup: 'Not specified' });
+        setQrRecords(recs.slice(0, 5));
+        
+        interval = setInterval(() => {
+           const remain = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+           setTimeLeft(remain);
+           if (remain <= 0) {
+              setQrError('This secure link has expired for your protection. Please ask the patient to generate a new QR code.');
+              clearInterval(interval);
+           }
+        }, 1000);
+
+      } catch (err) {
+        setQrError(err.message || 'Access Denied');
+      } finally {
+        setQrLoading(false);
+      }
+    };
+    
+    verifyToken();
+    return () => clearInterval(interval);
+  }, [token]);
   
   // Load appointments specific to this doctor
   const storageKey = `medivault_appointments_${doctorData.email}`;
@@ -76,36 +197,36 @@ export default function DoctorDashboard() {
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-2">Main Menu</p>
           
           <button 
-            onClick={() => { setActiveTab('patients'); setIsBooking(false); }}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'patients' ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
+            onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); }}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'patients' && !token ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
           >
             <div className="flex items-center gap-3">
               <Users size={20} />
               <span className="font-medium">Patient Records</span>
             </div>
-            {activeTab === 'patients' && <ChevronRight size={16} />}
+            {activeTab === 'patients' && !token && <ChevronRight size={16} />}
           </button>
 
           <button 
-            onClick={() => { setActiveTab('appointments'); setIsBooking(false); }}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'appointments' ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
+            onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); }}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'appointments' && !token ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
           >
             <div className="flex items-center gap-3">
               <Calendar size={20} />
               <span className="font-medium">Appointments</span>
             </div>
-            {activeTab === 'appointments' && <ChevronRight size={16} />}
+            {activeTab === 'appointments' && !token && <ChevronRight size={16} />}
           </button>
 
           <button 
-            onClick={() => { setActiveTab('prescriptions'); setIsBooking(false); }}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'prescriptions' ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
+            onClick={() => { setActiveTab('prescriptions'); setIsBooking(false); setSearchParams({}); }}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'prescriptions' && !token ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
           >
             <div className="flex items-center gap-3">
               <FileText size={20} />
               <span className="font-medium">Prescriptions</span>
             </div>
-            {activeTab === 'prescriptions' && <ChevronRight size={16} />}
+            {activeTab === 'prescriptions' && !token && <ChevronRight size={16} />}
           </button>
         </div>
 
@@ -131,20 +252,30 @@ export default function DoctorDashboard() {
         <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 z-10">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">
-              {activeTab === 'patients' && 'Patient Records Library'}
-              {activeTab === 'appointments' && "Today's Appointments"}
-              {activeTab === 'prescriptions' && 'Manage Prescriptions'}
+              {token ? 'Emergency Access View' : (
+                activeTab === 'patients' ? 'Patient Records Library' :
+                activeTab === 'appointments' ? "Today's Appointments" :
+                'Manage Prescriptions'
+              )}
             </h1>
             <p className="text-sm text-slate-500">Welcome back, {doctorData.name}</p>
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="relative">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <button 
+              onClick={() => setShowQrModal(true)}
+              className="flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-full font-bold text-xs transition-all hover:-translate-y-0.5"
+            >
+              <QrCode size={16} />
+              <span className="hidden sm:inline">Scan Patient QR</span>
+            </button>
+
+            <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
                 placeholder="Quick search..." 
-                className="pl-10 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:border-emerald-400 focus:bg-white focus:ring-2 focus:ring-emerald-400/20 transition-all w-64"
+                className="pl-10 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:border-emerald-400 focus:bg-white focus:ring-2 focus:ring-emerald-400/20 transition-all w-48 lg:w-64"
               />
             </div>
 
@@ -169,7 +300,121 @@ export default function DoctorDashboard() {
         <div className="flex-1 overflow-y-auto p-8 relative">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-blue-50/50 pointer-events-none -z-10"></div>
           
-          {activeTab === 'patients' && <PatientSearch />}
+          {token ? (
+            qrLoading ? (
+              <div className="h-full flex flex-col items-center justify-center text-slate-500">
+                <Loader2 className="animate-spin text-emerald-500 mb-4" size={48} />
+                <p className="font-bold uppercase tracking-widest text-sm">Decrypting Secure Link...</p>
+              </div>
+            ) : qrError ? (
+              <div className="h-full flex flex-col items-center justify-center text-center max-w-md mx-auto animate-in fade-in zoom-in-95 duration-500">
+                <div className="w-24 h-24 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6 ring-4 ring-red-50 border border-red-100">
+                  <ShieldCheck size={40} />
+                </div>
+                <h2 className="text-2xl font-black text-slate-800 mb-2">Access Denied</h2>
+                <p className="text-slate-500 mb-8 leading-relaxed font-medium">{qrError}</p>
+                <button 
+                  onClick={() => setSearchParams({})} 
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-8 py-3 rounded-xl font-bold transition-all shadow-sm"
+                >
+                  Return to Dashboard
+                </button>
+              </div>
+            ) : (
+              <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {/* Temporary Access Banner */}
+                <div className="bg-emerald-500 text-white p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between shadow-lg shadow-emerald-200 border border-emerald-400 gap-4">
+                  <div className="flex items-center gap-2 font-black tracking-wide"><ShieldCheck size={20} /> Temporary Emergency Access</div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button 
+                      id="save-patient-btn"
+                      onClick={handleSavePatient}
+                      className="flex items-center justify-center gap-1.5 font-bold bg-white text-emerald-600 px-4 py-1.5 rounded-lg text-sm tracking-wide shadow-sm hover:bg-emerald-50 hover:scale-105 active:scale-95 transition-all outline-none"
+                    >
+                      <Save size={16} /> Save to Practice
+                    </button>
+                    <div className="flex items-center gap-2 font-bold bg-white/20 px-3 py-1.5 rounded-lg text-sm tracking-widest shadow-inner">
+                      <Clock size={16} /> EXPIRES IN: {Math.floor(timeLeft/60).toString().padStart(2,'0')}:{(timeLeft%60).toString().padStart(2,'0')}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Profile Header */}
+                <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col sm:flex-row items-start sm:items-center gap-6 relative overflow-hidden">
+                   <div className="absolute -right-12 -top-12 w-48 h-48 bg-emerald-50 rounded-full blur-3xl pointer-events-none" />
+                   <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-black shrink-0 relative z-10 shadow-inner border border-emerald-200">{qrPatientData?.name?.[0] || 'P'}</div>
+                   <div className="relative z-10 flex-1 w-full">
+                     <h2 className="text-3xl font-black text-slate-800 mb-2">{qrPatientData?.name}</h2>
+                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-6 text-sm font-semibold text-slate-600 mt-4 border-t border-slate-100 pt-5">
+                       <div>
+                         <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1.5 flex items-center gap-1">ID / ABHA Number</span>
+                         <span className="text-slate-700">{qrPatientData?.abhaId || qrPatientData?.email || 'Identity Masked'}</span>
+                       </div>
+                       <div>
+                         <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1.5 flex items-center gap-1">Date of Birth / Age</span>
+                         <span className="text-slate-700">{qrPatientData?.dob || 'Unknown'} {qrPatientData?.age ? `(${qrPatientData.age}y)` : ''}</span>
+                       </div>
+                       <div>
+                         <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1.5 flex items-center gap-1">Blood Group</span>
+                         <span className="text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded-md inline-block border border-red-100">{qrPatientData?.bloodGroup || 'Not Typed'}</span>
+                       </div>
+                       <div>
+                         <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1.5 flex items-center gap-1">Gender</span>
+                         <span className="text-slate-700 capitalize">{qrPatientData?.gender || qrPatientData?.sex || 'Not Specified'}</span>
+                       </div>
+                       <div className="col-span-2">
+                         <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1.5 flex items-center gap-1">Address / Location</span>
+                         <span className="text-slate-700">{qrPatientData?.address || qrPatientData?.location || 'Location details restricted from vault'}</span>
+                       </div>
+                       <div className="col-span-2">
+                         <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1.5 flex items-center gap-1">Contact Information</span>
+                         <span className="text-slate-700">{qrPatientData?.mobile || qrPatientData?.phone || qrPatientData?.email || 'Contact details selectively hidden'}</span>
+                       </div>
+                     </div>
+                   </div>
+                   {qrPatientData?.emergencyContacts?.length > 0 && (
+                     <div className="sm:text-right mt-6 sm:mt-0 relative z-10 w-full sm:w-auto bg-red-50 sm:bg-transparent p-4 sm:p-0 rounded-2xl sm:border-l border-slate-200 sm:pl-8 sm:ml-4 flex flex-col justify-center">
+                        <span className="block text-[10px] uppercase font-black text-red-500 tracking-widest mb-1">Emergency SOS Contact</span>
+                        <div className="font-bold text-slate-800 text-lg mb-0.5">{qrPatientData.emergencyContacts[0].name}</div>
+                        <div className="text-sm font-bold text-slate-600 mb-1">{qrPatientData.emergencyContacts[0].phone}</div>
+                        <div className="text-xs font-semibold text-slate-400 capitalize bg-white sm:bg-slate-50 px-2 py-0.5 rounded inline-block w-max sm:ml-auto">{qrPatientData.emergencyContacts[0].relation}</div>
+                     </div>
+                   )}
+                </div>
+                
+                {/* Records Timeline */}
+                <div>
+                  <h3 className="font-black text-xl text-slate-800 flex items-center gap-2 mb-6 ml-2"><FileText className="text-emerald-500" /> Recent Medical History</h3>
+                  <div className="space-y-4">
+                     {qrRecords.length === 0 ? (
+                        <div className="text-center p-12 bg-white rounded-3xl border border-dashed border-slate-200 text-slate-500 shadow-sm font-medium">No records digitized in patient vault yet.</div>
+                     ) : (
+                        qrRecords.map(rec => (
+                          <div key={rec.id} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 md:items-center justify-between hover:border-emerald-200 hover:shadow-md transition-all group">
+                             <div className="flex items-start md:items-center gap-5">
+                                <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-emerald-50 group-hover:text-emerald-500 transition-colors"><FileText size={24} /></div>
+                                <div>
+                                  <h4 className="font-bold text-slate-800 text-base">{rec.name}</h4>
+                                  <div className="flex gap-3 text-xs font-semibold text-slate-400 mt-1">
+                                    <span>{rec.date}</span>
+                                    <span>{rec.size}</span>
+                                  </div>
+                                  {rec.aiSummary && <p className="text-sm font-medium text-slate-600 mt-2 line-clamp-2 leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">{rec.aiSummary.brief}</p>}
+                                </div>
+                             </div>
+                             <button onClick={() => rec.fileURL && window.open(rec.fileURL, '_blank')} className="bg-slate-50 hover:bg-emerald-50 text-slate-600 hover:text-emerald-600 border border-slate-100 hover:border-emerald-200 px-5 py-2.5 font-bold rounded-xl transition-all text-sm shrink-0 shadow-sm">
+                               View Full Report
+                             </button>
+                          </div>
+                        ))
+                     )}
+                  </div>
+                </div>
+              </div>
+            )
+          ) : (
+            <>
+              {activeTab === 'patients' && <PatientSearch />}
           
           {activeTab === 'appointments' && !isBooking && (
             <div className="flex flex-col h-full animate-in fade-in duration-500 max-w-5xl mx-auto w-full pt-6">
@@ -244,9 +489,61 @@ export default function DoctorDashboard() {
               <p className="text-lg font-medium text-slate-500">Feature in development</p>
             </div>
           )}
+            </>
+          )}
         </div>
 
       </main>
+
+      {/* QR Input Modal */}
+      {showQrModal && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200 border border-slate-100 relative">
+             <button onClick={() => setShowQrModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-50 transition-colors">
+               <X size={24} />
+             </button>
+             <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 ring-4 ring-emerald-50/50">
+               <QrCode size={32} />
+             </div>
+             <h3 className="text-2xl font-black text-center text-slate-800 mb-2">Scan Patient Check-in</h3>
+             <p className="text-center text-slate-500 mb-8 font-medium text-sm leading-relaxed px-2">Paste the secure emergency token or complete URL provided by the patient to decrypt their history.</p>
+             
+             <input 
+                type="text" 
+                autoFocus
+                placeholder="https://medivault.app/share/..." 
+                value={qrInputValue}
+                onChange={e => setQrInputValue(e.target.value)}
+                onKeyDown={e => {
+                   if(e.key === 'Enter') {
+                       const scanned = qrInputValue;
+                       const extToken = scanned.includes('token=') ? scanned.split('token=')[1].split('&')[0] : 
+                                       scanned.includes('/share/') ? scanned.split('/share/')[1] : scanned.trim();
+                       setSearchParams({ token: extToken });
+                       setShowQrModal(false);
+                       setQrInputValue('');
+                   }
+                }}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all text-sm font-medium"
+             />
+             
+             <button 
+                onClick={() => {
+                   if (!qrInputValue) return;
+                   const scanned = qrInputValue;
+                   const extToken = scanned.includes('token=') ? scanned.split('token=')[1].split('&')[0] : 
+                                   scanned.includes('/share/') ? scanned.split('/share/')[1] : scanned.trim();
+                   setSearchParams({ token: extToken });
+                   setShowQrModal(false);
+                   setQrInputValue('');
+                }}
+                className="w-full py-4 px-4 rounded-xl font-black text-white bg-emerald-500 hover:bg-emerald-600 transition-all shadow-md shadow-emerald-500/20 active:scale-95 text-base"
+             >
+                Decrypt & View Profile
+             </button>
+          </div>
+        </div>
+      )}
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (

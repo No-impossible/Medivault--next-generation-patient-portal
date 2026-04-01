@@ -85,7 +85,10 @@ export default function PatientConsultations() {
                      {consult.type === 'Online Video Consult' ? <Video size={16} className="text-blue-500" /> : <Building size={16} className="text-emerald-500" />}
                      {consult.type}
                   </div>
-                  <button className="text-indigo-600 font-bold text-sm bg-indigo-50 hover:bg-indigo-600 hover:text-white px-5 py-2 rounded-xl transition-all flex items-center gap-1 group-hover:shadow-md">
+                  <button 
+                    onClick={() => alert(`Opening details for ${consult.doctorName}`)}
+                    className="text-indigo-600 font-bold text-sm bg-indigo-50 hover:bg-indigo-600 hover:text-white px-5 py-2 rounded-xl transition-all flex items-center gap-1 group-hover:shadow-md"
+                  >
                     {consult.type === 'Online Video Consult' ? 'Join Call' : 'View Details'} <ChevronRight size={16} />
                   </button>
                 </div>

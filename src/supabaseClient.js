@@ -90,3 +90,45 @@ export const deletePatientRecord = async (recordId, fileURL) => {
     throw error;
   }
 };
+
+export const fetchConsultations = async (patientId) => {
+  try {
+    const { data, error } = await supabase
+      .from('consultations')
+      .select('*')
+      .eq('patientId', patientId);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching consultations:", error);
+    return [];
+  }
+};
+
+export const addConsultation = async (patientId, consultData) => {
+  try {
+    const { data, error } = await supabase
+      .from('consultations')
+      .insert([{ patientId, ...consultData }])
+      .select();
+    if (error) throw error;
+    return data[0];
+  } catch (error) {
+    console.error("Error adding consultation:", error);
+    throw error;
+  }
+};
+
+export const updatePatient = async (patientId, updates) => {
+  try {
+    const { data, error } = await supabase
+      .from('mock_abha_users')
+      .update(updates)
+      .eq('abhaId', patientId);
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Error updating patient:", error);
+    return false;
+  }
+};

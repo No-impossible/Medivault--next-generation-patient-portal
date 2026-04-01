@@ -11,8 +11,11 @@ import {
   ShieldCheck,
   Check,
   HeartPulse,
-  Phone
+  Phone,
+  X
 } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
+import { updatePatient } from '../supabaseClient';
 
 const Toggle = ({ enabled, onClick }) => (
   <button 
@@ -24,11 +27,42 @@ const Toggle = ({ enabled, onClick }) => (
 );
 
 export default function PatientSettings({ user }) {
-  const [notifications, setNotifications] = useState({
-    email: true,
-    sms: false,
-    app: true,
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`medivault_settings_${user?.id || 'guest'}`);
+      return saved ? JSON.parse(saved).notifications : { email: true, sms: false, app: true };
+    } catch {
+      return { email: true, sms: false, app: true };
+    }
   });
+
+  const { setUser } = useOutletContext();
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [newContact, setNewContact] = useState({ name: '', relation: '', phone: '' });
+
+  const handleAddContact = async () => {
+    if (!newContact.name || !newContact.phone) return alert('Name and Phone are required.');
+    
+    const updatedContacts = [...(user?.emergencyContacts || []), newContact];
+    const updatedUser = { ...user, emergencyContacts: updatedContacts };
+    
+    // Attempt DB Update if abhaid is linked
+    if (user?.isAbhaLinked && user?.abhaId) {
+       await updatePatient(user.abhaId, { emergencyContacts: updatedContacts });
+    }
+    
+    // Update local context/session
+    setUser(updatedUser);
+    localStorage.setItem('medivault_patient_session', JSON.stringify(updatedUser));
+    
+    setShowContactModal(false);
+    setNewContact({ name: '', relation: '', phone: '' });
+  };
+
+  const handleSave = () => {
+    localStorage.setItem(`medivault_settings_${user?.id || 'guest'}`, JSON.stringify({ notifications }));
+    alert('Preferences saved successfully!');
+  };
 
   const isAbhaLinked = !!user?.isAbhaLinked;
   const abhaId = user?.abhaId || 'Not Linked';
@@ -117,7 +151,7 @@ export default function PatientSettings({ user }) {
               </div>
             )}
             {!isAbhaLinked && (
-              <button className="bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg transition-all">
+              <button onClick={() => alert('Please contact MediVault support to link an ABHA ID after registration.')} className="bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg transition-all">
                 Connect ABHA ID
               </button>
             )}
@@ -159,7 +193,7 @@ export default function PatientSettings({ user }) {
               <p className="text-sm text-slate-500 italic col-span-2">No emergency contacts configured.</p>
             )}
           </div>
-          <button className="text-sm font-bold text-red-600 hover:text-red-700 mt-2 px-1">+ Add New Contact</button>
+          <button onClick={() => setShowContactModal(true)} className="text-sm font-bold text-red-600 hover:text-red-700 mt-2 px-1">+ Add New Contact</button>
         </div>
       </section>
 
@@ -201,18 +235,18 @@ export default function PatientSettings({ user }) {
             Security & Privacy
           </h3>
           <div className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+            <button onClick={() => alert('2FA Setup requires email verification. Link sent.')} className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
               <span className="text-sm font-bold text-slate-700">Two-Factor Authentication</span>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-emerald-600 font-bold uppercase tracking-wider">On</span>
                 <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
               </div>
             </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+            <button onClick={() => alert('FaceID/TouchID prompt initiated (simulated).')} className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
               <span className="text-sm font-bold text-slate-700">Biometric Login</span>
               <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+            <button onClick={() => alert('Opening data sharing center...')} className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
               <span className="text-sm font-bold text-slate-700">Data Sharing Permissions</span>
               <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -224,10 +258,39 @@ export default function PatientSettings({ user }) {
         <button className="px-6 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
           Cancel Changes
         </button>
-        <button className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-lg hover:bg-indigo-700 transition-all">
+        <button onClick={handleSave} className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-lg hover:bg-indigo-700 transition-all">
           Save Settings
         </button>
       </div>
+
+      {showContactModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setShowContactModal(false)} />
+          <div className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
+            <button onClick={() => setShowContactModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-50">
+              <X size={24} />
+            </button>
+            <h2 className="text-xl font-black text-slate-800 mb-6">Add Emergency Contact</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Full Name</label>
+                <input type="text" value={newContact.name} onChange={e => setNewContact({...newContact, name: e.target.value})} className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm" placeholder="e.g. Jane Doe" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Relation</label>
+                <input type="text" value={newContact.relation} onChange={e => setNewContact({...newContact, relation: e.target.value})} className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm" placeholder="e.g. Sister" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Phone Number</label>
+                <input type="tel" value={newContact.phone} onChange={e => setNewContact({...newContact, phone: e.target.value})} className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm" placeholder="e.g. +91 9876543210" />
+              </div>
+              <button onClick={handleAddContact} className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl mt-4 transition-colors">
+                Save Contact
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
