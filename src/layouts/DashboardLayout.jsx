@@ -11,7 +11,8 @@ import {
   X,
   Plus,
   ShieldAlert,
-  QrCode
+  QrCode,
+  FileText
 } from 'lucide-react';
 import { fetchConsultations } from '../supabaseClient';
 import ShareHistoryQR from '../components/ShareHistoryQR';
@@ -86,12 +87,13 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
     { name: 'Overview', path: `/dashboard/${role}`, icon: <LayoutDashboard size={20} /> },
     { name: role === 'patient' ? 'My Records' : 'Patients', path: `/dashboard/${role}/records`, icon: <FolderOpen size={20} /> },
     { name: 'Consultations', path: `/dashboard/${role}/consultations`, icon: <CalendarCheck size={20} /> },
+    ...(role === 'patient' ? [{ name: 'Prescriptions', path: '/dashboard/patient/prescriptions', icon: <FileText size={20} /> }] : []),
     { name: 'Settings', path: `/dashboard/${role}/settings`, icon: <Settings size={20} /> },
   ];
 
   const quickActions = [
     { name: 'Book Consult', icon: <Plus size={16} />, color: 'blue', action: () => navigate(`/dashboard/patient/book-consultation`) },
-    { name: 'Order Medicine', icon: <Plus size={16} />, color: 'teal', action: () => alert('Order Medicine capability incoming!') },
+    { name: 'Order Medicine', icon: <Plus size={16} />, color: 'teal', action: () => navigate(`/dashboard/patient/order-medicine`) },
   ];
 
   return (

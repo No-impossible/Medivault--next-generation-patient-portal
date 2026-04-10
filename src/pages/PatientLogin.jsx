@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, Languages, Globe } from 'lucide-react';
+import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, Languages, Globe, Loader2 } from 'lucide-react';
 
 import { fetchPatientByAbha } from '../services/healthService';
 
@@ -27,9 +27,12 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
   const [abhaIdInput, setAbhaIdInput] = useState('');
   const [loginError, setLoginError] = useState('');
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleAbhaLogin = async () => {
     try {
       setLoginError('');
+      setIsLoading(true);
       const patient = await fetchPatientByAbha(abhaIdInput.trim());
       onLoginSuccess({
         ...patient,
@@ -38,6 +41,8 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
       });
     } catch {
       setLoginError('Invalid ABHA ID or Patient not found');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -180,10 +185,18 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
               <button
                 type="button"
                 onClick={handleAbhaLogin}
-                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md hover:translate-y-[-1px] transition-all"
+                disabled={isLoading}
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md hover:translate-y-[-1px] transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
               >
-                Login
+                {isLoading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Checking...
+                  </>
+                ) : (
+                  'Login'
+                )}
               </button>
             </div>
             {loginError && <p className="text-xs text-red-500 mt-2 font-medium">{loginError}</p>}

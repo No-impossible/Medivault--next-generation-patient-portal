@@ -15,6 +15,8 @@ import PatientHealthScore from './pages/PatientHealthScore';
 import HospitalView from './pages/HospitalView';
 import PatientConsultations from './pages/PatientConsultations';
 import PatientBookConsultation from './pages/PatientBookConsultation';
+import PatientOrderMedicine from './pages/PatientOrderMedicine';
+import PatientPrescriptions from './pages/PatientPrescriptions';
 import DashboardLayout from './layouts/DashboardLayout';
 
 export default function App() {
@@ -108,8 +110,10 @@ export default function App() {
         <Route path="patient" element={<PatientDashboard user={user} />} />
         <Route path="patient/records" element={<PatientRecords />} />
         <Route path="patient/health-score" element={<PatientHealthScore />} />
+        <Route path="patient/prescriptions" element={<PatientPrescriptions />} />
         <Route path="patient/consultations" element={<PatientConsultations />} />
         <Route path="patient/book-consultation" element={<PatientBookConsultation />} />
+        <Route path="patient/order-medicine" element={<PatientOrderMedicine />} />
         <Route path="patient/settings" element={<PatientSettings user={user} />} />
       </Route>
 

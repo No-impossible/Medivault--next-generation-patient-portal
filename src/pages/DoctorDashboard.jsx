@@ -25,8 +25,14 @@ import AppointmentCalendar from '../components/doctor/AppointmentCalendar';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const doctorData = location.state || {
+  const getStoredDoctor = () => {
+    try {
+       const str = localStorage.getItem('medivault_doctor_session');
+       return str ? JSON.parse(str) : null;
+    } catch { return null; }
+  };
+
+  const doctorData = location.state || getStoredDoctor() || {
     name: 'Dr. Sarah Jenkins',
     email: 'sarah@example.com',
     specialization: 'Cardiologist'
@@ -185,120 +191,121 @@ export default function DoctorDashboard() {
     <div className="flex h-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
       
       {/* Sidebar sidebar bg-white dark:bg-slate-900 */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col transition-all duration-300">
-        <div className="h-20 flex items-center px-6 border-b border-slate-800">
-          <div className="flex items-center gap-2 text-emerald-400 cursor-pointer" onClick={() => navigate('/')}>
-            <Stethoscope size={28} />
-            <span className="text-xl font-bold text-white tracking-wide">Medivault</span>
+      <aside className="w-72 bg-gradient-to-b from-slate-900 to-slate-950 text-slate-300 flex flex-col transition-all duration-300 shadow-2xl z-20 border-r border-slate-800">
+        <div className="h-24 flex items-center px-8 border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="flex items-center gap-3 text-emerald-400 cursor-pointer relative z-10 group" onClick={() => navigate('/')}>
+            <div className="p-2.5 bg-emerald-500/10 rounded-2xl group-hover:bg-emerald-500/20 transition-all border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+              <Stethoscope size={28} className="drop-shadow-sm group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <span className="text-2xl font-black text-white tracking-wide">Medi<span className="text-emerald-400">Vault</span></span>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-4">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-2">Main Menu</p>
+        <div className="flex-1 overflow-y-auto py-8 flex flex-col gap-3 px-5 custom-scrollbar">
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 px-3">Practice Management</p>
           
           <button 
             onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); }}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'patients' && !token ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'patients' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
-            <div className="flex items-center gap-3">
-              <Users size={20} />
-              <span className="font-medium">Patient Records</span>
+            <div className="flex items-center gap-3.5">
+              <Users size={20} className={activeTab === 'patients' && !token ? 'text-emerald-100' : 'text-slate-400'} />
+              <span>Patient Records</span>
             </div>
-            {activeTab === 'patients' && !token && <ChevronRight size={16} />}
+            {activeTab === 'patients' && !token && <ChevronRight size={16} className="text-emerald-100" />}
           </button>
 
           <button 
             onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); }}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'appointments' && !token ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'appointments' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
-            <div className="flex items-center gap-3">
-              <Calendar size={20} />
-              <span className="font-medium">Appointments</span>
+            <div className="flex items-center gap-3.5">
+              <Calendar size={20} className={activeTab === 'appointments' && !token ? 'text-emerald-100' : 'text-slate-400'} />
+              <span>Appointments</span>
             </div>
-            {activeTab === 'appointments' && !token && <ChevronRight size={16} />}
+            {activeTab === 'appointments' && !token && <ChevronRight size={16} className="text-emerald-100" />}
           </button>
 
           <button 
             onClick={() => { setActiveTab('prescriptions'); setIsBooking(false); setSearchParams({}); }}
-            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${activeTab === 'prescriptions' && !token ? 'bg-emerald-500/10 text-emerald-400' : 'hover:bg-slate-800 hover:text-white'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'prescriptions' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
-            <div className="flex items-center gap-3">
-              <FileText size={20} />
-              <span className="font-medium">Prescriptions</span>
+            <div className="flex items-center gap-3.5">
+              <FileText size={20} className={activeTab === 'prescriptions' && !token ? 'text-emerald-100' : 'text-slate-400'} />
+              <span>Prescriptions</span>
             </div>
-            {activeTab === 'prescriptions' && !token && <ChevronRight size={16} />}
+            {activeTab === 'prescriptions' && !token && <ChevronRight size={16} className="text-emerald-100" />}
           </button>
         </div>
 
-        <div className="p-4 border-t border-slate-800">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl hover:bg-slate-800 transition-all text-slate-400 hover:text-white">
+        <div className="p-5 border-t border-slate-800/80 bg-slate-900/50 backdrop-blur-sm">
+          <button className="flex items-center gap-3.5 px-5 py-3.5 w-full rounded-2xl hover:bg-slate-800 transition-all text-slate-400 hover:text-white border border-transparent">
             <Settings size={20} />
-            <span className="font-medium">Settings</span>
+            <span className="font-bold text-sm">Provider Settings</span>
           </button>
           <button 
             onClick={() => setShowLogoutConfirm(true)}
-            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-all mt-2"
+            className="flex items-center gap-3.5 px-5 py-3.5 w-full rounded-2xl hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-all mt-2 border border-transparent group"
           >
-            <LogOut size={20} />
-            <span className="font-medium">Logout</span>
+            <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
+            <span className="font-bold text-sm">Secure Logout</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col relative overflow-hidden">
+      <main className="flex-1 flex flex-col relative overflow-hidden bg-slate-50">
         
         {/* Top Header */}
-        <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 z-10">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-800">
+        <header className="h-24 bg-white/80 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-8 sm:px-12 z-10 sticky top-0 shadow-sm">
+          <div className="animate-in fade-in slide-in-from-left-4 duration-500">
+            <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-800 drop-shadow-sm mb-1">
               {token ? 'Emergency Access View' : (
-                activeTab === 'patients' ? 'Patient Records Library' :
-                activeTab === 'appointments' ? "Today's Appointments" :
+                activeTab === 'patients' ? 'Patient Vault & Records' :
+                activeTab === 'appointments' ? "Today's Clinical Schedule" :
                 'Manage Prescriptions'
               )}
             </h1>
-            <p className="text-sm text-slate-500">Welcome back, {doctorData.name}</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+              {doctorData.name} / Provider Access
+            </p>
           </div>
 
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-4 sm:gap-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <button 
               onClick={() => setShowQrModal(true)}
-              className="flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-full font-bold text-xs transition-all hover:-translate-y-0.5"
+              className="flex items-center gap-2 bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white px-5 py-2.5 rounded-xl font-black text-sm transition-all duration-300 shadow-sm hover:shadow-emerald-500/25 border border-emerald-100 hover:border-emerald-500 hover:-translate-y-0.5"
             >
-              <QrCode size={16} />
+              <QrCode size={18} />
               <span className="hidden sm:inline">Scan Patient QR</span>
             </button>
 
-            <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <div className="relative hidden xl:block">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
-                placeholder="Quick search..." 
-                className="pl-10 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:border-emerald-400 focus:bg-white focus:ring-2 focus:ring-emerald-400/20 transition-all w-48 lg:w-64"
+                placeholder="Global vault search..." 
+                className="pl-12 pr-4 py-2.5 bg-slate-100 hover:bg-slate-200/50 border-transparent rounded-xl text-sm font-semibold focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-400/10 transition-all w-48 xl:w-72 outline-none text-slate-700 placeholder-slate-400"
               />
             </div>
 
-            <button className="relative p-2 text-slate-400 hover:text-slate-800 transition-colors">
-              <Bell size={24} />
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-
-            <div className="flex items-center gap-3 pl-6 border-l border-gray-200 cursor-pointer">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold border border-emerald-200">
-                {initials}
+            <div className="flex items-center gap-4 pl-4 sm:pl-8 border-l border-gray-200 h-10 cursor-pointer group">
+              <div className="text-right hidden md:block">
+                <p className="text-sm font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">{doctorData.name}</p>
+                <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mt-0.5">{doctorData.specialization}</p>
               </div>
-              <div className="hidden md:block">
-                <p className="text-sm font-semibold text-slate-800">{doctorData.name}</p>
-                <p className="text-xs text-slate-500">{doctorData.specialization}</p>
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 flex items-center justify-center text-emerald-600 font-black text-lg border-2 border-white shadow-md ring-2 ring-emerald-50 group-hover:ring-emerald-200 transition-all">
+                {initials}
               </div>
             </div>
           </div>
         </header>
 
         {/* Dynamic View */}
-        <div className="flex-1 overflow-y-auto p-8 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-blue-50/50 pointer-events-none -z-10"></div>
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-12 relative custom-scrollbar">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-50 via-slate-50 to-slate-50 pointer-events-none -z-10"></div>
           
           {token ? (
             qrLoading ? (
@@ -414,7 +421,7 @@ export default function DoctorDashboard() {
             )
           ) : (
             <>
-              {activeTab === 'patients' && <PatientSearch />}
+              {activeTab === 'patients' && <PatientSearch onScanClick={() => setShowQrModal(true)} />}
           
           {activeTab === 'appointments' && !isBooking && (
             <div className="flex flex-col h-full animate-in fade-in duration-500 max-w-5xl mx-auto w-full pt-6">

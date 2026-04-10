@@ -87,10 +87,14 @@ export default function PatientRecords() {
         aiSummary: mockAISummary
       };
 
-      // Save to Firestore
+      // Save to Firestore / Supabase
       let savedId = Date.now().toString();
       if (user?.id) {
-         savedId = await addPatientRecord(user.id, newRecordData);
+         try {
+           savedId = await addPatientRecord(user.id, newRecordData);
+         } catch (dbErr) {
+           console.error("Failed to add to database, using local id:", dbErr);
+         }
       }
       
       const newRecord = { id: savedId, ...newRecordData };

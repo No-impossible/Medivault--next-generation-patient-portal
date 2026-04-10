@@ -160,6 +160,9 @@ export default function DoctorLogin() {
       }
     }
 
+    // Persist login session
+    localStorage.setItem('medivault_doctor_session', JSON.stringify(doctorData));
+
     navigate('/doctor/dashboard', { state: doctorData });
   };
 

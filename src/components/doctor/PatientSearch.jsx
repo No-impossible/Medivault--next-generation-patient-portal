@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Loader2, AlertCircle, QrCode } from 'lucide-react';
 import PatientRecordView from './PatientRecordView';
 
-export default function PatientSearch() {
+export default function PatientSearch({ onScanClick }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [isScanningQR, setIsScanningQR] = useState(false);
@@ -28,9 +28,13 @@ export default function PatientSearch() {
   };
 
   const handleScanQR = () => {
+    if (onScanClick) {
+      onScanClick();
+      return;
+    }
+    // Fallback if not injected (e.g. static tests)
     setIsScanningQR(true);
     setError('');
-    // Simulate 2.5s scanning process
     setTimeout(() => {
       setIsScanningQR(false);
       setPatientData(mockPatient);

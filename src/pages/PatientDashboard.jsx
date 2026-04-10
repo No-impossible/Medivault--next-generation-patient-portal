@@ -208,4 +208,3 @@ export default function PatientDashboard({ user }) {
     </div>
   );
 }
-
