@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Search, Loader2, AlertCircle, QrCode } from 'lucide-react';
 import PatientRecordView from './PatientRecordView';
+import { supabase } from '../../supabaseClient';
 
-export default function PatientSearch({ onScanClick }) {
+export default function PatientSearch({ onScanClick, onSavePatient }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [isScanningQR, setIsScanningQR] = useState(false);
   const [patientData, setPatientData] = useState(null);
   const [error, setError] = useState('');
 
@@ -27,21 +27,7 @@ export default function PatientSearch({ onScanClick }) {
     }
   };
 
-  const handleScanQR = () => {
-    if (onScanClick) {
-      onScanClick();
-      return;
-    }
-    // Fallback if not injected (e.g. static tests)
-    setIsScanningQR(true);
-    setError('');
-    setTimeout(() => {
-      setIsScanningQR(false);
-      setPatientData(mockPatient);
-    }, 2500);
-  };
-
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
@@ -49,138 +35,143 @@ export default function PatientSearch({ onScanClick }) {
     setError('');
     setPatientData(null);
 
-    // Mock API call to fetch patient records
-    setTimeout(() => {
-      setIsSearching(false);
-      
+    try {
       if (searchQuery.length < 3) {
         setError('Please enter at least 3 characters to search.');
+        setIsSearching(false);
         return;
       }
 
-      if (searchQuery.toLowerCase().includes('unknown')) {
-        setError('No patient found with the given ABHA ID or Name.');
-        return;
-      }
+      // Actual backend search query using Supabase.
+      // We look up by ABHA ID or partial name match.
+      const { data, error: dbError } = await supabase
+        .from('mock_abha_users')
+        .select('*')
+        .or(`abhaId.ilike.%${searchQuery}%,name.ilike.%${searchQuery}%`)
+        .limit(1);
 
-      setPatientData(mockPatient);
+      if (dbError) throw dbError;
+
+      if (data && data.length > 0) {
+        const p = data[0];
+        
+        let age = 42; // default fallback
+        if (p.dob) {
+          const birthYear = new Date(p.dob).getFullYear();
+          age = new Date().getFullYear() - birthYear;
+        }
+
+        setPatientData({
+          id: p.id || p.abhaId,
+          abhaId: p.abhaId,
+          name: p.name,
+          age: age,
+          gender: p.gender || 'Not specified',
+          bloodGroup: p.bloodGroup || 'Not specified',
+          phone: p.mobile || 'Not specified',
+          email: p.email || 'Not specified',
+          address: p.address || 'Not specified',
+          allergies: ['None reported'],
+          chronicConditions: ['None reported'],
+          emergencyContact: {
+            name: 'Emergency Contact',
+            phone: 'Not provided'
+          }
+        });
+      } else {
+        setError('No patient found with the given ABHA ID or Name in the backend database.');
+      }
       
-    }, 1500);
+    } catch (err) {
+      console.error('Fetch Patient Error:', err);
+      setError('A database error occurred while fetching real patient records.');
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
     <div className="flex flex-col h-full animate-in fade-in duration-500">
       
-      {/* Search Header Area */}
-      {!patientData && !isScanningQR && (
-        <div className="max-w-2xl mx-auto w-full mt-10">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-slate-800 mb-4">Patient Lookup</h2>
-            <p className="text-slate-600">Enter a Patient Name or ABHA ID to securely fetch their medical records and history.</p>
+      {/* Search Header Area Overlay (Hero Section) */}
+      {!patientData && (
+        <div className="w-full mt-2 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto">
+          <div className="relative w-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/20 mb-8" style={{ minHeight: '340px' }}>
+             {/* Background Image */}
+             <div className="absolute inset-0 bg-slate-900 group">
+                <img src="/patient_search_hero.png" className="w-full h-full object-cover opacity-80" alt="Beautiful Medical Background" />
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-900/60 via-emerald-900/40 to-slate-900/80"></div>
+             </div>
+             
+             {/* Content */}
+             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-md tracking-tight">Patient Lookup Center</h2>
+                <p className="text-emerald-50 max-w-xl text-sm md:text-base font-medium drop-shadow mb-8 leading-relaxed">Securely retrieve and access comprehensive medical histories, verified prescriptions, and health timelines instantly via ABHA network.</p>
+                
+                <form onSubmit={handleSearch} className="relative group w-full max-w-2xl px-2">
+                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-emerald-500 group-focus-within:text-emerald-600 transition-colors z-10">
+                    <Search size={22} />
+                  </div>
+                  <input
+                    type="text"
+                    className="block w-full pl-14 pr-40 py-5 border-4 border-white/25 rounded-2xl leading-5 bg-white/95 backdrop-blur-md placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/30 sm:text-lg transition-all shadow-2xl text-slate-800 font-medium"
+                    placeholder="e.g. 91-2345-6789-1023 or Patient Name..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <div className="absolute inset-y-2 right-4 flex items-center z-10">
+                    <button
+                      type="submit"
+                      disabled={isSearching}
+                      className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 focus:ring-4 focus:ring-emerald-300 text-white rounded-xl px-6 py-3 font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95"
+                    >
+                      {isSearching ? <Loader2 className="animate-spin" size={20} /> : 'Fetch Records'}
+                    </button>
+                  </div>
+                </form>
+             </div>
           </div>
-
-          <form onSubmit={handleSearch} className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-emerald-500 group-focus-within:text-emerald-600 transition-colors">
-              <Search size={22} />
-            </div>
-            <input
-              type="text"
-              className="block w-full pl-12 pr-32 py-5 border-2 border-emerald-100 rounded-2xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 sm:text-lg transition-all shadow-sm group-hover:shadow-md"
-              placeholder="e.g. 91-2345-6789-1023 or Arjun..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <div className="absolute inset-y-2 right-2 flex items-center">
-              <button
-                type="submit"
-                disabled={isSearching}
-                className="bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-300 text-white rounded-xl px-6 py-3 font-semibold transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {isSearching ? <Loader2 className="animate-spin" size={20} /> : 'Fetch Records'}
-              </button>
-            </div>
-          </form>
-
-          <div className="mt-8 flex items-center justify-center">
-            <div className="h-px bg-slate-200 w-full max-w-[60px]"></div>
-            <span className="px-4 text-xs font-bold text-slate-400 tracking-wider">OR</span>
-            <div className="h-px bg-slate-200 w-full max-w-[60px]"></div>
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={handleScanQR}
-              className="group flex flex-col items-center justify-center gap-3 w-48 h-40 bg-white border-2 border-dashed border-emerald-300 rounded-3xl text-emerald-600 hover:bg-emerald-50 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-emerald-100"
-            >
-              <QrCode size={40} className="text-emerald-500 group-hover:scale-110 transition-transform" />
-              <span className="font-bold text-sm">Scan QR Code</span>
-            </button>
-          </div>
-
+          
           {error && (
-            <div className="mt-6 flex items-start gap-3 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 animate-in slide-in-from-top-2">
+            <div className="max-w-2xl mx-auto flex items-start gap-3 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 animate-in slide-in-from-top-2 shadow-sm mb-4">
               <AlertCircle className="shrink-0" size={20} />
               <p className="text-sm font-medium">{error}</p>
             </div>
           )}
 
-          <div className="mt-8 text-center text-sm text-slate-500 flex items-center justify-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-            Consent-based access via ABDM
-          </div>
-        </div>
-      )}
-
-      {/* QR Scanning UI */}
-      {isScanningQR && (
-        <div className="max-w-md mx-auto w-full mt-16 p-8 bg-white rounded-3xl shadow-lg border border-slate-100 flex flex-col items-center animate-in zoom-in-95 duration-300">
-          <style>{`
-            @keyframes scan {
-              0% { top: 0; }
-              50% { top: 100%; }
-              100% { top: 0; }
-            }
-          `}</style>
-          <h3 className="text-2xl font-black text-slate-800 mb-8">Scanning Patient QR</h3>
-          <div className="relative w-56 h-56 bg-emerald-50/50 border-4 border-emerald-500/30 rounded-3xl flex items-center justify-center overflow-hidden mb-8 shadow-inner shadow-emerald-500/10">
-            <QrCode size={96} className="text-emerald-500/30" />
-            <div className="absolute left-0 w-full h-1 bg-emerald-500 shadow-[0_0_15px_3px_rgba(16,185,129,0.8)] animate-[scan_2s_ease-in-out_infinite]"></div>
-            
-            {/* Corner Markers */}
-            <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-emerald-500 rounded-tl-2xl"></div>
-            <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-emerald-500 rounded-tr-2xl"></div>
-            <div className="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-emerald-500 rounded-bl-2xl"></div>
-            <div className="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-emerald-500 rounded-br-2xl"></div>
-          </div>
-          
-          <div className="flex items-center gap-3 text-emerald-600 font-bold mb-6">
-            <Loader2 size={20} className="animate-spin" />
-            <span>Align QR code within frame...</span>
-          </div>
-
-          <button 
-            type="button"
-            onClick={() => setIsScanningQR(false)}
-            className="px-6 py-2.5 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 font-semibold transition-all shadow-sm"
-          >
-            Cancel Scan
-          </button>
+          {!error && (
+            <div className="text-center text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center gap-2 font-semibold">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+              Consent-based access active via ABDM Global Network
+            </div>
+          )}
         </div>
       )}
 
       {/* Patient Data View */}
       {patientData && (
         <div className="flex-1 flex flex-col h-full animate-in slide-in-from-bottom-4 duration-500">
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-[#1e1e1e] p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm animate-in slide-in-from-top-4">
             <button 
               onClick={() => setPatientData(null)}
-              className="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-2 bg-emerald-50 hover:bg-emerald-100 px-4 py-2 rounded-lg transition-colors"
+              className="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 px-5 py-2.5 rounded-xl transition-all shadow-sm"
             >
-              ← Back to Search
+              ← Back to Lookup
             </button>
-            <div className="flex items-center gap-2 text-sm text-slate-500 bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
-              Current Patient Context: <span className="font-bold text-slate-800">{patientData.abhaId}</span>
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-bold">
+                Lookup Context: <span className="text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg">{patientData.abhaId}</span>
+              </div>
+              {onSavePatient && (
+                <button 
+                  id="search-save-patient-btn"
+                  onClick={() => onSavePatient(patientData, 'search-save-patient-btn')}
+                  className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg hover:scale-105 active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+                  Save Profile
+                </button>
+              )}
             </div>
           </div>
           

@@ -113,11 +113,11 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/dashboard/${role}`)}>
-            <div className={`text-${role === 'patient' ? '[#1E40AF]' : '[#14B8A6]'}`}>
-              <Heart fill="currentColor" size={28} />
+          <div className="flex items-center gap-3 cursor-pointer relative z-10 group" onClick={() => navigate(`/dashboard/${role}`)}>
+            <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
+              <Heart className="h-5 w-5 text-white" fill="currentColor" />
             </div>
-            <span className="text-xl font-bold text-slate-800">MediVault</span>
+            <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
           </div>
           <button className="md:hidden text-slate-500" onClick={() => setIsSidebarOpen(false)}>
             <X size={24} />

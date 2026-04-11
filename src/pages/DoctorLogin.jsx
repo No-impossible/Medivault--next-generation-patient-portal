@@ -172,13 +172,13 @@ export default function DoctorLogin() {
         
         {/* Header Section */}
         <div 
-          className="flex justify-center items-center gap-2 cursor-pointer mb-6 transform hover:scale-105 transition-all w-max mx-auto"
+          className="flex justify-center items-center gap-3 cursor-pointer mb-6 transform hover:scale-105 transition-all w-max mx-auto group"
           onClick={() => navigate('/')}
         >
-          <div className="text-[#1E40AF]">
-            <Heart fill="currentColor" size={32} />
+          <div className="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center transition-all duration-300 shadow-sm group-hover:rotate-3 shadow-indigo-600/30">
+            <Heart className="h-5 w-5 text-white" fill="currentColor" />
           </div>
-          <span className="text-3xl font-bold text-slate-800 tracking-tight">
+          <span className="text-3xl font-black text-slate-800 tracking-tight">
             MediVault
           </span>
         </div>
@@ -285,21 +285,44 @@ export default function DoctorLogin() {
                   </div>
                 </div>
 
-                {/* Location */}
+                {/* License Number (Moved here) */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700">Clinic / Hospital Location</label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <MapPin className="h-5 w-5 text-slate-400" />
+                  <label className="block text-sm font-semibold text-slate-700">Medical License Number</label>
+                  <div className="flex gap-2 mt-1">
+                    <div className="relative flex-1 rounded-md shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <ShieldCheck className="h-5 w-5 text-slate-400" />
+                      </div>
+                      <input
+                        type="text"
+                        required
+                        value={licenseNumber}
+                        onChange={(e) => { setLicenseNumber(e.target.value); setLicenseVerified(false); }}
+                        className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none uppercase"
+                        placeholder="e.g. MCI/12/34567"
+                      />
+                      {licenseVerified && (
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in zoom-in duration-300">
+                          <CheckCircle2 size={18} />
+                        </div>
+                      )}
                     </div>
-                    <input
-                      type="text"
-                      required
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
-                      placeholder="e.g. Apollo Hospital, Bangalore"
-                    />
+
+                    <button 
+                      type="button" 
+                      onClick={handleVerifyLicense}
+                      disabled={isVerifyingLicense || licenseVerified || !licenseNumber}
+                      className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
+                        ${licenseVerified 
+                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 opacity-80 cursor-default' 
+                          : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:bg-slate-100'}
+                        ${isVerifyingLicense ? 'opacity-70 cursor-wait' : ''}
+                      `}
+                    >
+                      {isVerifyingLicense && <Loader2 size={16} className="animate-spin" />}
+                      {!isVerifyingLicense && licenseVerified && <span>Verified</span>}
+                      {!isVerifyingLicense && !licenseVerified && <span>Verify</span>}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -352,45 +375,22 @@ export default function DoctorLogin() {
               </div>
             </div>
 
-            {/* License Number with optional inline Verify */}
+            {/* Clinic Location (Moved here) */}
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-semibold text-slate-700">Medical License Number</label>
-                <div className="flex gap-2 mt-1">
-                  <div className="relative flex-1 rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <ShieldCheck className="h-5 w-5 text-slate-400" />
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={licenseNumber}
-                      onChange={(e) => { setLicenseNumber(e.target.value); setLicenseVerified(false); }}
-                      className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none uppercase"
-                      placeholder="e.g. MCI/12/34567"
-                    />
-                    {licenseVerified && (
-                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in zoom-in duration-300">
-                        <CheckCircle2 size={18} />
-                      </div>
-                    )}
+              <div className="animate-in fade-in duration-300">
+                <label className="block text-sm font-semibold text-slate-700">Clinic / Hospital Location</label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MapPin className="h-5 w-5 text-slate-400" />
                   </div>
-
-                  <button 
-                    type="button" 
-                    onClick={handleVerifyLicense}
-                    disabled={isVerifyingLicense || licenseVerified || !licenseNumber}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
-                      ${licenseVerified 
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 opacity-80 cursor-default' 
-                        : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:bg-slate-100'}
-                      ${isVerifyingLicense ? 'opacity-70 cursor-wait' : ''}
-                    `}
-                  >
-                    {isVerifyingLicense && <Loader2 size={16} className="animate-spin" />}
-                    {!isVerifyingLicense && licenseVerified && <span>Verified</span>}
-                    {!isVerifyingLicense && !licenseVerified && <span>Verify</span>}
-                  </button>
+                  <input
+                    type="text"
+                    required
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
+                    placeholder="e.g. Apollo Hospital, Bangalore"
+                  />
                 </div>
               </div>
             )}
@@ -422,7 +422,7 @@ export default function DoctorLogin() {
               </div>
               
               {/* Password Dynamic Constraints UI */}
-              {!isLogin && (
+              {!isLogin && showConfirmPassword && (
                 <div className="mt-3 grid grid-cols-2 gap-2 px-1">
                   <div className={`flex items-center gap-1.5 text-xs font-semibold ${hasMinLength ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
                     <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasMinLength ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-slate-100'}`}>
