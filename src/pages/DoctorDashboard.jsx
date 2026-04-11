@@ -16,7 +16,8 @@ import {
   QrCode,
   X,
   Save,
-  UserCheck
+  UserCheck,
+  Heart
 } from 'lucide-react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { supabase, fetchPatientRecords } from '../supabaseClient';
@@ -26,6 +27,7 @@ import PatientRecordView from '../components/doctor/PatientRecordView';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const getStoredDoctor = () => {
     try {
        const str = localStorage.getItem('medivault_doctor_session');
@@ -67,29 +69,29 @@ export default function DoctorDashboard() {
   const [qrError, setQrError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
 
-  const handleSavePatient = () => {
-    if (!qrPatientData) return;
+  const handleSavePatient = (patientObj = qrPatientData, buttonId = 'save-patient-btn') => {
+    if (!patientObj) return;
     const existingSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]');
-    if (!existingSaved.some(p => p.abhaId === qrPatientData.abhaId)) {
+    if (!existingSaved.some(p => p.abhaId === patientObj.abhaId)) {
         existingSaved.push({
-            name: qrPatientData.name,
-            abhaId: qrPatientData.abhaId,
-            dob: qrPatientData.dob,
-            age: qrPatientData.age,
-            bloodGroup: qrPatientData.bloodGroup,
-            gender: qrPatientData.gender,
-            contact: qrPatientData.phone || qrPatientData.email,
-            phone: qrPatientData.phone,
-            email: qrPatientData.email,
-            address: qrPatientData.address,
-            allergies: qrPatientData.allergies,
-            chronicConditions: qrPatientData.chronicConditions,
+            name: patientObj.name,
+            abhaId: patientObj.abhaId,
+            dob: patientObj.dob,
+            age: patientObj.age,
+            bloodGroup: patientObj.bloodGroup,
+            gender: patientObj.gender,
+            contact: patientObj.phone || patientObj.email,
+            phone: patientObj.phone,
+            email: patientObj.email,
+            address: patientObj.address,
+            allergies: patientObj.allergies,
+            chronicConditions: patientObj.chronicConditions,
             savedAt: new Date().toISOString()
         });
         localStorage.setItem(`medivault_saved_${doctorData.email}`, JSON.stringify(existingSaved));
     }
     // Simple visual feedback
-    const btn = document.getElementById('save-patient-btn');
+    const btn = document.getElementById(buttonId);
     if (btn) {
        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check w-4 h-4"><polyline points="20 6 9 17 4 12"/></svg> Saved!`;
        btn.classList.add('bg-emerald-100', 'text-emerald-700');
@@ -205,8 +207,8 @@ export default function DoctorDashboard() {
         <div className="h-24 flex items-center px-8 border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-sm relative overflow-hidden">
           <div className="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
           <div className="flex items-center gap-3 text-emerald-400 cursor-pointer relative z-10 group" onClick={() => navigate('/')}>
-            <div className="p-2.5 bg-emerald-500/10 rounded-2xl group-hover:bg-emerald-500/20 transition-all border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-              <Stethoscope size={28} className="drop-shadow-sm group-hover:scale-110 transition-transform duration-300" />
+            <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-emerald-500/20">
+              <Heart className="h-5 w-5 text-white" fill="currentColor" />
             </div>
             <span className="text-2xl font-black text-white tracking-wide">Medi<span className="text-emerald-400">Vault</span></span>
           </div>
@@ -443,7 +445,7 @@ export default function DoctorDashboard() {
             )
           ) : (
             <>
-              {activeTab === 'lookup' && <PatientSearch onScanClick={() => setShowQrModal(true)} />}
+              {activeTab === 'lookup' && <PatientSearch onScanClick={() => setShowQrModal(true)} onSavePatient={handleSavePatient} />}
 
               {activeTab === 'patients' && (
                 <div className="flex flex-col h-full animate-in fade-in duration-500 max-w-5xl mx-auto w-full pt-6">

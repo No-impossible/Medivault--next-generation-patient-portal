@@ -175,9 +175,11 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
           Back to Home
         </button>
 
-        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <Heart fill="#7C83FD" size={22} className="text-indigo-500" />
-          <span className="text-xl font-bold text-slate-800">MediVault</span>
+        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
+            <Heart className="h-5 w-5 text-white" fill="currentColor" />
+          </div>
+          <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
         </div>
 
         <div className="w-64 h-64 mb-8 rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: '0 25px 60px rgba(124,131,253,0.35)' }}>
@@ -220,9 +222,11 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
 
         <div className="w-full max-w-lg">
           <div className="mb-6">
-            <div className="flex items-center gap-2 mb-1 lg:hidden">
-              <Heart fill="#7C83FD" size={20} />
-              <span className="text-lg font-bold text-slate-800">MediVault</span>
+            <div className="flex items-center gap-2 mb-2 lg:hidden">
+              <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center shadow-sm">
+                <Heart className="h-4 w-4 text-white" fill="currentColor" />
+              </div>
+              <span className="text-xl font-bold text-slate-800 tracking-tight">MediVault</span>
             </div>
             <h1 className="text-3xl font-black text-slate-900">Create Account</h1>
             <p className="text-slate-500 mt-1 text-sm">Join MediVault to manage your health digitally.</p>
