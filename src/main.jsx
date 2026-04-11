@@ -5,10 +5,14 @@ import './index.css'
 import App from './App.jsx'
 import './i18n'
 
+import { ThemeProvider } from 'next-themes'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </StrictMode>,
 )

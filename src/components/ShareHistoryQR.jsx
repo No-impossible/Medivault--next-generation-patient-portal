@@ -91,10 +91,10 @@ export default function ShareHistoryQR({ user, onClose }) {
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 border border-blue-100 flex flex-col items-center">
+      <div className="relative bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 border border-blue-100 flex flex-col items-center">
         <button 
           onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-50 transition-colors"
+          className="absolute top-6 right-6 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] transition-colors"
         >
           <X size={24} />
         </button>
@@ -103,8 +103,8 @@ export default function ShareHistoryQR({ user, onClose }) {
           <QrCode size={32} />
         </div>
         
-        <h2 className="text-xl font-black text-slate-800 text-center mb-1">Emergency Check-in</h2>
-        <p className="text-slate-500 text-center text-sm mb-6 leading-relaxed">
+        <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 text-center mb-1">Emergency Check-in</h2>
+        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-center text-sm mb-6 leading-relaxed">
           Show this QR code to the hospital staff to instantly grant temporary access to your medical history.
         </p>
         
@@ -122,36 +122,36 @@ export default function ShareHistoryQR({ user, onClose }) {
           </div>
         ) : (
           <>
-            <div className="bg-white border-4 border-blue-500 p-4 rounded-[2rem] shadow-lg mb-4 flex justify-center w-full max-w-[240px]">
+            <div className="bg-white dark:bg-[#1e1e1e] border-4 border-blue-500 p-4 rounded-[2rem] shadow-lg mb-4 flex justify-center w-full max-w-[240px]">
                <QRCodeComponent value={qrUrl} size={180} fgColor="#0F172A" />
             </div>
             
-            <div className="w-full flex items-center gap-2 bg-slate-50 border border-slate-200 p-2 rounded-xl mb-6 shadow-inner">
+            <div className="w-full flex items-center gap-2 bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 p-2 rounded-xl mb-6 shadow-inner">
                <input 
                  readOnly 
                  value={qrUrl} 
-                 className="bg-transparent flex-1 text-xs text-slate-500 font-mono outline-none cursor-text truncate px-2"
+                 className="bg-transparent flex-1 text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 font-mono outline-none cursor-text truncate px-2"
                />
                <button 
                  onClick={handleCopy}
-                 className={`p-2 rounded-lg flex items-center justify-center transition-all ${copied ? 'bg-emerald-100 text-emerald-600' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                 className={`p-2 rounded-lg flex items-center justify-center transition-all ${copied ? 'bg-emerald-100 text-emerald-600' : 'bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800'}`}
                >
                  {copied ? <Check size={14} /> : <Copy size={14} />}
                </button>
             </div>
 
-            <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-col items-center space-y-2 relative overflow-hidden">
+            <div className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center space-y-2 relative overflow-hidden">
                <div className="absolute top-0 left-0 w-full h-1 bg-red-100 overflow-hidden">
                  <div className="h-full bg-red-500 transition-all duration-1000 ease-linear" style={{ width: `${(timeLeft/600)*100}%` }} />
                </div>
-               <div className="flex items-center gap-2 text-sm font-black text-slate-800">
+               <div className="flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-100">
                  Expires in: <span className="text-red-600 text-lg">{formatTime(timeLeft)}</span>
                </div>
             </div>
 
-            <div className="mt-6 flex flex-col w-full items-center gap-2 text-sm text-slate-500 font-medium">
+            <div className="mt-6 flex flex-col w-full items-center gap-2 text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium">
               <div className="flex items-center gap-1.5 justify-center"><ShieldCheck size={16} className="text-emerald-500"/> Secured via MediVault RLS</div>
-              <div className="text-[10px] text-slate-400">Tokens are destroyed after expiration</div>
+              <div className="text-[10px] text-slate-400 dark:text-slate-500">Tokens are destroyed after expiration</div>
             </div>
           </>
         )}

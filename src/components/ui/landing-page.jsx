@@ -516,7 +516,7 @@ export function DesignAgency() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-3xl bg-white/20 backdrop-blur-sm border-white/40 text-white hover:bg-white/30"
+                      className="rounded-3xl bg-white dark:bg-[#1e1e1e]/20 backdrop-blur-sm border-white/40 text-white hover:bg-white dark:bg-[#1e1e1e]/30"
                     >
                       View Project <ArrowUpRight className="ml-2 h-4 w-4" />
                     </Button>

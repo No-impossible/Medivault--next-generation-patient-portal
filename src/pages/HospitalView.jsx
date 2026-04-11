@@ -61,26 +61,26 @@ export default function HospitalView() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#121212] flex flex-col items-center justify-center p-4">
         <Loader2 className="animate-spin text-blue-600 mb-4" size={48} />
-        <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Verifying Secure Access Wrapper...</p>
+        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-sm">Verifying Secure Access Wrapper...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans text-slate-800">
-        <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-red-100 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#121212] flex items-center justify-center p-4 font-sans text-slate-800 dark:text-slate-100">
+        <div className="max-w-md w-full bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 border border-red-100 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-red-500" />
           <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
             <AlertTriangle size={40} />
           </div>
-          <h1 className="text-2xl font-black mb-2 text-slate-900">Access Expired</h1>
-          <p className="text-slate-500 mb-8 leading-relaxed">
+          <h1 className="text-2xl font-black mb-2 text-slate-900 dark:text-white">Access Expired</h1>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-8 leading-relaxed">
             {error}
           </p>
-          <div className="w-full bg-slate-50 border border-slate-100 p-4 rounded-xl flex items-center justify-center gap-2 text-slate-400 text-sm font-bold">
+          <div className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 p-4 rounded-xl flex items-center justify-center gap-2 text-slate-400 dark:text-slate-500 text-sm font-bold">
             <ShieldCheck size={16} /> MediVault Row Level Security
           </div>
         </div>
@@ -89,7 +89,7 @@ export default function HospitalView() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-12 font-sans text-slate-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#121212] pb-12 font-sans text-slate-900 dark:text-white">
       {/* Banner */}
       <div className="bg-blue-600 text-white p-3 flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase shadow-md relative z-10">
         <ShieldCheck size={16} /> Temporary Access Provided via MediVault Secure Share
@@ -98,7 +98,7 @@ export default function HospitalView() {
       <div className="max-w-4xl mx-auto px-4 mt-8 space-y-8 animate-in fade-in duration-500">
         
         {/* Patient Header */}
-        <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 flex flex-col md:flex-row gap-8 items-start md:items-center relative overflow-hidden">
+        <section className="bg-white dark:bg-[#1e1e1e] rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-8 flex flex-col md:flex-row gap-8 items-start md:items-center relative overflow-hidden">
           <div className="absolute right-0 top-0 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl" />
           
           <div className="w-24 h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-4xl font-black shrink-0 relative z-10">
@@ -107,23 +107,23 @@ export default function HospitalView() {
           
           <div className="flex-1 relative z-10">
              <div className="flex items-center gap-3 mb-2">
-               <h1 className="text-3xl font-black text-slate-800">{patientData?.name}</h1>
+               <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100">{patientData?.name}</h1>
                <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 border border-emerald-200">
                  <ShieldCheck size={14} /> Verified ID
                </span>
              </div>
              
-             <div className="grid grid-cols-2 md:flex gap-x-8 gap-y-4 text-sm text-slate-600 font-semibold mt-4">
+             <div className="grid grid-cols-2 md:flex gap-x-8 gap-y-4 text-sm text-slate-600 dark:text-slate-400 dark:text-slate-500 font-semibold mt-4">
                <div>
-                  <span className="block text-[10px] text-slate-400 uppercase tracking-widest mb-1">Date of Birth</span>
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Date of Birth</span>
                   {patientData?.dob || 'Not provided'}
                </div>
                <div>
-                  <span className="block text-[10px] text-slate-400 uppercase tracking-widest mb-1">Blood Group</span>
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Blood Group</span>
                   <span className="flex items-center gap-1 text-red-600"><Activity size={14}/> {patientData?.bloodGroup || 'O+'}</span>
                </div>
                <div>
-                  <span className="block text-[10px] text-slate-400 uppercase tracking-widest mb-1">Identifier</span>
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Identifier</span>
                   {patientData?.abhaId || 'Restricted'}
                </div>
              </div>
@@ -131,39 +131,39 @@ export default function HospitalView() {
         </section>
 
         {/* Action Bar */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-4">
            <h2 className="text-xl font-bold flex items-center gap-2">
              <FileText className="text-blue-500" />
              Recent Medical History
            </h2>
-           <span className="text-slate-400 text-sm font-bold">Most Recent 5 Records</span>
+           <span className="text-slate-400 dark:text-slate-500 text-sm font-bold">Most Recent 5 Records</span>
         </div>
         
         {/* Records */}
         <div className="space-y-4">
           {records.length === 0 ? (
-            <div className="text-center p-12 bg-white rounded-3xl border border-slate-100 text-slate-500 shadow-sm">
+            <div className="text-center p-12 bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 dark:text-slate-500 shadow-sm">
               <FileText size={48} className="mx-auto mb-4 text-slate-300" />
               Patient has no medical records in their vault.
             </div>
           ) : (
             records.map((record) => (
-              <div key={record.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:shadow-md transition-shadow group flex flex-col md:flex-row gap-6 md:items-center">
-                <div className="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+              <div key={record.id} className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-6 hover:shadow-md transition-shadow group flex flex-col md:flex-row gap-6 md:items-center">
+                <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
                   <FileText size={24} />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{record.name}</h3>
-                  <div className="text-sm font-semibold text-slate-500 mt-1 flex items-center gap-4">
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 transition-colors">{record.name}</h3>
+                  <div className="text-sm font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 flex items-center gap-4">
                     <span>{record.date}</span>
-                    <span className="px-2 py-0.5 bg-slate-100 rounded text-xs">{record.size}</span>
+                    <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs">{record.size}</span>
                   </div>
                 </div>
                 
                 {record.aiSummary && (
-                  <div className="md:w-1/3 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2 block">Extracted Summary</span>
-                    <p className="text-xs text-slate-700 font-semibold line-clamp-2">{record.aiSummary.brief}</p>
+                  <div className="md:w-1/3 bg-slate-50 dark:bg-[#121212] p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider mb-2 block">Extracted Summary</span>
+                    <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold line-clamp-2">{record.aiSummary.brief}</p>
                   </div>
                 )}
                 

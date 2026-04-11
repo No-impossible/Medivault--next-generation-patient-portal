@@ -129,7 +129,7 @@ export default function PatientPrescriptions() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-[#1E40AF]">Prescription History</h1>
-          <p className="text-slate-500 font-medium mt-1">View your past prescriptions and quickly reorder medicines.</p>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">View your past prescriptions and quickly reorder medicines.</p>
         </div>
         <button 
           onClick={() => navigate('/dashboard/patient/order-medicine')}
@@ -140,12 +140,12 @@ export default function PatientPrescriptions() {
       </div>
 
       {prescriptions.length === 0 ? (
-        <div className="bg-white rounded-3xl border-2 border-dashed border-slate-200 p-16 flex flex-col items-center justify-center text-center shadow-sm">
+        <div className="bg-white dark:bg-[#1e1e1e] rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-16 flex flex-col items-center justify-center text-center shadow-sm">
           <div className="w-24 h-24 bg-blue-50 text-blue-300 rounded-full flex items-center justify-center mb-6">
             <FileText size={48} />
           </div>
-          <h3 className="text-2xl font-black text-slate-800 mb-3">No Prescriptions Yet</h3>
-          <p className="text-slate-500 font-medium max-w-md mb-8 leading-relaxed">
+          <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-3">No Prescriptions Yet</h3>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium max-w-md mb-8 leading-relaxed">
             You haven't uploaded any prescriptions yet. Use the Smart Pharmacy module to scan your prescriptions and unlock instant reordering.
           </p>
           <button 
@@ -158,22 +158,22 @@ export default function PatientPrescriptions() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {prescriptions.map((record) => (
-            <div key={record.id} className="bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
+            <div key={record.id} className="bg-white dark:bg-[#1e1e1e] rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
               
               {/* Card Header: Image & Date */}
-              <div className="p-4 flex items-center gap-4 border-b border-slate-50 bg-slate-50/50 relative group">
-                <div className="w-16 h-16 bg-slate-200 rounded-lg overflow-hidden shrink-0 border border-slate-100">
+              <div className="p-4 flex items-center gap-4 border-b border-slate-50 bg-slate-50 dark:bg-[#121212]/50 relative group">
+                <div className="w-16 h-16 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden shrink-0 border border-slate-100 dark:border-slate-800">
                   {record.imageUrl ? (
                     <img src={record.imageUrl} alt="Prescription snippet" className="w-full h-full object-cover opacity-90" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400">
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-500">
                       <FileText size={24} />
                     </div>
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-800 flex items-center gap-1.5">
-                    <Calendar size={16} className="text-slate-400" /> 
+                  <h3 className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                    <Calendar size={16} className="text-slate-400 dark:text-slate-500" /> 
                     {formatDate(record.created_at)}
                   </h3>
                   <span className="inline-block mt-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
@@ -183,7 +183,7 @@ export default function PatientPrescriptions() {
                 
                 <button 
                   onClick={() => setDeletingId(record.id)}
-                  className="absolute top-4 right-4 text-slate-300 hover:text-red-500 p-2 rounded-full hover:bg-white transition-all opacity-0 group-hover:opacity-100"
+                  className="absolute top-4 right-4 text-slate-300 hover:text-red-500 p-2 rounded-full hover:bg-white dark:bg-[#1e1e1e] transition-all opacity-0 group-hover:opacity-100"
                   title="Delete Record"
                 >
                   <Trash2 size={16} />
@@ -192,11 +192,11 @@ export default function PatientPrescriptions() {
 
               {/* Medicines List */}
               <div className="p-5 flex-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">Extracted Medicines</p>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Extracted Medicines</p>
                 <div className="space-y-4">
                   {Array.isArray(record.medicines) && record.medicines.map((med, idx) => (
-                    <div key={idx} className="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-100 transition-colors">
-                      <span className="font-semibold text-slate-700 text-sm">{med}</span>
+                    <div key={idx} className="bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 text-sm">{med}</span>
                       <div className="flex items-center gap-2 shrink-0">
                         <button 
                           onClick={() => openDeepLink(med, 'pharmeasy')}
@@ -217,7 +217,7 @@ export default function PatientPrescriptions() {
                   ))}
                   
                   {(!record.medicines || record.medicines.length === 0) && (
-                    <p className="text-sm text-slate-500 italic">No medicines specifically logged.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 italic">No medicines specifically logged.</p>
                   )}
                 </div>
               </div>
@@ -233,10 +233,10 @@ export default function PatientPrescriptions() {
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
             onClick={() => setDeletingId(null)}
           />
-          <div className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="relative bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
             <button 
               onClick={() => setDeletingId(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2"
+              className="absolute top-4 right-4 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 p-2"
             >
               <X size={20} />
             </button>
@@ -245,8 +245,8 @@ export default function PatientPrescriptions() {
               <AlertCircle size={32} />
             </div>
             
-            <h2 className="text-xl font-black text-slate-800 text-center mb-2">Delete Record?</h2>
-            <p className="text-slate-500 text-center text-sm mb-8">
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 text-center mb-2">Delete Record?</h2>
+            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-center text-sm mb-8">
               This will permanently remove this prescription and its medical data from your vault. This action cannot be undone.
             </p>
             
@@ -259,7 +259,7 @@ export default function PatientPrescriptions() {
               </button>
               <button 
                 onClick={() => setDeletingId(null)}
-                className="w-full py-3.5 text-slate-500 font-bold hover:text-slate-800"
+                className="w-full py-3.5 text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold hover:text-slate-800 dark:text-slate-100"
               >
                 Cancel
               </button>

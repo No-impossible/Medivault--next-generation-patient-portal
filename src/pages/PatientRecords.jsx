@@ -146,8 +146,8 @@ export default function PatientRecords() {
     <div className="max-w-6xl w-full mx-auto space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800">My Medical Records</h1>
-          <p className="text-slate-500 text-sm mt-1">All your health documents secured with AES-256 encryption.</p>
+          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">My Medical Records</h1>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mt-1">All your health documents secured with AES-256 encryption.</p>
         </div>
         <button 
           onClick={() => fileInputRef.current?.click()}
@@ -166,21 +166,21 @@ export default function PatientRecords() {
       </div>
 
       {records.length === 0 ? (
-        <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-16 flex flex-col items-center justify-center text-center">
-          <div className="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mb-6">
+        <div className="bg-white dark:bg-[#1e1e1e] border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-3xl p-16 flex flex-col items-center justify-center text-center">
+          <div className="w-20 h-20 bg-slate-50 dark:bg-[#121212] text-slate-300 rounded-full flex items-center justify-center mb-6">
             <FileText size={40} />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">Your vault is empty</h3>
-          <p className="text-slate-500 max-w-sm mb-8 leading-relaxed">
+          <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Your vault is empty</h3>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 max-w-sm mb-8 leading-relaxed">
             Securely upload your prescriptions, lab reports, and imaging here. 
             <br/><br/>
-            <span className="text-indigo-600 font-semibold bg-indigo-50 px-3 py-1 rounded-full text-xs">
+            <span className="text-indigo-600 font-semibold bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full text-xs">
               💡 Tip: Upload a file named "Checkup.pdf" to auto-generate your Health Score!
             </span>
           </p>
           <button 
             onClick={() => fileInputRef.current?.click()}
-            className="text-slate-700 font-bold bg-white border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 px-8 py-3 rounded-xl transition-all"
+            className="text-slate-700 dark:text-slate-300 font-bold bg-white dark:bg-[#1e1e1e] border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-300 hover:bg-indigo-50 dark:bg-indigo-900/30 px-8 py-3 rounded-xl transition-all"
           >
             Browse Files
           </button>
@@ -188,42 +188,42 @@ export default function PatientRecords() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {records.map(record => (
-            <div key={record.id} className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-100/50 transition-all group">
+            <div key={record.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-100/50 transition-all group">
               <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
                   <File size={24} />
                 </div>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => record.fileURL && window.open(record.fileURL, '_blank')}
-                    className="text-slate-400 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 transition-colors opacity-0 group-hover:opacity-100"
+                    className="text-slate-400 dark:text-slate-500 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 dark:bg-indigo-900/30 transition-colors opacity-0 group-hover:opacity-100"
                     title="View Document"
                   >
                     <ExternalLink size={18} />
                   </button>
                   <button 
                     onClick={() => handleDeleteRecord(record)}
-                    className="text-slate-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                    className="text-slate-400 dark:text-slate-500 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
                     title="Delete"
                   >
                     <Trash2 size={18} />
                   </button>
                 </div>
               </div>
-              <h4 className="font-bold text-slate-800 truncate mb-1" title={record.name}>{record.name}</h4>
-              <div className="flex items-center gap-4 text-xs font-medium text-slate-500 mb-4">
+              <h4 className="font-bold text-slate-800 dark:text-slate-100 truncate mb-1" title={record.name}>{record.name}</h4>
+              <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-4">
                 <span className="flex items-center gap-1"><ShieldCheck size={14} className="text-emerald-500"/> Secured</span>
                 <span>{record.size}</span>
               </div>
-              <div className="border-t border-slate-100 pt-4 flex items-center justify-between">
-                <div className="flex items-center text-xs text-slate-400 gap-1.5">
+              <div className="border-t border-slate-100 dark:border-slate-800 pt-4 flex items-center justify-between">
+                <div className="flex items-center text-xs text-slate-400 dark:text-slate-500 gap-1.5">
                   <Calendar size={14} />
                   {record.date}
                 </div>
                 {record.aiSummary && (
                   <button 
                     onClick={() => setSelectedAIReport(record)}
-                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors"
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 px-2.5 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors"
                   >
                     <BrainCircuit size={12} /> AI Brief
                   </button>
@@ -241,20 +241,20 @@ export default function PatientRecords() {
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
             onClick={() => setSelectedAIReport(null)}
           />
-          <div className="relative bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="relative bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
             <button 
               onClick={() => setSelectedAIReport(null)}
-              className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-50 transition-colors"
+              className="absolute top-6 right-6 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] transition-colors"
             >
               <X size={24} />
             </button>
             
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-xl flex items-center justify-center">
                 <BrainCircuit size={24} />
               </div>
               <div>
-                <h2 className="text-xl font-black text-slate-800">AI Medical Brief</h2>
+                <h2 className="text-xl font-black text-slate-800 dark:text-slate-100">AI Medical Brief</h2>
                 <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider flex items-center gap-1">
                   Confidence: {selectedAIReport.aiSummary?.confidence || 'N/A'}
                 </p>
@@ -263,17 +263,17 @@ export default function PatientRecords() {
             
             <div className="space-y-6">
               <div>
-                <h4 className="text-sm font-bold text-slate-800 mb-2 border-b border-slate-100 pb-2">Short Brief</h4>
-                <p className="text-slate-600 text-sm leading-relaxed">
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2 border-b border-slate-100 dark:border-slate-800 pb-2">Short Brief</h4>
+                <p className="text-slate-600 dark:text-slate-400 dark:text-slate-500 text-sm leading-relaxed">
                   {selectedAIReport.aiSummary?.brief}
                 </p>
               </div>
               
               <div>
-                <h4 className="text-sm font-bold text-slate-800 mb-2 border-b border-slate-100 pb-2">Key Findings (Doctor Summary)</h4>
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2 border-b border-slate-100 dark:border-slate-800 pb-2">Key Findings (Doctor Summary)</h4>
                 <ul className="space-y-2">
                   {selectedAIReport.aiSummary?.keyFindings?.map((finding, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-slate-600">
+                    <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400 dark:text-slate-500">
                       <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
                       {finding}
                     </li>
@@ -282,13 +282,13 @@ export default function PatientRecords() {
               </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
-              <span className="text-xs text-slate-400">For informational purposes only.</span>
+            <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+              <span className="text-xs text-slate-400 dark:text-slate-500">For informational purposes only.</span>
               <button 
                 onClick={() => {
                   if(selectedAIReport?.fileURL) window.open(selectedAIReport.fileURL, '_blank');
                 }}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all"
+                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all"
               >
                 <ExternalLink size={16} className="text-indigo-600" /> View Original
               </button>
