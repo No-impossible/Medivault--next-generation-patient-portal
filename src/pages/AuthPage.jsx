@@ -24,7 +24,7 @@ export default function AuthPage({ onPatientBack, onPatientSignUp, t, i18n, onPa
             />
           </div>
         ) : (
-          <div className="w-full h-full pt-8">
+          <div className="h-screen w-full">
             <DoctorLogin />
           </div>
         )}

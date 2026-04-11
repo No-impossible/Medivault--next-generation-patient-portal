@@ -101,9 +101,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
             <a href="#contact" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">{t('nav_contact')}</a>
 
             <div className="flex items-center space-x-4 pl-4 border-l border-border ml-2">
-              <div className="scale-50 origin-center -mx-4">
-                <CinematicThemeSwitcher />
-              </div>
+              {/* Theme toggle moved to global App.jsx layout */}
 
               {/* Language Switcher */}
               <div className="flex items-center gap-2">
@@ -424,42 +422,51 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
           </div>
           
           <div className="bg-white dark:bg-[#1e1e1e] rounded-[2rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-gray-100 dark:border-gray-800 min-h-[600px] transition-colors duration-500">
-            {/* ───── LEFT PANEL (from Patient Login UI) ───── */}
+            {/* ───── LEFT PANEL (Dynamic based on Role) ───── */}
             <div
-              className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-16"
-              style={{ background: 'linear-gradient(135deg, #c7ccff 0%, #eef0ff 60%, #dce0ff 100%)' }}
+              className={`hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-16 transition-all duration-700`}
+              style={{ 
+                background: portalRole === 'patient' 
+                  ? 'linear-gradient(135deg, #c7ccff 0%, #eef0ff 60%, #dce0ff 100%)'
+                  : 'linear-gradient(135deg, #a7f3d0 0%, #ecfdf5 60%, #d1fae5 100%)'
+              }}
             >
-              <div className="w-72 h-72 mb-8 rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: '0 25px 60px rgba(124,131,253,0.35)' }}>
+              <div className="w-72 h-72 mb-8 rounded-3xl overflow-hidden shadow-2xl transition-all duration-700" style={{ boxShadow: portalRole === 'patient' ? '0 25px 60px rgba(124,131,253,0.35)' : '0 25px 60px rgba(16,185,129,0.35)' }}>
                 <img
-                  src="/login_illustration.png"
+                  src={portalRole === 'patient' ? "/login_illustration.png" : "/steth_hero.png"}
                   alt="Medical digital vault illustration"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-opacity duration-500"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'flex';
                   }}
                 />
                 <div className="w-full h-full flex items-center justify-center bg-indigo-100 rounded-3xl hidden">
-                  <ShieldCheck size={100} className="text-indigo-400 opacity-60" />
+                  {portalRole === 'patient' ? <ShieldCheck size={100} className="text-indigo-400 opacity-60" /> : <Stethoscope size={100} className="text-emerald-400 opacity-60" />}
                 </div>
               </div>
 
-              <div className="text-center max-w-xs">
+              <div className="text-center max-w-xs animate-in fade-in duration-500 key={portalRole}">
                 <h2 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-3 leading-snug">
-                  Your medical history.<br />
-                  <span style={{ color: '#7C83FD' }}>Secured. Always accessible.</span>
+                  {portalRole === 'patient' ? (
+                    <>Your medical history.<br /><span style={{ color: '#7C83FD' }}>Secured. Always accessible.</span></>
+                  ) : (
+                    <>Practice Management.<br /><span style={{ color: '#059669' }}>Streamlined and Intuitive.</span></>
+                  )}
                 </h2>
-                <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm leading-relaxed">
-                  MediVault keeps all your reports, prescriptions, and health records in one encrypted, government-standard vault.
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                  {portalRole === 'patient' 
+                    ? "MediVault keeps all your reports, prescriptions, and health records in one encrypted, government-standard vault."
+                    : "Manage patient records, write prescriptions, and seamlessly sync with the global ABHA network natively."}
                 </p>
               </div>
 
-              <div className="absolute bottom-8 flex items-center gap-4 text-xs text-indigo-500 font-medium opacity-80">
-                <span className="flex items-center gap-1"><ShieldCheck size={13} /> ABHA Ready</span>
-                <span>·</span>
-                <span>AES-256 Encrypted</span>
-                <span>·</span>
-                <span>HIPAA Compliant</span>
+              <div className={`absolute bottom-8 flex items-center gap-4 text-xs font-medium opacity-80 ${portalRole === 'patient' ? 'text-indigo-500' : 'text-emerald-700'}`}>
+                {portalRole === 'patient' ? (
+                  <><span className="flex items-center gap-1"><ShieldCheck size={13} /> ABHA Ready</span><span>·</span><span>AES-256 Encrypted</span><span>·</span><span>HIPAA</span></>
+                ) : (
+                  <><span className="flex items-center gap-1"><Stethoscope size={13} /> Clinical Grade</span><span>·</span><span>Verified Doctors</span><span>·</span><span>NMC Approved</span></>
+                )}
               </div>
             </div>
 

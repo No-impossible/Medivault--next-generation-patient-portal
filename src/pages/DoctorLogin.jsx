@@ -167,30 +167,21 @@ export default function DoctorLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
-      <div className="sm:mx-auto sm:w-full sm:max-w-2xl px-4">
-        
-        {/* Header Section */}
-        <div 
-          className="flex justify-center items-center gap-3 cursor-pointer mb-6 transform hover:scale-105 transition-all w-max mx-auto group"
-
+    <div className="h-screen flex overflow-hidden font-sans">
+      
+      {/* ───── LEFT PANEL ───── */}
+      <div 
+        className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-12"
+        style={{ background: 'linear-gradient(135deg, #a7f3d0 0%, #ecfdf5 60%, #d1fae5 100%)' }}
+      >
+        {/* Back button */}
+        <button
           onClick={() => navigate('/')}
-          className="absolute top-8 left-8 flex items-center gap-2 text-teal-700 hover:text-teal-900 font-bold text-sm transition-all bg-white/20 hover:bg-white/40 px-4 py-2 rounded-full backdrop-blur-sm z-20 group/back"
+          className="absolute top-8 left-8 flex items-center gap-2 text-emerald-700 hover:text-emerald-900 font-bold text-sm transition-all bg-white/20 hover:bg-white/40 px-4 py-2 rounded-full backdrop-blur-sm z-20 group"
         >
-          <div className="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center transition-all duration-300 shadow-sm group-hover:rotate-3 shadow-indigo-600/30">
-            <Heart className="h-5 w-5 text-white" fill="currentColor" />
-          </div>
-          <span className="text-3xl font-black text-slate-800 tracking-tight">
-            MediVault
-          </span>
-        </div>
-        <h2 className="text-center text-3xl font-black text-slate-900 mb-2">
-          {isLogin ? 'Doctor Portal Access' : 'Provider Registration'}
-        </h2>
-        <p className="text-center text-sm text-slate-600 max-w-sm mx-auto">
-          {isLogin ? 'Welcome back! Sign in to manage your practice.' : 'Join the network to manage your appointments and records.'}
-        </p>
-
+          <ArrowRight className="rotate-180 group-hover:-translate-x-1 transition-transform" size={16} />
+          Back to Home
+        </button>
 
         {/* Logo */}
         <div className="absolute top-9 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
