@@ -22,6 +22,7 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { supabase, fetchPatientRecords } from '../supabaseClient';
 import PatientSearch from '../components/doctor/PatientSearch';
 import AppointmentCalendar from '../components/doctor/AppointmentCalendar';
+import PatientRecordView from '../components/doctor/PatientRecordView';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
@@ -49,9 +50,11 @@ export default function DoctorDashboard() {
 
   const initials = getInitials(doctorData.name);
 
-  const [activeTab, setActiveTab] = useState('patients');
+  const [activeTab, setActiveTab] = useState('lookup');
   const [isBooking, setIsBooking] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [selectedProfilePatient, setSelectedProfilePatient] = useState(null);
+  const [profileSearchQuery, setProfileSearchQuery] = useState("");
   const [showQrModal, setShowQrModal] = useState(false);
   const [qrInputValue, setQrInputValue] = useState("");
   
@@ -72,8 +75,15 @@ export default function DoctorDashboard() {
             name: qrPatientData.name,
             abhaId: qrPatientData.abhaId,
             dob: qrPatientData.dob,
+            age: qrPatientData.age,
+            bloodGroup: qrPatientData.bloodGroup,
             gender: qrPatientData.gender,
             contact: qrPatientData.phone || qrPatientData.email,
+            phone: qrPatientData.phone,
+            email: qrPatientData.email,
+            address: qrPatientData.address,
+            allergies: qrPatientData.allergies,
+            chronicConditions: qrPatientData.chronicConditions,
             savedAt: new Date().toISOString()
         });
         localStorage.setItem(`medivault_saved_${doctorData.email}`, JSON.stringify(existingSaved));
@@ -206,18 +216,29 @@ export default function DoctorDashboard() {
           <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 px-3">Practice Management</p>
           
           <button 
-            onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); }}
+            onClick={() => { setActiveTab('lookup'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'lookup' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+          >
+            <div className="flex items-center gap-3.5">
+              <Search size={20} className={activeTab === 'lookup' && !token ? 'text-emerald-100' : 'text-slate-400'} />
+              <span>Patient Lookup</span>
+            </div>
+            {activeTab === 'lookup' && !token && <ChevronRight size={16} className="text-emerald-100" />}
+          </button>
+
+          <button 
+            onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
             className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'patients' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
               <Users size={20} className={activeTab === 'patients' && !token ? 'text-emerald-100' : 'text-slate-400'} />
-              <span>Patient Records</span>
+              <span>Patient Profiles</span>
             </div>
             {activeTab === 'patients' && !token && <ChevronRight size={16} className="text-emerald-100" />}
           </button>
 
           <button 
-            onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); }}
+            onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
             className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'appointments' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
@@ -228,7 +249,7 @@ export default function DoctorDashboard() {
           </button>
 
           <button 
-            onClick={() => { setActiveTab('prescriptions'); setIsBooking(false); setSearchParams({}); }}
+            onClick={() => { setActiveTab('prescriptions'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
             className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'prescriptions' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
@@ -262,7 +283,8 @@ export default function DoctorDashboard() {
           <div className="animate-in fade-in slide-in-from-left-4 duration-500">
             <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-800 drop-shadow-sm mb-1">
               {token ? 'Emergency Access View' : (
-                activeTab === 'patients' ? 'Patient Vault & Records' :
+                activeTab === 'lookup' ? 'Patient Lookup' :
+                activeTab === 'patients' ? 'Patient Profiles' :
                 activeTab === 'appointments' ? "Today's Clinical Schedule" :
                 'Manage Prescriptions'
               )}
@@ -421,7 +443,114 @@ export default function DoctorDashboard() {
             )
           ) : (
             <>
-              {activeTab === 'patients' && <PatientSearch onScanClick={() => setShowQrModal(true)} />}
+              {activeTab === 'lookup' && <PatientSearch onScanClick={() => setShowQrModal(true)} />}
+
+              {activeTab === 'patients' && (
+                <div className="flex flex-col h-full animate-in fade-in duration-500 max-w-5xl mx-auto w-full pt-6">
+                  {selectedProfilePatient ? (
+                    <>
+                      <div className="flex items-center gap-4 mb-6">
+                        <button onClick={() => setSelectedProfilePatient(null)} className="text-emerald-600 font-medium hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                          ← Back to Profiles
+                        </button>
+                      </div>
+                      <PatientRecordView patient={selectedProfilePatient} />
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                        <div>
+                          <h2 className="text-2xl font-bold text-slate-800">Saved Patient Profiles</h2>
+                          <p className="text-sm text-slate-500">View and manage records for your registered patients.</p>
+                        </div>
+                        <div className="relative w-full md:w-72">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                          <input 
+                            type="text" 
+                            placeholder="Search by name or ID..." 
+                            value={profileSearchQuery}
+                            onChange={(e) => setProfileSearchQuery(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+                          />
+                        </div>
+                      </div>
+                      {(() => {
+                        const allSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]');
+                        const saved = allSaved.filter(pt => 
+                          (pt.name && pt.name.toLowerCase().includes(profileSearchQuery.toLowerCase())) ||
+                          (pt.abhaId && pt.abhaId.toLowerCase().includes(profileSearchQuery.toLowerCase()))
+                        );
+                        
+                        if (allSaved.length === 0) {
+                          return (
+                            <div className="flex flex-col items-center justify-center flex-1 text-slate-400 mt-12">
+                              <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-6 text-emerald-500 border-4 border-emerald-100 shadow-sm">
+                                <Users size={40} />
+                              </div>
+                              <h2 className="text-2xl font-bold text-slate-800 mb-3">No Profiles Saved</h2>
+                              <p className="text-lg font-medium text-slate-500 max-w-md text-center">Use the Patient Lookup tab to scan and save patient records to your practice.</p>
+                            </div>
+                          );
+                        }
+
+                        if (saved.length === 0 && profileSearchQuery) {
+                          return (
+                            <div className="flex flex-col items-center justify-center flex-1 text-slate-400 mt-12">
+                              <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-400 border-2 border-slate-100">
+                                <Search size={32} />
+                              </div>
+                              <h2 className="text-xl font-bold text-slate-700 mb-2">No Matches Found</h2>
+                              <p className="text-md font-medium text-slate-500 text-center">No saved patients matched "{profileSearchQuery}".</p>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 custom-scrollbar overflow-y-auto pb-8 pr-2">
+                            {saved.map((pt, i) => (
+                              <div key={i} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all flex flex-col justify-between group">
+                                <div className="flex items-start gap-4 mb-4">
+                                  <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center font-bold text-xl border border-emerald-100 shrink-0">
+                                    {pt.name ? pt.name.charAt(0) : 'P'}
+                                  </div>
+                                  <div>
+                                    <h3 className="font-bold text-slate-800 text-lg leading-tight mb-1 group-hover:text-emerald-700 transition-colors">{pt.name}</h3>
+                                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{pt.abhaId}</p>
+                                  </div>
+                                </div>
+                                <div className="text-sm text-slate-600 space-y-2 mb-6">
+                                  <p className="flex justify-between"><span className="text-slate-400">Gender:</span> <span className="font-medium">{pt.gender || 'N/A'}</span></p>
+                                  <p className="flex justify-between"><span className="text-slate-400">Contact:</span> <span className="font-medium">{pt.contact || 'N/A'}</span></p>
+                                  <p className="flex justify-between"><span className="text-slate-400">Added:</span> <span className="font-medium">{pt.savedAt ? new Date(pt.savedAt).toLocaleDateString() : 'N/A'}</span></p>
+                                </div>
+                                <button 
+                                  onClick={() => {
+                                    setSelectedProfilePatient({
+                                      name: pt.name,
+                                      abhaId: pt.abhaId,
+                                      age: pt.age || (pt.dob ? Math.floor((new Date() - new Date(pt.dob)) / 31557600000) : 'Unknown'),
+                                      gender: pt.gender || 'Unknown',
+                                      bloodGroup: pt.bloodGroup || 'Not Typed',
+                                      phone: pt.phone || pt.contact || 'No phone',
+                                      email: pt.email || 'No email',
+                                      address: pt.address || 'Address hidden',
+                                      allergies: pt.allergies || ['None Known'],
+                                      chronicConditions: pt.chronicConditions || ['None Known']
+                                    });
+                                  }}
+                                  className="w-full text-emerald-600 hover:text-white bg-emerald-50 hover:bg-emerald-500 py-2.5 rounded-xl font-bold text-sm transition-colors border border-emerald-100/50 flex justify-center items-center gap-2"
+                                >
+                                    <FileText size={16} /> View Full Record
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
+                    </>
+                  )}
+                </div>
+              )}
           
           {activeTab === 'appointments' && !isBooking && (
             <div className="flex flex-col h-full animate-in fade-in duration-500 max-w-5xl mx-auto w-full pt-6">
