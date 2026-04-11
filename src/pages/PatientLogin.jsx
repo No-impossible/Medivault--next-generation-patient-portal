@@ -78,10 +78,11 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
 
         {/* Logo */}
         <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-sm">
-            <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
+          <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
+            <Heart className="h-5 w-5 text-white" fill="currentColor" />
           </div>
-          <span className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">MediVault</span>
+          <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
+
         </div>
 
         {/* Illustration */}
@@ -153,10 +154,11 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2 lg:hidden">
-              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-                <Heart className="h-4 w-4 text-primary-foreground" fill="currentColor" />
+              <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center shadow-sm">
+                <Heart className="h-4 w-4 text-white" fill="currentColor" />
               </div>
-              <span className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">MediVault</span>
+              <span className="text-xl font-bold text-slate-800 tracking-tight">MediVault</span>
+
             </div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-white transition-colors">{t('login_welcome')}</h1>
             <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 text-sm transition-colors">{t('login_subtitle')}</p>

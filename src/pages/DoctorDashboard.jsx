@@ -27,6 +27,7 @@ import PatientRecordView from '../components/doctor/PatientRecordView';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const getStoredDoctor = () => {
     try {
        const str = localStorage.getItem('medivault_doctor_session');
@@ -204,10 +205,11 @@ export default function DoctorDashboard() {
       {/* Sidebar sidebar bg-white dark:bg-slate-900 */}
       <aside className="w-72 bg-gradient-to-b from-slate-900 to-slate-950 text-slate-300 flex flex-col transition-all duration-300 shadow-2xl z-20 border-r border-slate-800">
         <div className="h-24 flex items-center px-8 border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute -top-12 -left-12 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="flex items-center gap-3 cursor-pointer relative z-10 group" onClick={() => navigate('/')}>
-            <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-primary/20">
-              <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
+          <div className="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="flex items-center gap-3 text-emerald-400 cursor-pointer relative z-10 group" onClick={() => navigate('/')}>
+            <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-emerald-500/20">
+              <Heart className="h-5 w-5 text-white" fill="currentColor" />
+
             </div>
             <span className="text-2xl font-black text-white tracking-tight">MediVault</span>
           </div>

@@ -112,12 +112,13 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
         fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-[#1e1e1e] border-r border-slate-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate(`/dashboard/${role}`)}>
-            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-sm">
-              <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
+        <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100">
+          <div className="flex items-center gap-3 cursor-pointer relative z-10 group" onClick={() => navigate(`/dashboard/${role}`)}>
+            <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
+              <Heart className="h-5 w-5 text-white" fill="currentColor" />
             </div>
-            <span className="font-bold text-xl text-slate-800 dark:text-white">MediVault</span>
+            <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
+
           </div>
           <button className="md:hidden text-slate-500 dark:text-slate-400 dark:text-slate-500" onClick={() => setIsSidebarOpen(false)}>
             <X size={24} />

@@ -167,24 +167,30 @@ export default function DoctorLogin() {
   };
 
   return (
-    <div className="h-screen flex overflow-hidden font-sans">
-      {/* ───── LEFT PANEL (INTERACTIVE) ───── */}
-      <div
-        className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-12 group"
-        style={{ background: 'linear-gradient(135deg, #ccfbf1 0%, #f0fdfa 60%, #99f6e4 100%)' }}
-      >
-        {/* Animated Background Orbs */}
-        <div className="absolute top-10 right-10 w-64 h-64 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse transition-all duration-1000 group-hover:opacity-50 group-hover:scale-110"></div>
-        <div className="absolute bottom-10 left-10 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse transition-all duration-1000 delay-500 group-hover:opacity-50 group-hover:scale-110"></div>
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
+      <div className="sm:mx-auto sm:w-full sm:max-w-2xl px-4">
+        
+        {/* Header Section */}
+        <div 
+          className="flex justify-center items-center gap-3 cursor-pointer mb-6 transform hover:scale-105 transition-all w-max mx-auto group"
 
-        {/* Back button */}
-        <button
           onClick={() => navigate('/')}
           className="absolute top-8 left-8 flex items-center gap-2 text-teal-700 hover:text-teal-900 font-bold text-sm transition-all bg-white/20 hover:bg-white/40 px-4 py-2 rounded-full backdrop-blur-sm z-20 group/back"
         >
-          <ArrowRight className="rotate-180 group-hover/back:-translate-x-1 transition-transform" size={18} />
-          Back to Home
-        </button>
+          <div className="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center transition-all duration-300 shadow-sm group-hover:rotate-3 shadow-indigo-600/30">
+            <Heart className="h-5 w-5 text-white" fill="currentColor" />
+          </div>
+          <span className="text-3xl font-black text-slate-800 tracking-tight">
+            MediVault
+          </span>
+        </div>
+        <h2 className="text-center text-3xl font-black text-slate-900 mb-2">
+          {isLogin ? 'Doctor Portal Access' : 'Provider Registration'}
+        </h2>
+        <p className="text-center text-sm text-slate-600 max-w-sm mx-auto">
+          {isLogin ? 'Welcome back! Sign in to manage your practice.' : 'Join the network to manage your appointments and records.'}
+        </p>
+
 
         {/* Logo */}
         <div className="absolute top-9 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
@@ -360,31 +366,45 @@ export default function DoctorLogin() {
                   </div>
                 </div>
 
-              </div>
-            )}
-
-            {/* License Number with optional inline Verify */}
-            {!isLogin && (
-              <div className="mb-4">
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Medical License Number</label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1 rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <ShieldCheck className="h-5 w-5 text-slate-400 dark:text-slate-500" />
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={licenseNumber}
-                      onChange={(e) => { setLicenseNumber(e.target.value); setLicenseVerified(false); }}
-                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none uppercase"
-                      placeholder="e.g. MCI/12/34567"
-                    />
-                    {licenseVerified && (
-                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in zoom-in duration-300">
-                        <CheckCircle2 size={18} />
+                {/* License Number (Moved here) */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-slate-700">Medical License Number</label>
+                  <div className="flex gap-2 mt-1">
+                    <div className="relative flex-1 rounded-md shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <ShieldCheck className="h-5 w-5 text-slate-400" />
                       </div>
-                    )}
+                      <input
+                        type="text"
+                        required
+                        value={licenseNumber}
+                        onChange={(e) => { setLicenseNumber(e.target.value); setLicenseVerified(false); }}
+                        className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none uppercase"
+                        placeholder="e.g. MCI/12/34567"
+                      />
+                      {licenseVerified && (
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in zoom-in duration-300">
+                          <CheckCircle2 size={18} />
+                        </div>
+                      )}
+                    </div>
+
+                    <button 
+                      type="button" 
+                      onClick={handleVerifyLicense}
+                      disabled={isVerifyingLicense || licenseVerified || !licenseNumber}
+                      className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
+                        ${licenseVerified 
+                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 opacity-80 cursor-default' 
+                          : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:bg-slate-100'}
+                        ${isVerifyingLicense ? 'opacity-70 cursor-wait' : ''}
+                      `}
+                    >
+                      {isVerifyingLicense && <Loader2 size={16} className="animate-spin" />}
+                      {!isVerifyingLicense && licenseVerified && <span>Verified</span>}
+                      {!isVerifyingLicense && !licenseVerified && <span>Verify</span>}
+                    </button>
+
                   </div>
 
                   <button 
@@ -453,20 +473,22 @@ export default function DoctorLogin() {
               </div>
             </div>
 
-            {/* Location (Moved Below Email) */}
+            {/* Clinic Location (Moved here) */}
             {!isLogin && (
-              <div className="mb-4">
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Clinic / Hospital Location</label>
-                <div className="relative rounded-md shadow-sm">
+              <div className="animate-in fade-in duration-300">
+                <label className="block text-sm font-semibold text-slate-700">Clinic / Hospital Location</label>
+                <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <MapPin className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                    <MapPin className="h-5 w-5 text-slate-400" />
+
                   </div>
                   <input
                     type="text"
                     required
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                    className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
+
                     placeholder="e.g. Apollo Hospital, Bangalore"
                   />
                 </div>
