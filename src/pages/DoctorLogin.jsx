@@ -168,61 +168,98 @@ export default function DoctorLogin() {
 
   return (
     <div className="h-screen flex overflow-hidden font-sans">
-      {/* ───── LEFT PANEL ───── */}
+      {/* ───── LEFT PANEL (INTERACTIVE) ───── */}
       <div
-        className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-12"
+        className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-12 group"
         style={{ background: 'linear-gradient(135deg, #ccfbf1 0%, #f0fdfa 60%, #99f6e4 100%)' }}
       >
+        {/* Animated Background Orbs */}
+        <div className="absolute top-10 right-10 w-64 h-64 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse transition-all duration-1000 group-hover:opacity-50 group-hover:scale-110"></div>
+        <div className="absolute bottom-10 left-10 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse transition-all duration-1000 delay-500 group-hover:opacity-50 group-hover:scale-110"></div>
+
         {/* Back button */}
         <button
           onClick={() => navigate('/')}
-          className="absolute top-8 left-8 flex items-center gap-2 text-teal-600 hover:text-teal-800 font-medium text-sm transition-colors group"
+          className="absolute top-8 left-8 flex items-center gap-2 text-teal-700 hover:text-teal-900 font-bold text-sm transition-all bg-white/20 hover:bg-white/40 px-4 py-2 rounded-full backdrop-blur-sm z-20 group/back"
         >
-          <ArrowRight className="rotate-180 group-hover:-translate-x-1 transition-transform" size={18} />
+          <ArrowRight className="rotate-180 group-hover/back:-translate-x-1 transition-transform" size={18} />
           Back to Home
         </button>
 
         {/* Logo */}
-        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <Heart fill="#14B8A6" size={22} className="text-teal-500" />
-          <span className="text-xl font-bold text-slate-800">MediVault</span>
+        <div className="absolute top-9 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
+          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-sm">
+            <Heart className="h-5 w-5 text-primary-foreground animate-pulse" fill="currentColor" />
+          </div>
+          <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
         </div>
 
-        {/* Illustration */}
-        <div className="w-72 h-72 mb-8 rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: '0 25px 60px rgba(20, 184, 166, 0.25)' }}>
-          <img
-            src="/doctor_illustration.png"
-            alt="Doctor digital portal illustration"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-          {/* Fallback icon panel */}
-          <div className="w-full h-full items-center justify-center bg-teal-100 rounded-3xl hidden">
-            <Stethoscope size={100} className="text-teal-400 opacity-60" />
+        {/* Interactive 3D Illustration Container */}
+        <div className="relative w-80 h-80 mb-10 z-10 transition-all duration-700 ease-out hover:-translate-y-4 hover:scale-[1.02] cursor-pointer"
+             onMouseMove={(e) => {
+               const rect = e.currentTarget.getBoundingClientRect();
+               const x = e.clientX - rect.left - rect.width / 2;
+               const y = e.clientY - rect.top - rect.height / 2;
+               e.currentTarget.style.transform = `perspective(1000px) rotateY(${x / 10}deg) rotateX(${-y / 10}deg) scale3d(1.05, 1.05, 1.05)`;
+               e.currentTarget.style.transition = 'none';
+             }}
+             onMouseLeave={(e) => {
+               e.currentTarget.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`;
+               e.currentTarget.style.transition = 'transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+             }}>
+          
+          <div className="absolute inset-0 bg-gradient-to-tr from-teal-400 to-emerald-300 rounded-[2.5rem] opacity-20 blur-2xl transition-opacity duration-500 group-hover:opacity-40"></div>
+          
+          <div className="absolute inset-0 rounded-[2.5rem] bg-white p-2 shadow-2xl transition-all duration-500 ring-1 ring-white/50" 
+               style={{ boxShadow: '0 30px 60px -15px rgba(20, 184, 166, 0.4)' }}>
+            <div className="w-full h-full rounded-[2rem] overflow-hidden bg-teal-50 relative group/img">
+              <img
+                src="/steth_hero.png"
+                alt="Premium Medical Stethoscope"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div className="absolute inset-0 bg-teal-900/10 group-hover/img:bg-transparent transition-colors duration-500"></div>
+              {/* Fallback pattern */}
+              <div className="w-full h-full items-center justify-center hidden bg-gradient-to-br from-teal-50 to-emerald-100 relative overflow-hidden">
+                <Stethoscope size={120} className="text-teal-400 opacity-80 drop-shadow-lg transition-transform duration-500 hover:scale-110 hover:rotate-6" />
+                <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] animate-[shimmer_3s_infinite_linear] opacity-30 pointer-events-none"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating UI Elements */}
+          <div className="absolute -right-6 top-10 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-white flex items-center gap-3 animate-bounce shadow-teal-500/20" style={{ animationDuration: '3s' }}>
+             <div className="bg-emerald-100 p-2 rounded-full text-emerald-600"><CheckCircle2 size={16} /></div>
+             <div className="text-xs font-bold text-slate-700">Verified</div>
+          </div>
+          <div className="absolute -left-6 bottom-16 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-white flex items-center gap-3 animate-bounce shadow-teal-500/20" style={{ animationDuration: '4s', animationDelay: '1s' }}>
+             <div className="bg-blue-100 p-2 rounded-full text-blue-600"><ShieldCheck size={16} /></div>
+             <div className="text-xs font-bold text-slate-700">AES-256</div>
           </div>
         </div>
 
         {/* Tagline */}
-        <div className="text-center max-w-xs">
-          <h2 className="text-2xl font-black text-slate-800 mb-3 leading-snug">
+        <div className="text-center max-w-sm z-10 transition-transform duration-500 group-hover:-translate-y-2">
+          <h2 className="text-3xl font-black text-slate-800 mb-4 leading-[1.1]">
             Streamline your practice.<br />
-            <span style={{ color: '#14B8A6' }}>Empower your care.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500 filter drop-shadow-sm">Empower your care.</span>
           </h2>
-          <p className="text-slate-500 text-sm leading-relaxed">
-            MediVault gives you secure access to patient records, digital prescriptions, and tele-consultations all from one encrypted portal.
+          <p className="text-slate-600 font-medium text-sm leading-relaxed px-4">
+            Join the most secure provider network. Manage patient records and tele-consultations directly from your encrypted portal.
           </p>
         </div>
 
         {/* Bottom badges */}
-        <div className="absolute bottom-8 flex items-center gap-4 text-xs text-teal-600 font-medium opacity-80">
-          <span className="flex items-center gap-1"><ShieldCheck size={13} /> Secure Access</span>
-          <span>·</span>
-          <span>HIPAA Compliant</span>
-          <span>·</span>
-          <span>AES-256 Encrypted</span>
+        <div className="absolute bottom-8 flex flex-wrap justify-center items-center gap-6 text-xs text-teal-800 font-bold opacity-80 bg-white/30 backdrop-blur-md px-6 py-3 rounded-full border border-white/40 shadow-sm transition-transform duration-500 hover:scale-105">
+          <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-teal-600" /> Secure Gateway</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+          <span className="flex items-center gap-1.5"><Heart size={14} className="text-teal-600" /> Patient First</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+          <span className="flex items-center gap-1.5"><Lock size={14} className="text-teal-600" /> Zero-Knowledge</span>
         </div>
       </div>
 
@@ -241,14 +278,16 @@ export default function DoctorLogin() {
         <div className="w-full max-w-md">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center gap-2 mb-1 lg:hidden">
-              <Heart fill="#14B8A6" size={20} className="text-teal-500" />
-              <span className="text-lg font-bold text-slate-800 dark:text-slate-100">MediVault</span>
+            <div className="flex items-center gap-2 mb-3 lg:hidden">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
+                <Heart className="h-4 w-4 text-primary-foreground" fill="currentColor" />
+              </div>
+              <span className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">MediVault</span>
             </div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-white transition-colors">
               {isLogin ? 'Doctor Portal Access' : 'Provider Registration'}
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">
+            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 text-sm transition-colors">
               {isLogin ? 'Welcome back! Sign in to manage your practice.' : 'Join the network to manage your appointments and records.'}
             </p>
           </div>
@@ -263,7 +302,7 @@ export default function DoctorLogin() {
                   <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name (with Title)</label>
                   <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <User className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                      <User className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
                     </div>
                     <input
                       type="text"
@@ -281,7 +320,7 @@ export default function DoctorLogin() {
                   <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Medical Specialty</label>
                   <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Activity className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                      <Activity className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
                     </div>
                     <select
                       required
@@ -304,7 +343,7 @@ export default function DoctorLogin() {
                   <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Gender</label>
                   <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Users className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                      <Users className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
                     </div>
                     <select
                       required
@@ -321,76 +360,12 @@ export default function DoctorLogin() {
                   </div>
                 </div>
 
-                {/* Location */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Clinic / Hospital Location</label>
-                  <div className="relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <MapPin className="h-5 w-5 text-slate-400 dark:text-slate-500" />
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
-                      placeholder="e.g. Apollo Hospital, Bangalore"
-                    />
-                  </div>
-                </div>
               </div>
             )}
 
-            {/* -------------------- BOTH COMMONLY USED FIELDS -------------------- */}
-
-            {/* Email with optional inline Verify */}
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
-              <div className="flex gap-2">
-                <div className="relative flex-1 rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => { setEmail(e.target.value); setEmailVerified(false); }}
-                    className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
-                    placeholder="doctor@hospital.com"
-                  />
-                  {/* Verified Icon Badge inside input if verified */}
-                  {!isLogin && emailVerified && (
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in zoom-in duration-300">
-                      <CheckCircle2 size={18} />
-                    </div>
-                  )}
-                </div>
-
-                {/* Verification Trigger Button */}
-                {!isLogin && (
-                  <button 
-                    type="button" 
-                    onClick={handleVerifyEmail}
-                    disabled={isVerifyingEmail || emailVerified || !email}
-                    className={`px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
-                      ${emailVerified 
-                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default' 
-                        : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 active:bg-slate-100'}
-                      ${isVerifyingEmail ? 'opacity-70 cursor-wait' : ''}
-                    `}
-                  >
-                    {isVerifyingEmail && <Loader2 size={16} className="animate-spin" />}
-                    {!isVerifyingEmail && emailVerified && <span>Verified</span>}
-                    {!isVerifyingEmail && !emailVerified && <span>Verify</span>}
-                  </button>
-                )}
-              </div>
-            </div>
-
             {/* License Number with optional inline Verify */}
             {!isLogin && (
-              <div>
+              <div className="mb-4">
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Medical License Number</label>
                 <div className="flex gap-2">
                   <div className="relative flex-1 rounded-md shadow-sm">
@@ -419,7 +394,7 @@ export default function DoctorLogin() {
                     className={`px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
                       ${licenseVerified 
                         ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default' 
-                        : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 active:bg-slate-100'}
+                        : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] dark:hover:bg-slate-800 active:bg-slate-100 dark:bg-slate-800'}
                       ${isVerifyingLicense ? 'opacity-70 cursor-wait' : ''}
                     `}
                   >
@@ -427,6 +402,73 @@ export default function DoctorLogin() {
                     {!isVerifyingLicense && licenseVerified && <span>Verified</span>}
                     {!isVerifyingLicense && !licenseVerified && <span>Verify</span>}
                   </button>
+                </div>
+              </div>
+            )}
+
+            {/* -------------------- BOTH COMMONLY USED FIELDS -------------------- */}
+
+            {/* Email with optional inline Verify */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
+              <div className="flex gap-2">
+                <div className="relative flex-1 rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                  </div>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setEmailVerified(false); }}
+                    className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                    placeholder="doctor@hospital.com"
+                  />
+                  {/* Verified Icon Badge inside input if verified */}
+                  {!isLogin && emailVerified && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-emerald-500 animate-in zoom-in duration-300">
+                      <CheckCircle2 size={18} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Verification Trigger Button */}
+                {!isLogin && (
+                  <button 
+                    type="button" 
+                    onClick={handleVerifyEmail}
+                    disabled={isVerifyingEmail || emailVerified || !email}
+                    className={`px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
+                      ${emailVerified 
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default' 
+                        : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] dark:hover:bg-slate-800 active:bg-slate-100 dark:bg-slate-800'}
+                      ${isVerifyingEmail ? 'opacity-70 cursor-wait' : ''}
+                    `}
+                  >
+                    {isVerifyingEmail && <Loader2 size={16} className="animate-spin" />}
+                    {!isVerifyingEmail && emailVerified && <span>Verified</span>}
+                    {!isVerifyingEmail && !emailVerified && <span>Verify</span>}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Location (Moved Below Email) */}
+            {!isLogin && (
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Clinic / Hospital Location</label>
+                <div className="relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MapPin className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                    placeholder="e.g. Apollo Hospital, Bangalore"
+                  />
                 </div>
               </div>
             )}
@@ -443,7 +485,7 @@ export default function DoctorLogin() {
               </div>
               <div className="relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                  <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
                 </div>
                 <input
                   type={showPasswordText ? "text" : "password"}
@@ -458,34 +500,34 @@ export default function DoctorLogin() {
                   type="button"
                   tabIndex="-1"
                   onClick={() => setShowPasswordText(!showPasswordText)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none"
                 >
                   {showPasswordText ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               
               {/* Password Dynamic Constraints UI */}
-              {!isLogin && (
+              {!isLogin && showConfirmPassword && (
                 <div className="mt-3 grid grid-cols-2 gap-2 px-1">
-                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasMinLength ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasMinLength ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'} transition-colors`}>
                     <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasMinLength ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasMinLength && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
                     8+ Characters
                   </div>
-                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasCapital ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasCapital ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'} transition-colors`}>
                     <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasCapital ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasCapital && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
                     1 Capital Letter
                   </div>
-                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasNumber ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasNumber ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'} transition-colors`}>
                     <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasNumber ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasNumber && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
                     1 Number
                   </div>
-                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasSpecial ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasSpecial ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'} transition-colors`}>
                     <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasSpecial ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasSpecial && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
@@ -501,7 +543,7 @@ export default function DoctorLogin() {
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Confirm Password</label>
                 <div className="relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                    <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
                   </div>
                   <input
                     type={showConfirmPasswordText ? "text" : "password"}
@@ -510,8 +552,8 @@ export default function DoctorLogin() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={`pl-10 pr-16 block w-full rounded-xl border sm:text-sm py-3 transition-colors outline-none text-slate-900 dark:text-slate-100 dark:border-slate-700 dark:bg-[#1a1a1a]
                       ${confirmPassword && !isConfirmMatch ? 'border-red-300 dark:border-red-800 focus:ring-red-400 focus:border-red-400 bg-red-50/50 dark:bg-red-900/20' : ''}
-                      ${confirmPassword && isConfirmMatch ? 'border-emerald-300 dark:border-emerald-800 focus:ring-emerald-400 focus:border-emerald-400 bg-emerald-50/50 dark:bg-emerald-900/20' : ''}
-                      ${!confirmPassword ? 'border-slate-200 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] bg-white dark:bg-[#1a1a1a]' : ''}
+                      ${confirmPassword && isConfirmMatch ? 'border-emerald-300 dark:border-emerald-800 focus:ring-emerald-400 focus:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20/50 dark:bg-emerald-900/20' : ''}
+                      ${!confirmPassword ? 'border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] bg-white dark:bg-[#1a1a1a]' : ''}
                     `}
                     placeholder="••••••••"
                   />
@@ -525,7 +567,7 @@ export default function DoctorLogin() {
                       type="button"
                       tabIndex="-1"
                       onClick={() => setShowConfirmPasswordText(!showConfirmPasswordText)}
-                      className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
+                      className="text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none"
                     >
                       {showConfirmPasswordText ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -548,7 +590,7 @@ export default function DoctorLogin() {
           </form>
 
           {/* Footer - Replaced Toggle Buttons */}
-          <div className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
+          <div className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400 dark:text-slate-500">
             {isLogin ? (
               <p>
                 New provider?{' '}

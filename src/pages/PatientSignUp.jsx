@@ -24,7 +24,7 @@ function Field({ label, id, type = 'text', value, onChange, placeholder, autoFil
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <label htmlFor={id} className="text-sm font-semibold text-slate-700">{label}</label>
+        <label htmlFor={id} className="text-sm font-semibold text-slate-700 dark:text-slate-300">{label}</label>
         {autoFilled && (
           <span className="flex items-center gap-1 text-emerald-600 text-xs font-semibold">
             <CheckCircle size={13} /> Auto-filled
@@ -39,7 +39,7 @@ function Field({ label, id, type = 'text', value, onChange, placeholder, autoFil
           onChange={onChange}
           placeholder={placeholder}
           required={required}
-          className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-gray-400 focus:outline-none transition-all"
+          className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none transition-all"
           style={{ borderColor: autoFilled ? '#6ee7b7' : '#e5e7eb', background: autoFilled ? '#f0fdf4' : 'white' }}
           onFocus={(e) => { if (!autoFilled) e.target.style.borderColor = '#7C83FD'; }}
           onBlur={(e) => { if (!autoFilled) e.target.style.borderColor = '#e5e7eb'; }}
@@ -175,9 +175,11 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
           Back to Home
         </button>
 
-        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <Heart fill="#7C83FD" size={22} className="text-indigo-500" />
-          <span className="text-xl font-bold text-slate-800">MediVault</span>
+        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-sm">
+            <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
+          </div>
+          <span className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">MediVault</span>
         </div>
 
         <div className="w-64 h-64 mb-8 rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: '0 25px 60px rgba(124,131,253,0.35)' }}>
@@ -190,11 +192,11 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
         </div>
 
         <div className="text-center max-w-xs">
-          <h2 className="text-2xl font-black text-slate-800 mb-3 leading-snug">
+          <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-3 leading-snug">
             Begin your health<br />
             <span style={{ color: '#7C83FD' }}>digital journey.</span>
           </h2>
-          <p className="text-slate-500 text-sm leading-relaxed">
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm leading-relaxed">
             Use your ABHA ID to instantly populate your profile, or fill in your details manually.
           </p>
         </div>
@@ -209,7 +211,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
       </div>
 
       {/* ───── RIGHT PANEL ───── */}
-      <div className="flex-1 overflow-y-auto flex flex-col items-center px-6 py-10 bg-white">
+      <div className="flex-1 overflow-y-auto flex flex-col items-center px-6 py-10 bg-white dark:bg-[#1e1e1e]">
         <button
           onClick={onBack}
           className="lg:hidden self-start mb-4 flex items-center gap-2 text-indigo-500 hover:text-indigo-700 text-sm font-medium transition-colors group"
@@ -220,16 +222,18 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
 
         <div className="w-full max-w-lg">
           <div className="mb-6">
-            <div className="flex items-center gap-2 mb-1 lg:hidden">
-              <Heart fill="#7C83FD" size={20} />
-              <span className="text-lg font-bold text-slate-800">MediVault</span>
+            <div className="flex items-center gap-2 mb-2 lg:hidden">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
+                <Heart className="h-4 w-4 text-primary-foreground" fill="currentColor" />
+              </div>
+              <span className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">MediVault</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-900">Create Account</h1>
-            <p className="text-slate-500 mt-1 text-sm">Join MediVault to manage your health digitally.</p>
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white">Create Account</h1>
+            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 text-sm">Join MediVault to manage your health digitally.</p>
           </div>
 
           {/* Social sign-up */}
-          <button className="flex items-center justify-center gap-3 w-full border border-gray-200 rounded-xl py-3 text-sm font-medium text-slate-700 hover:bg-gray-50 transition-all shadow-sm mb-4">
+          <button className="flex items-center justify-center gap-3 w-full border border-gray-200 rounded-xl py-3 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-gray-50 transition-all shadow-sm mb-4">
             <GoogleIcon /> Continue with Google
           </button>
 
@@ -249,7 +253,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               {/* Header row */}
               <div className="flex items-center gap-2 mb-3">
                 <ShieldCheck size={16} className={abhaFetched ? 'text-emerald-500' : 'text-indigo-400'} />
-                <p className="text-sm font-bold text-slate-800 flex-1">
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-100 flex-1">
                   {abhaFetched ? '✅ ABHA details fetched!' : 'Have an ABHA ID? Auto-fill your details'}
                 </p>
 
@@ -272,7 +276,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
                   {/* Popup tooltip */}
                   {abhaPopup && (
                     <div
-                      className="absolute right-0 top-7 z-50 w-64 rounded-xl shadow-xl border border-indigo-100 p-4 text-xs text-slate-600"
+                      className="absolute right-0 top-7 z-50 w-64 rounded-xl shadow-xl border border-indigo-100 p-4 text-xs text-slate-600 dark:text-slate-400 dark:text-slate-500"
                       style={{ background: 'white' }}
                     >
                       <p className="font-bold text-indigo-600 mb-1.5">🪪 What is ABHA?</p>
@@ -292,7 +296,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
                   onChange={(e) => { setAbhaId(e.target.value); setAbhaError(''); }}
                   placeholder="e.g. 1234 5678 9012 34"
                   maxLength={18}
-                  className="flex-1 border border-indigo-200 bg-white rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-gray-400 focus:outline-none focus:border-indigo-400 transition-all"
+                  className="flex-1 border border-indigo-200 bg-white dark:bg-[#1e1e1e] rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:border-indigo-400 transition-all"
                 />
                 <button
                   type="button"
@@ -308,8 +312,8 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               {abhaError && <p className="text-red-500 text-xs mt-2">{abhaError}</p>}
 
               {/* Demo hint */}
-              <p className="text-[11px] text-slate-400 mt-2">
-                🧪 Demo IDs: <code className="bg-white px-1 rounded">91-1122-3344-5566</code> or <code className="bg-white px-1 rounded">82-2233-4455-6677</code>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+                🧪 Demo IDs: <code className="bg-white dark:bg-[#1e1e1e] px-1 rounded">91-1122-3344-5566</code> or <code className="bg-white dark:bg-[#1e1e1e] px-1 rounded">82-2233-4455-6677</code>
               </p>
             </div>
 
@@ -320,7 +324,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <Field label="Gender" id="gender" autoFilled={autoFilledFields.gender} required>
                 <select
                   id="gender" value={form.gender} onChange={setField('gender')} required
-                  className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none transition-all"
+                  className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
                   style={{ borderColor: autoFilledFields.gender ? '#6ee7b7' : '#e5e7eb', background: autoFilledFields.gender ? '#f0fdf4' : 'white' }}
                 >
                   <option value="">Select</option>
@@ -330,7 +334,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <Field label="Blood Group" id="blood-group" autoFilled={autoFilledFields.bloodGroup} required>
                 <select
                   id="blood-group" value={form.bloodGroup} onChange={setField('bloodGroup')} required
-                  className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none transition-all"
+                  className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
                   style={{ borderColor: autoFilledFields.bloodGroup ? '#6ee7b7' : '#e5e7eb', background: autoFilledFields.bloodGroup ? '#f0fdf4' : 'white' }}
                 >
                   <option value="">Select</option>
@@ -353,33 +357,33 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
             <Field label="Email Address" id="signup-email" type="email" value={form.email} onChange={setField('email')} placeholder="you@example.com" required />
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
               <div className="relative">
                 <input id="signup-password" type={showPassword ? 'text' : 'password'} value={form.password} onChange={setField('password')} placeholder="Min. 8 characters" required
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 focus:outline-none transition-all"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
                   onFocus={(e) => e.target.style.borderColor='#7C83FD'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 transition-colors">
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 transition-colors">
                   {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                 </button>
               </div>
 
               {/* Password Requirements Guide */}
               {form.password && (
-                <div className="mt-3 grid grid-cols-2 gap-y-2 p-3 bg-slate-50 border border-slate-100 rounded-xl">
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.length ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <div className="mt-3 grid grid-cols-2 gap-y-2 p-3 bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 rounded-xl">
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.length ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
                      <CheckCircle size={10} fill={pwdValidation.length ? 'currentColor' : 'none'} className={pwdValidation.length ? 'opacity-100' : 'opacity-30'} />
                      At least 8 characters
                    </div>
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.upper ? 'text-emerald-600' : 'text-slate-400'}`}>
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.upper ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
                      <CheckCircle size={10} fill={pwdValidation.upper ? 'currentColor' : 'none'} className={pwdValidation.upper ? 'opacity-100' : 'opacity-30'} />
                      Uppercase letter
                    </div>
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.lower ? 'text-emerald-600' : 'text-slate-400'}`}>
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.lower ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
                      <CheckCircle size={10} fill={pwdValidation.lower ? 'currentColor' : 'none'} className={pwdValidation.lower ? 'opacity-100' : 'opacity-30'} />
                      Lowercase letter
                    </div>
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.special ? 'text-emerald-600' : 'text-slate-400'}`}>
+                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.special ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
                      <CheckCircle size={10} fill={pwdValidation.special ? 'currentColor' : 'none'} className={pwdValidation.special ? 'opacity-100' : 'opacity-30'} />
                      Special character
                    </div>
@@ -388,13 +392,13 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Confirm Password</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Confirm Password</label>
               <div className="relative">
                 <input id="confirm-password" type={showConfirm ? 'text' : 'password'} value={form.confirmPassword} onChange={setField('confirmPassword')} placeholder="Repeat password" required
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 focus:outline-none transition-all"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
                   onFocus={(e) => e.target.style.borderColor='#7C83FD'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
                 />
-                <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 transition-colors">
+                <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 transition-colors">
                   {showConfirm ? <EyeOff size={17} /> : <Eye size={17} />}
                 </button>
               </div>
@@ -415,7 +419,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
             </button>
           </form>
 
-          <p className="text-center text-sm text-slate-500 mt-5">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-5">
             Already have an account?{' '}
             <button onClick={onLogin} className="font-semibold hover:underline" style={{ color: '#7C83FD' }}>
               Sign In

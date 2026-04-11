@@ -77,9 +77,11 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         </button>
 
         {/* Logo */}
-        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <Heart fill="#7C83FD" size={22} className="text-indigo-500" />
-          <span className="text-xl font-bold text-slate-800">MediVault</span>
+        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-sm">
+            <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
+          </div>
+          <span className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">MediVault</span>
         </div>
 
         {/* Illustration */}
@@ -101,11 +103,11 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
 
         {/* Tagline */}
         <div className="text-center max-w-xs">
-          <h2 className="text-2xl font-black text-slate-800 mb-3 leading-snug">
+          <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-3 leading-snug">
             Your medical history.<br />
             <span style={{ color: '#7C83FD' }}>Secured. Always accessible.</span>
           </h2>
-          <p className="text-slate-500 text-sm leading-relaxed">
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm leading-relaxed">
             MediVault keeps all your reports, prescriptions, and health records in one encrypted, government-standard vault.
           </p>
         </div>
@@ -150,12 +152,14 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         <div className="w-full max-w-md">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center gap-2 mb-1 lg:hidden">
-              <Heart fill="#7C83FD" size={20} />
-              <span className="text-lg font-bold text-slate-800 dark:text-slate-100">MediVault</span>
+            <div className="flex items-center gap-2 mb-2 lg:hidden">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
+                <Heart className="h-4 w-4 text-primary-foreground" fill="currentColor" />
+              </div>
+              <span className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">MediVault</span>
             </div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-white transition-colors">{t('login_welcome')}</h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">{t('login_subtitle')}</p>
+            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 text-sm transition-colors">{t('login_subtitle')}</p>
           </div>
 
           {/* Social Buttons */}
@@ -169,7 +173,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           </div>
 
           {/* ABHA Login */}
-          <div className="bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl p-5 mb-6 border border-indigo-100 dark:border-indigo-900/50 transition-colors">
+          <div className="bg-indigo-50 dark:bg-indigo-900/30/50 dark:bg-indigo-900/10 rounded-2xl p-5 mb-6 border border-indigo-100 dark:border-indigo-900/50 transition-colors">
             <div className="flex items-center gap-2 mb-3">
               <ShieldCheck size={16} className="text-indigo-500" />
               <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Login with ABHA Account</p>
@@ -200,7 +204,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
               </button>
             </div>
             {loginError && <p className="text-xs text-red-500 mt-2 font-medium">{loginError}</p>}
-            <p className="text-[10px] text-slate-400 mt-2">🧪 Demo: Use any 14 digits from database</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2">🧪 Demo: Use any 14 digits from database</p>
           </div>
 
           {/* Divider */}
@@ -252,7 +256,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -270,7 +274,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           </form>
 
           {/* Footer */}
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6 transition-colors">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-6 transition-colors">
             {t('login_new')}{' '}
             <button
               onClick={onSignUp}

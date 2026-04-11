@@ -92,12 +92,12 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
   ];
 
   const quickActions = [
-    { name: 'Book Consult', icon: <Plus size={16} />, color: 'blue', action: () => navigate(`/dashboard/patient/book-consultation`) },
-    { name: 'Order Medicine', icon: <Plus size={16} />, color: 'teal', action: () => navigate(`/dashboard/patient/order-medicine`) },
+    { name: 'Book Consultation', icon: <Plus size={16} />, bgClass: 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50', textClass: 'text-blue-700 dark:text-blue-300', iconBg: 'bg-blue-100 dark:bg-blue-800', action: () => navigate(`/dashboard/patient/book-consultation`) },
+    { name: 'Order Medicine', icon: <Plus size={16} />, bgClass: 'bg-teal-50 hover:bg-teal-100 dark:bg-teal-900/30 dark:hover:bg-teal-900/50', textClass: 'text-teal-700 dark:text-teal-300', iconBg: 'bg-teal-100 dark:bg-teal-800', action: () => navigate(`/dashboard/patient/order-medicine`) },
   ];
 
   return (
-    <div className="h-screen overflow-hidden bg-slate-50 flex font-sans text-slate-900">
+    <div className="h-screen overflow-hidden bg-slate-50 dark:bg-[#121212] flex font-sans text-slate-900 dark:text-white">
       
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
@@ -109,24 +109,24 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
 
       {/* Sidebar */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
+        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-[#1e1e1e] border-r border-slate-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/dashboard/${role}`)}>
-            <div className={`text-${role === 'patient' ? '[#1E40AF]' : '[#14B8A6]'}`}>
-              <Heart fill="currentColor" size={28} />
+        <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate(`/dashboard/${role}`)}>
+            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-sm">
+              <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
             </div>
-            <span className="text-xl font-bold text-slate-800">MediVault</span>
+            <span className="font-bold text-xl text-slate-800 dark:text-white">MediVault</span>
           </div>
-          <button className="md:hidden text-slate-500" onClick={() => setIsSidebarOpen(false)}>
+          <button className="md:hidden text-slate-500 dark:text-slate-400 dark:text-slate-500" onClick={() => setIsSidebarOpen(false)}>
             <X size={24} />
           </button>
         </div>
 
         <div className="px-4 py-8 flex flex-col h-[calc(100vh-5rem)]">
           <div className="mb-6 px-4">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Menu</p>
+            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Menu</p>
           </div>
           
           <nav className="flex-1 space-y-2">
@@ -156,8 +156,8 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
               <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quick Actions</div>
               <div className="grid grid-cols-1 gap-2">
                 {quickActions.map((action) => (
-                  <button onClick={action.action} key={action.name} className={`flex items-center gap-3 w-full p-3 rounded-xl bg-${action.color}-50 text-${action.color}-700 text-xs font-bold hover:bg-${action.color}-100 transition-colors`}>
-                    <div className={`p-1 rounded-lg bg-${action.color}-100`}>{action.icon}</div>
+                  <button onClick={action.action} key={action.name} className={`flex items-center gap-3 w-full p-3 rounded-xl text-xs font-bold transition-colors ${action.bgClass} ${action.textClass}`}>
+                    <div className={`p-1 rounded-lg ${action.iconBg}`}>{action.icon}</div>
                     {action.name}
                   </button>
                 ))}
@@ -167,7 +167,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
 
           <button 
             onClick={() => setShowLogoutConfirm(true)}
-            className="flex items-center justify-center gap-2 w-full mt-auto text-slate-500 hover:text-red-600 hover:bg-red-50 p-4 rounded-xl font-semibold transition-all"
+            className="flex items-center justify-center gap-2 w-full mt-auto text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-red-600 hover:bg-red-50 p-4 rounded-xl font-semibold transition-all"
           >
             <LogOut size={20} />
             Logout
@@ -178,9 +178,9 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Top Navbar */}
-        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-20 bg-white dark:bg-[#1e1e1e] border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-6 sticky top-0 z-30">
           <button 
-            className="md:hidden text-slate-600 hover:text-slate-900"
+            className="md:hidden text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:text-white"
             onClick={() => setIsSidebarOpen(true)}
           >
             <Menu size={24} />
@@ -194,7 +194,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white dark:bg-[#1e1e1e]"></span>
               </span>
               SOS
             </button>
@@ -203,7 +203,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             {role === 'patient' && (
               <button 
                 onClick={() => setIsQrModalOpen(true)}
-                className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-2.5 rounded-full font-bold text-xs transition-all hover:-translate-y-0.5"
+                className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold text-xs transition-all hover:-translate-y-0.5"
               >
                 <QrCode size={16} className="text-indigo-600" />
                 <span className="hidden sm:inline">Check-in</span>
@@ -211,30 +211,30 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             )}
 
             <div 
-              className="flex items-center gap-4 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-colors"
+              className="flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] p-2 rounded-xl transition-colors"
               onClick={() => navigate(`/dashboard/${role}/settings`)}
             >
             <div className={`w-10 h-10 rounded-full bg-${role === 'patient' ? 'blue' : 'teal'}-100 flex items-center justify-center text-${role === 'patient' ? '[#1E40AF]' : '[#14B8A6]'} font-bold`}>
               {user?.name?.[0] || (role === 'patient' ? 'P' : 'Dr')}
             </div>
               <div className="hidden sm:block">
-                <p className="text-sm font-bold text-slate-800 leading-tight">
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight">
                   {user?.name || (role === 'patient' ? 'Patient' : 'Doctor')}
                 </p>
-                <p className="text-xs text-slate-500 capitalize">{role}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 capitalize">{role}</p>
               </div>
             </div>
           </div>
         </header>
 
         {/* Dashboard Pages */}
-        <div className="flex-1 overflow-auto bg-slate-50 flex flex-col justify-between p-6 md:p-8">
+        <div className="flex-1 overflow-auto bg-slate-50 dark:bg-[#121212] flex flex-col justify-between p-6 md:p-8">
           <div>
             <Outlet context={{ user, setUser, records, setRecords, fullBodyReport, setFullBodyReport, consultations, setConsultations }} />
           </div>
           
           {/* Motivational Footer */}
-          <footer className="mt-12 text-center text-slate-400 text-sm font-medium animate-in fade-in slide-in-from-bottom-2 duration-700 pb-4">
+          <footer className="mt-12 text-center text-slate-400 dark:text-slate-500 text-sm font-medium animate-in fade-in slide-in-from-bottom-2 duration-700 pb-4">
             "{quotes[quoteIdx]}"
           </footer>
         </div>
@@ -247,22 +247,22 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300"
             onClick={() => setIsSosModalOpen(false)}
           />
-          <div className="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="relative bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6 mx-auto">
               <ShieldAlert size={32} />
             </div>
-            <h2 className="text-2xl font-black text-center text-slate-800 mb-2">Emergency SOS</h2>
-            <p className="text-slate-500 text-center mb-6 leading-relaxed">
+            <h2 className="text-2xl font-black text-center text-slate-800 dark:text-slate-100 mb-2">Emergency SOS</h2>
+            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-center mb-6 leading-relaxed">
               This will instantly alert emergency services and share your medical vault location with authorized responders. Use this only in critical situations.
             </p>
-            <div className="bg-slate-50 rounded-2xl p-4 mb-6 space-y-3">
+            <div className="bg-slate-50 dark:bg-[#121212] rounded-2xl p-4 mb-6 space-y-3">
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-slate-700 font-medium">Automatic call to 102/112</p>
+                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">Automatic call to 102/112</p>
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-slate-700 font-medium">
+                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
                   Alerting emergency contacts:<br/>
                   <span className="font-bold">
                     {user?.emergencyContacts?.length > 0 
@@ -273,7 +273,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-slate-700 font-medium">Sharing current health profile & live location</p>
+                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">Sharing current health profile & live location</p>
               </div>
             </div>
             <div className="flex flex-col gap-3">
@@ -287,7 +287,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
                 CONFIRM EMERGENCY
               </button>
               <button 
-                className="w-full py-3 text-slate-500 font-bold hover:text-slate-700"
+                className="w-full py-3 text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold hover:text-slate-700 dark:text-slate-300"
                 onClick={() => setIsSosModalOpen(false)}
               >
                 Go Back
@@ -309,12 +309,12 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300"
             onClick={() => setShowLogoutConfirm(false)}
           />
-          <div className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center">
+          <div className="relative bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col items-center">
             <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
               <LogOut size={32} />
             </div>
-            <h2 className="text-xl font-black text-slate-800 text-center mb-2">Sign Out?</h2>
-            <p className="text-slate-500 text-center text-sm mb-8 leading-relaxed">
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 text-center mb-2">Sign Out?</h2>
+            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-center text-sm mb-8 leading-relaxed">
               Are you sure you want to securely log out of your MediVault account? You will need to re-authenticate to access your vault.
             </p>
             <div className="flex flex-col gap-3 w-full">
@@ -326,7 +326,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
               </button>
               <button 
                 onClick={() => setShowLogoutConfirm(false)}
-                className="w-full py-3.5 text-slate-500 font-bold hover:text-slate-800 transition-colors"
+                className="w-full py-3.5 text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold hover:text-slate-800 dark:text-slate-100 transition-colors"
               >
                 Cancel
               </button>

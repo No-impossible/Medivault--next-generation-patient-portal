@@ -202,7 +202,7 @@ export default function CinematicThemeSwitcher() {
         {/* Background Icons */}
         <div className="absolute inset-0 flex items-center justify-between px-4">
           <Sun size={20} className={isDark ? 'text-yellow-100' : 'text-amber-600'} />
-          <Moon size={20} className={isDark ? 'text-yellow-100' : 'text-slate-700'} />
+          <Moon size={20} className={isDark ? 'text-yellow-100' : 'text-slate-700 dark:text-slate-300'} />
         </div>
 
         {/* Circular Thumb with Bouncy Spring Physics */}

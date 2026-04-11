@@ -199,15 +199,15 @@ export default function PatientOrderMedicine() {
           <h1 className="text-3xl font-black text-[#1E40AF] flex items-center gap-3">
             <Pill size={32} /> Smart Pharmacy
           </h1>
-          <p className="text-slate-500 font-medium mt-1">Upload prescriptions for instant AI-powered medication extraction and seamless ordering.</p>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">Upload prescriptions for instant AI-powered medication extraction and seamless ordering.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
         {/* Left Column: Upload & Scan */}
-        <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-lg shadow-blue-900/5">
-          <div className="flex items-center gap-2 mb-6 text-[#1E40AF] font-bold text-lg border-b border-slate-100 pb-4">
+        <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-lg shadow-blue-900/5">
+          <div className="flex items-center gap-2 mb-6 text-[#1E40AF] font-bold text-lg border-b border-slate-100 dark:border-slate-800 pb-4">
             <ScanLine size={24} /> Upload & Scan
           </div>
 
@@ -215,20 +215,20 @@ export default function PatientOrderMedicine() {
             <div className="space-y-6">
               {/* Manual Search */}
               <form onSubmit={handleManualSearch} className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={20} />
                 <input 
                   type="text" 
                   value={manualQuery}
                   onChange={(e) => setManualQuery(e.target.value)}
                   placeholder="Or search medicines manually by name..." 
-                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#1E40AF] focus:border-transparent font-medium text-slate-800 placeholder:text-slate-400"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-[#1E40AF] focus:border-transparent font-medium text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:text-slate-500"
                 />
               </form>
 
               <div className="flex items-center gap-4">
-                <div className="h-px bg-slate-200 flex-1"></div>
-                <span className="text-slate-400 font-bold text-xs uppercase tracking-wider">AI Scanner</span>
-                <div className="h-px bg-slate-200 flex-1"></div>
+                <div className="h-px bg-slate-200 dark:bg-slate-700 flex-1"></div>
+                <span className="text-slate-400 dark:text-slate-500 font-bold text-xs uppercase tracking-wider">AI Scanner</span>
+                <div className="h-px bg-slate-200 dark:bg-slate-700 flex-1"></div>
               </div>
 
               {/* Dropzone */}
@@ -245,21 +245,21 @@ export default function PatientOrderMedicine() {
                   onChange={handleFileSelect}
                   className="hidden" 
                 />
-                <div className="w-16 h-16 bg-white text-blue-600 rounded-full flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 bg-white dark:bg-[#1e1e1e] text-blue-600 rounded-full flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
                   <UploadCloud size={32} />
                 </div>
-                <h3 className="font-black text-lg text-slate-800 mb-1">Drag & Drop Prescription</h3>
-                <p className="text-sm text-slate-500 font-medium">or click to browse (PNG, JPG)</p>
+                <h3 className="font-black text-lg text-slate-800 dark:text-slate-100 mb-1">Drag & Drop Prescription</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium">or click to browse (PNG, JPG)</p>
               </div>
             </div>
           ) : (
             // Image Preview & Scanner
-            <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center h-80 group">
+            <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#121212] flex items-center justify-center h-80 group">
               <img src={previewUrl} alt="Prescription" className="max-h-full max-w-full object-contain opacity-70" />
               
               <button 
                 onClick={clearFile}
-                className="absolute top-4 right-4 bg-white/80 backdrop-blur text-red-500 hover:text-red-700 hover:bg-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20"
+                className="absolute top-4 right-4 bg-white dark:bg-[#1e1e1e]/80 backdrop-blur text-red-500 hover:text-red-700 hover:bg-white dark:bg-[#1e1e1e] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20"
                 title="Remove and upload new"
               >
                 <X size={20} />
@@ -293,8 +293,8 @@ export default function PatientOrderMedicine() {
         </div>
 
         {/* Right Column: Extracted Results */}
-        <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-lg shadow-blue-900/5 min-h-[500px] flex flex-col">
-          <div className="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
+        <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-lg shadow-blue-900/5 min-h-[500px] flex flex-col">
+          <div className="flex items-center justify-between mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
             <div className="flex items-center gap-2 text-[#1E40AF] font-bold text-lg">
               <CheckCircle2 size={24} /> Extracted Results
             </div>
@@ -308,7 +308,7 @@ export default function PatientOrderMedicine() {
           {(status === 'IDLE' || status === 'SCANNING') ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-300">
               <ScanLine size={64} className="mb-4 opacity-50" />
-              <p className="font-medium text-slate-400 text-center max-w-xs">Scan a prescription to view extracted medicines here.</p>
+              <p className="font-medium text-slate-400 dark:text-slate-500 text-center max-w-xs">Scan a prescription to view extracted medicines here.</p>
             </div>
           ) : (
             <div className="flex-1 flex flex-col h-full">
@@ -321,30 +321,30 @@ export default function PatientOrderMedicine() {
 
               <div className="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
                 {extractedMedicines.map(med => (
-                  <div key={med.id} className="border border-slate-200 rounded-2xl p-5 hover:border-blue-300 transition-colors group">
+                  <div key={med.id} className="border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-blue-300 transition-colors group">
                     <div className="flex justify-between items-start mb-4">
                       {/* Editable Fields */}
                       <div className="space-y-3 flex-1 mr-4">
                         <div className="relative">
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Medicine Name</label>
+                          <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Medicine Name</label>
                           <div className="flex items-center gap-2">
                             <input 
                               type="text" 
                               value={med.name} 
                               onChange={(e) => handleMedicineChange(med.id, 'name', e.target.value)}
-                              className="font-black text-slate-800 text-lg w-full border-none p-0 focus:ring-0 bg-transparent transition-colors hover:text-blue-600"
+                              className="font-black text-slate-800 dark:text-slate-100 text-lg w-full border-none p-0 focus:ring-0 bg-transparent transition-colors hover:text-blue-600"
                             />
                             <Edit2 size={14} className="text-slate-300 group-hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                         </div>
                         <div className="relative">
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Suggested Dosage</label>
+                          <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Suggested Dosage</label>
                           <div className="flex items-center gap-2">
                             <input 
                               type="text" 
                               value={med.dosage} 
                               onChange={(e) => handleMedicineChange(med.id, 'dosage', e.target.value)}
-                              className="font-medium text-slate-600 text-sm w-full border-none p-0 focus:ring-0 bg-transparent"
+                              className="font-medium text-slate-600 dark:text-slate-400 dark:text-slate-500 text-sm w-full border-none p-0 focus:ring-0 bg-transparent"
                             />
                             <Edit2 size={12} className="text-slate-300 group-hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
@@ -352,13 +352,13 @@ export default function PatientOrderMedicine() {
                       </div>
 
                       {/* Confidence Score */}
-                      <div className={`shrink-0 flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-lg ${med.confidence > 90 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                      <div className={`shrink-0 flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-lg ${med.confidence > 90 ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
                         {med.confidence}% Match
                       </div>
                     </div>
 
                     {/* Deep Linking Ordering Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-100">
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                       <button 
                         onClick={() => openDeepLink(med.name, 'pharmeasy')}
                         className="flex-1 bg-[#10847e] hover:bg-[#0c6b66] text-white py-2 rounded-xl text-xs font-bold shadow-md transition-transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
@@ -377,9 +377,9 @@ export default function PatientOrderMedicine() {
               </div>
 
               {/* Data Persistence Action */}
-              <div className="mt-8 pt-6 border-t border-slate-100">
+              <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
                 {status === 'SAVED' ? (
-                  <div className="bg-emerald-50 text-emerald-700 p-4 rounded-xl flex items-center justify-center gap-2 font-bold">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 p-4 rounded-xl flex items-center justify-center gap-2 font-bold">
                     <CheckCircle2 size={20} /> Prescriptions Saved Securely!
                   </div>
                 ) : (

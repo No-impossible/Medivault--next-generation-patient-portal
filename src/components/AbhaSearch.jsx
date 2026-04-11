@@ -37,7 +37,7 @@ const AbhaSearch = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 md:p-8 transition-all">
+      <div className="bg-white dark:bg-[#1e1e1e] rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6 md:p-8 transition-all">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 tracking-tight">ABHA Registry Search</h2>
         
         <form onSubmit={handleSearch} className="relative flex flex-col md:flex-row gap-4 mb-4">
@@ -80,7 +80,7 @@ const AbhaSearch = () => {
         )}
 
         {patientData && !loading && !error && (
-          <div className="mt-8 bg-white border border-gray-100 rounded-xl shadow-md p-6 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="mt-8 bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-gray-800 rounded-xl shadow-md p-6 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
              {/* Accent left border */}
              <div className="absolute top-0 left-0 w-1.5 h-full bg-[#1E40AF]"></div>
              
@@ -114,7 +114,7 @@ const AbhaSearch = () => {
                   </div>
                 </div>
 
-                <div className="mt-4 lg:mt-0 w-full lg:w-auto pt-4 lg:pt-0 border-t lg:border-t-0 border-gray-100">
+                <div className="mt-4 lg:mt-0 w-full lg:w-auto pt-4 lg:pt-0 border-t lg:border-t-0 border-gray-100 dark:border-gray-800">
                   <button className="w-full lg:w-auto px-6 py-3 bg-[#1E40AF] text-white text-sm font-semibold rounded-xl shadow-sm hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-[#1E40AF] focus:ring-offset-2 transition-all">
                     Request Consent to View Records
                   </button>
