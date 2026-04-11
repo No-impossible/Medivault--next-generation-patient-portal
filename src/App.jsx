@@ -6,8 +6,8 @@ import DoctorLogin from './pages/DoctorLogin';
 import { seedMockAbhaUsers } from './services/healthService';
 
 import LandingPage from './pages/LandingPage';
-import PatientLogin from './pages/PatientLogin';
 import PatientSignUp from './pages/PatientSignUp';
+import AuthPage from './pages/AuthPage';
 import PatientDashboard from './pages/PatientDashboard';
 import PatientSettings from './pages/PatientSettings';
 import PatientRecords from './pages/PatientRecords';
@@ -73,20 +73,20 @@ export default function App() {
             t={t} 
             i18n={i18n}
             scrollToEntry={scrollToEntry}
-            onPatientLogin={() => navigate('/login/patient')}
+            onPatientLogin={() => navigate('/auth', { state: { role: 'patient' } })}
           />
         } 
       />
       
       <Route 
-        path="/login/patient" 
+        path="/auth" 
         element={
-          <PatientLogin 
-            onBack={() => navigate('/')}
-            onSignUp={() => navigate('/signup/patient')}
+          <AuthPage 
+            onPatientBack={() => navigate('/')}
+            onPatientSignUp={() => navigate('/signup/patient')}
             t={t}
             i18n={i18n}
-            onLoginSuccess={handleLoginSuccess}
+            onPatientLoginSuccess={handleLoginSuccess}
           />
         } 
       />
@@ -96,7 +96,7 @@ export default function App() {
         element={
           <PatientSignUp 
             onBack={() => navigate('/')}
-            onLogin={() => navigate('/login/patient')}
+            onLogin={() => navigate('/auth', { state: { role: 'patient' } })}
             onSignUpSuccess={handleLoginSuccess}
           />
         } 
@@ -118,7 +118,7 @@ export default function App() {
       </Route>
 
       {/* Doctor Routes */}
-      <Route path="/doctor/login" element={<DoctorLogin />} />
+      <Route path="/doctor/login" element={<Navigate to="/auth" state={{ role: 'doctor' }} replace />} />
       <Route path="/doctor" element={<DoctorDashboard />} />
       <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
 

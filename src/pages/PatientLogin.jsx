@@ -121,27 +121,27 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
       </div>
 
       {/* ───── RIGHT PANEL ───── */}
-      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white relative">
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white dark:bg-[#121212] transition-colors duration-500 relative">
         
         {/* Language Switcher */}
         <div className="absolute top-8 right-8 z-10 flex items-center gap-2">
-          <Globe size={18} className="text-indigo-600" />
+          <Globe size={18} className="text-indigo-600 dark:text-indigo-400" />
           <select 
             onChange={(e) => i18n.changeLanguage(e.target.value)}
             value={i18n.language}
-            className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer hover:text-indigo-600 transition-colors"
+            className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
           >
-            <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-            <option value="mr">मराठी</option>
-            <option value="ta">தமிழ்</option>
+            <option value="en" className="dark:bg-slate-800">English</option>
+            <option value="hi" className="dark:bg-slate-800">हिंदी</option>
+            <option value="mr" className="dark:bg-slate-800">मराठी</option>
+            <option value="ta" className="dark:bg-slate-800">தமிழ்</option>
           </select>
         </div>
         
         {/* Mobile back button */}
         <button
           onClick={onBack}
-          className="lg:hidden self-start mb-6 flex items-center gap-2 text-indigo-500 hover:text-indigo-700 text-sm font-medium transition-colors group"
+          className="lg:hidden self-start mb-6 flex items-center gap-2 text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 text-sm font-medium transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           Home
@@ -152,27 +152,27 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-1 lg:hidden">
               <Heart fill="#7C83FD" size={20} />
-              <span className="text-lg font-bold text-slate-800">MediVault</span>
+              <span className="text-lg font-bold text-slate-800 dark:text-slate-100">MediVault</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-900">{t('login_welcome')}</h1>
-            <p className="text-slate-500 mt-1 text-sm">{t('login_subtitle')}</p>
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white transition-colors">{t('login_welcome')}</h1>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">{t('login_subtitle')}</p>
           </div>
 
           {/* Social Buttons */}
           <div className="flex flex-col gap-3 mb-6">
-            <button className="flex items-center justify-center gap-3 w-full border border-gray-200 rounded-xl py-3 text-sm font-medium text-slate-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm">
+            <button className="flex items-center justify-center gap-3 w-full border border-gray-200 dark:border-slate-700 rounded-xl py-3 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 transition-all shadow-sm">
               <GoogleIcon /> {t('login_google')}
             </button>
-            <button className="flex items-center justify-center gap-3 w-full border border-gray-200 rounded-xl py-3 text-sm font-medium text-slate-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm">
+            <button className="flex items-center justify-center gap-3 w-full border border-gray-200 dark:border-slate-700 rounded-xl py-3 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 transition-all shadow-sm">
               <FacebookIcon /> {t('login_facebook')}
             </button>
           </div>
 
           {/* ABHA Login */}
-          <div className="bg-indigo-50/50 rounded-2xl p-5 mb-6 border border-indigo-100">
+          <div className="bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl p-5 mb-6 border border-indigo-100 dark:border-indigo-900/50 transition-colors">
             <div className="flex items-center gap-2 mb-3">
               <ShieldCheck size={16} className="text-indigo-500" />
-              <p className="text-sm font-bold text-slate-800">Login with ABHA Account</p>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Login with ABHA Account</p>
             </div>
             <div className="flex gap-2">
               <input
@@ -180,13 +180,13 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                 value={abhaIdInput}
                 onChange={(e) => setAbhaIdInput(e.target.value)}
                 placeholder="14-digit ABHA ID"
-                className="flex-1 border border-indigo-200 bg-white rounded-xl px-4 py-2.5 text-sm transition-all focus:border-indigo-400 focus:outline-none"
+                className="flex-1 border border-indigo-200 dark:border-slate-700 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 rounded-xl px-4 py-2.5 text-sm transition-all focus:border-indigo-400 dark:focus:border-indigo-500 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={handleAbhaLogin}
                 disabled={isLoading}
-                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md hover:translate-y-[-1px] transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shadow-indigo-200/50 dark:shadow-none hover:translate-y-[-1px] transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
               >
                 {isLoading ? (
@@ -205,16 +205,16 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
 
           {/* Divider */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-gray-200" />
+            <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700 transition-colors" />
             <span className="text-xs text-gray-400 font-medium">OR USE EMAIL</span>
-            <div className="flex-1 h-px bg-gray-200" />
+            <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700 transition-colors" />
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">{t('login_email')}</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5 transition-colors">{t('login_email')}</label>
               <input
                 id="patient-email"
                 type="email"
@@ -222,17 +222,17 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all"
+                className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 dark:focus:ring-indigo-900 transition-all"
                 style={{ focusRingColor: '#7C83FD' }}
                 onFocus={(e) => e.target.style.borderColor = '#7C83FD'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                onBlur={(e) => e.target.style.borderColor = ''}
               />
             </div>
 
             {/* Password */}
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-sm font-semibold text-slate-700">{t('login_password')}</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">{t('login_password')}</label>
                 <button type="button" className="text-xs font-medium" style={{ color: '#7C83FD' }}>
                   {t('login_forgot')}
                 </button>
@@ -245,14 +245,14 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-12 text-sm text-slate-800 placeholder-gray-400 focus:outline-none transition-all"
+                  className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 pr-12 text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 dark:focus:ring-indigo-900 transition-all"
                   onFocus={(e) => e.target.style.borderColor = '#7C83FD'}
-                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                  onBlur={(e) => e.target.style.borderColor = ''}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -262,7 +262,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             {/* Submit */}
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
+              className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg shadow-indigo-200/50 dark:shadow-none hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
               style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
             >
               {t('login_submit')}
@@ -270,7 +270,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           </form>
 
           {/* Footer */}
-          <p className="text-center text-sm text-slate-500 mt-6">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6 transition-colors">
             {t('login_new')}{' '}
             <button
               onClick={onSignUp}

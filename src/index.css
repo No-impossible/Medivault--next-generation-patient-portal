@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
 
 body {
   margin: 0;
@@ -7,6 +8,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: theme('colors.white');
+  color: theme('colors.slate.900');
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.dark body {
+  background-color: #121212;
+  color: theme('colors.slate.100');
 }
 
 /* Custom Scrollbar for patient records view */

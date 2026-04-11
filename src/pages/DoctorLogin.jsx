@@ -167,74 +167,110 @@ export default function DoctorLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
-      <div className="sm:mx-auto sm:w-full sm:max-w-2xl px-4">
-        
-        {/* Header Section */}
-        <div 
-          className="flex justify-center items-center gap-2 cursor-pointer mb-6 transform hover:scale-105 transition-all w-max mx-auto"
+    <div className="h-screen flex overflow-hidden font-sans">
+      {/* ───── LEFT PANEL ───── */}
+      <div
+        className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-12"
+        style={{ background: 'linear-gradient(135deg, #ccfbf1 0%, #f0fdfa 60%, #99f6e4 100%)' }}
+      >
+        {/* Back button */}
+        <button
           onClick={() => navigate('/')}
+          className="absolute top-8 left-8 flex items-center gap-2 text-teal-600 hover:text-teal-800 font-medium text-sm transition-colors group"
         >
-          <div className="text-[#1E40AF]">
-            <Heart fill="currentColor" size={32} />
-          </div>
-          <span className="text-3xl font-bold text-slate-800 tracking-tight">
-            MediVault
-          </span>
-        </div>
-        <h2 className="text-center text-3xl font-black text-slate-900 mb-2">
-          {isLogin ? 'Doctor Portal Access' : 'Provider Registration'}
-        </h2>
-        <p className="text-center text-sm text-slate-600 max-w-sm mx-auto">
-          {isLogin ? 'Welcome back! Sign in to manage your practice.' : 'Join the network to manage your appointments and records.'}
-        </p>
+          <ArrowRight className="rotate-180 group-hover:-translate-x-1 transition-transform" size={18} />
+          Back to Home
+        </button>
 
-        {/* Toggle Mode */}
-        <div className="flex justify-center mt-6">
-          <div className="bg-slate-200 p-1 rounded-xl flex items-center shadow-inner">
-            <button 
-              onClick={() => setIsLogin(true)}
-              className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${isLogin ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              Log In
-            </button>
-            <button 
-              onClick={() => setIsLogin(false)}
-              className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${!isLogin ? 'bg-[#14B8A6] text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              Sign Up
-            </button>
+        {/* Logo */}
+        <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-2">
+          <Heart fill="#14B8A6" size={22} className="text-teal-500" />
+          <span className="text-xl font-bold text-slate-800">MediVault</span>
+        </div>
+
+        {/* Illustration */}
+        <div className="w-72 h-72 mb-8 rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: '0 25px 60px rgba(20, 184, 166, 0.25)' }}>
+          <img
+            src="/doctor_illustration.png"
+            alt="Doctor digital portal illustration"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+          {/* Fallback icon panel */}
+          <div className="w-full h-full items-center justify-center bg-teal-100 rounded-3xl hidden">
+            <Stethoscope size={100} className="text-teal-400 opacity-60" />
           </div>
         </div>
 
-        {/* Main Card */}
-        <div className="mt-8 bg-white py-8 px-6 shadow-xl shadow-slate-200/50 sm:rounded-3xl sm:px-10 border border-slate-100 relative overflow-hidden">
-          {/* Decorative Icon */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50/50 rounded-bl-[100px] pointer-events-none z-0"></div>
-          <div className="flex justify-center mb-8 relative z-10">
-            <div className="w-16 h-16 bg-gradient-to-br from-teal-50 to-blue-50 text-[#14B8A6] rounded-2xl flex items-center justify-center border border-white shadow-sm rotate-3 hover:rotate-0 transition-all duration-300 ring-4 ring-slate-50">
-              <Stethoscope size={28} />
+        {/* Tagline */}
+        <div className="text-center max-w-xs">
+          <h2 className="text-2xl font-black text-slate-800 mb-3 leading-snug">
+            Streamline your practice.<br />
+            <span style={{ color: '#14B8A6' }}>Empower your care.</span>
+          </h2>
+          <p className="text-slate-500 text-sm leading-relaxed">
+            MediVault gives you secure access to patient records, digital prescriptions, and tele-consultations all from one encrypted portal.
+          </p>
+        </div>
+
+        {/* Bottom badges */}
+        <div className="absolute bottom-8 flex items-center gap-4 text-xs text-teal-600 font-medium opacity-80">
+          <span className="flex items-center gap-1"><ShieldCheck size={13} /> Secure Access</span>
+          <span>·</span>
+          <span>HIPAA Compliant</span>
+          <span>·</span>
+          <span>AES-256 Encrypted</span>
+        </div>
+      </div>
+
+      {/* ───── RIGHT PANEL ───── */}
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white dark:bg-[#121212] transition-colors duration-500 relative">
+        
+        {/* Mobile back button */}
+        <button
+          onClick={() => navigate('/')}
+          className="lg:hidden self-start mb-6 flex items-center gap-2 text-teal-600 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300 text-sm font-medium transition-colors group"
+        >
+          <ArrowRight className="rotate-180 group-hover:-translate-x-1 transition-transform" size={16} />
+          Home
+        </button>
+
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-1 lg:hidden">
+              <Heart fill="#14B8A6" size={20} className="text-teal-500" />
+              <span className="text-lg font-bold text-slate-800 dark:text-slate-100">MediVault</span>
             </div>
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white transition-colors">
+              {isLogin ? 'Doctor Portal Access' : 'Provider Registration'}
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">
+              {isLogin ? 'Welcome back! Sign in to manage your practice.' : 'Join the network to manage your appointments and records.'}
+            </p>
           </div>
 
-          <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
+          <form className="space-y-5" onSubmit={handleSubmit}>
             
             {/* -------------------- REGISTRATION FIELDS -------------------- */}
             {!isLogin && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4 animate-in fade-in duration-300">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2 animate-in fade-in duration-300">
                 {/* Full Name */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700">Full Name (with Title)</label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name (with Title)</label>
+                  <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <User className="h-5 w-5 text-slate-400" />
+                      <User className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <input
                       type="text"
                       required
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
                       placeholder="e.g. Dr. Sarah Jenkins"
                     />
                   </div>
@@ -242,62 +278,62 @@ export default function DoctorLogin() {
 
                 {/* Specialty */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700">Medical Specialty</label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Medical Specialty</label>
+                  <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Activity className="h-5 w-5 text-slate-400" />
+                      <Activity className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <select
                       required
                       value={specialty}
                       onChange={(e) => setSpecialty(e.target.value)}
-                      className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none appearance-none"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none appearance-none"
                     >
-                      <option value="" disabled>Select Specialty</option>
-                      <option value="Cardiologist">Cardiologist</option>
-                      <option value="Dermatologist">Dermatologist</option>
-                      <option value="General Practitioner">General Practitioner</option>
-                      <option value="Neurologist">Neurologist</option>
-                      <option value="Pediatrician">Pediatrician</option>
+                      <option value="" disabled className="dark:bg-slate-800">Select</option>
+                      <option value="Cardiologist" className="dark:bg-slate-800">Cardiologist</option>
+                      <option value="Dermatologist" className="dark:bg-slate-800">Dermatologist</option>
+                      <option value="General Practitioner" className="dark:bg-slate-800">General Practitioner</option>
+                      <option value="Neurologist" className="dark:bg-slate-800">Neurologist</option>
+                      <option value="Pediatrician" className="dark:bg-slate-800">Pediatrician</option>
                     </select>
                   </div>
                 </div>
 
                 {/* Gender */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700">Gender</label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Gender</label>
+                  <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Users className="h-5 w-5 text-slate-400" />
+                      <Users className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <select
                       required
                       value={gender}
                       onChange={(e) => setGender(e.target.value)}
-                      className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none appearance-none"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none appearance-none"
                     >
-                      <option value="" disabled>Select Gender</option>
-                      <option value="Female">Female</option>
-                      <option value="Male">Male</option>
-                      <option value="Non-binary">Non-binary</option>
-                      <option value="Prefer not to say">Prefer not to say</option>
+                      <option value="" disabled className="dark:bg-slate-800">Select</option>
+                      <option value="Female" className="dark:bg-slate-800">Female</option>
+                      <option value="Male" className="dark:bg-slate-800">Male</option>
+                      <option value="Non-binary" className="dark:bg-slate-800">Non-binary</option>
+                      <option value="Prefer not to say" className="dark:bg-slate-800">Prefer not to say</option>
                     </select>
                   </div>
                 </div>
 
                 {/* Location */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700">Clinic / Hospital Location</label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Clinic / Hospital Location</label>
+                  <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <MapPin className="h-5 w-5 text-slate-400" />
+                      <MapPin className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <input
                       type="text"
                       required
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
                       placeholder="e.g. Apollo Hospital, Bangalore"
                     />
                   </div>
@@ -309,18 +345,18 @@ export default function DoctorLogin() {
 
             {/* Email with optional inline Verify */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Email Address</label>
-              <div className="flex gap-2 mt-1">
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
+              <div className="flex gap-2">
                 <div className="relative flex-1 rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-slate-400" />
+                    <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                   </div>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setEmailVerified(false); }}
-                    className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
+                    className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
                     placeholder="doctor@hospital.com"
                   />
                   {/* Verified Icon Badge inside input if verified */}
@@ -337,10 +373,10 @@ export default function DoctorLogin() {
                     type="button" 
                     onClick={handleVerifyEmail}
                     disabled={isVerifyingEmail || emailVerified || !email}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
+                    className={`px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
                       ${emailVerified 
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 opacity-80 cursor-default' 
-                        : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:bg-slate-100'}
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default' 
+                        : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 active:bg-slate-100'}
                       ${isVerifyingEmail ? 'opacity-70 cursor-wait' : ''}
                     `}
                   >
@@ -355,18 +391,18 @@ export default function DoctorLogin() {
             {/* License Number with optional inline Verify */}
             {!isLogin && (
               <div>
-                <label className="block text-sm font-semibold text-slate-700">Medical License Number</label>
-                <div className="flex gap-2 mt-1">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Medical License Number</label>
+                <div className="flex gap-2">
                   <div className="relative flex-1 rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <ShieldCheck className="h-5 w-5 text-slate-400" />
+                      <ShieldCheck className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <input
                       type="text"
                       required
                       value={licenseNumber}
                       onChange={(e) => { setLicenseNumber(e.target.value); setLicenseVerified(false); }}
-                      className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none uppercase"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none uppercase"
                       placeholder="e.g. MCI/12/34567"
                     />
                     {licenseVerified && (
@@ -380,10 +416,10 @@ export default function DoctorLogin() {
                     type="button" 
                     onClick={handleVerifyLicense}
                     disabled={isVerifyingLicense || licenseVerified || !licenseNumber}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
+                    className={`px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
                       ${licenseVerified 
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 opacity-80 cursor-default' 
-                        : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:bg-slate-100'}
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default' 
+                        : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 active:bg-slate-100'}
                       ${isVerifyingLicense ? 'opacity-70 cursor-wait' : ''}
                     `}
                   >
@@ -397,10 +433,17 @@ export default function DoctorLogin() {
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700">Password</label>
-              <div className="mt-1 relative rounded-md shadow-sm">
+              <div className="flex justify-between items-center mb-1">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+                {isLogin && (
+                  <button type="button" className="text-xs font-semibold text-[#14B8A6] hover:text-teal-700 dark:hover:text-teal-400 transition-colors">
+                    Forgot password?
+                  </button>
+                )}
+              </div>
+              <div className="relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
+                  <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                 </div>
                 <input
                   type={showPasswordText ? "text" : "password"}
@@ -408,14 +451,14 @@ export default function DoctorLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setShowConfirmPassword(true)}
-                  className="pl-10 pr-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
+                  className="pl-10 pr-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   tabIndex="-1"
                   onClick={() => setShowPasswordText(!showPasswordText)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
                 >
                   {showPasswordText ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -424,26 +467,26 @@ export default function DoctorLogin() {
               {/* Password Dynamic Constraints UI */}
               {!isLogin && (
                 <div className="mt-3 grid grid-cols-2 gap-2 px-1">
-                  <div className={`flex items-center gap-1.5 text-xs font-semibold ${hasMinLength ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
-                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasMinLength ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-slate-100'}`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasMinLength ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasMinLength ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasMinLength && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
                     8+ Characters
                   </div>
-                  <div className={`flex items-center gap-1.5 text-xs font-semibold ${hasCapital ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
-                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasCapital ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-slate-100'}`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasCapital ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasCapital ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasCapital && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
                     1 Capital Letter
                   </div>
-                  <div className={`flex items-center gap-1.5 text-xs font-semibold ${hasNumber ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
-                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasNumber ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-slate-100'}`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasNumber ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasNumber ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasNumber && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
                     1 Number
                   </div>
-                  <div className={`flex items-center gap-1.5 text-xs font-semibold ${hasSpecial ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
-                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasSpecial ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-slate-100'}`}>
+                  <div className={`flex items-center gap-1.5 text-[11px] font-bold ${hasSpecial ? 'text-emerald-600' : 'text-slate-400'} transition-colors`}>
+                    <div className={`w-3 h-3 rounded-full flex items-center justify-center border ${hasSpecial ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-700'}`}>
                       {hasSpecial && <CheckCircle2 size={10} className="text-white bg-emerald-500 rounded-full" />}
                     </div>
                     1 Special Char
@@ -455,20 +498,20 @@ export default function DoctorLogin() {
             {/* Confirm Password (Registration Only) */}
             {!isLogin && showConfirmPassword && (
               <div className="pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="block text-sm font-semibold text-slate-700">Confirm Password</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Confirm Password</label>
+                <div className="relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-400" />
+                    <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                   </div>
                   <input
                     type={showConfirmPasswordText ? "text" : "password"}
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={`pl-10 pr-16 block w-full rounded-xl sm:text-sm py-3 bg-slate-50 border outline-none transition-all
-                      ${confirmPassword && !isConfirmMatch ? 'border-red-300 focus:ring-red-400 focus:border-red-400 bg-red-50/50' : ''}
-                      ${confirmPassword && isConfirmMatch ? 'border-emerald-300 focus:ring-emerald-400 focus:border-emerald-400 bg-emerald-50/50' : ''}
-                      ${!confirmPassword ? 'border-slate-300 focus:ring-[#14B8A6] focus:border-[#14B8A6]' : ''}
+                    className={`pl-10 pr-16 block w-full rounded-xl border sm:text-sm py-3 transition-colors outline-none text-slate-900 dark:text-slate-100 dark:border-slate-700 dark:bg-[#1a1a1a]
+                      ${confirmPassword && !isConfirmMatch ? 'border-red-300 dark:border-red-800 focus:ring-red-400 focus:border-red-400 bg-red-50/50 dark:bg-red-900/20' : ''}
+                      ${confirmPassword && isConfirmMatch ? 'border-emerald-300 dark:border-emerald-800 focus:ring-emerald-400 focus:border-emerald-400 bg-emerald-50/50 dark:bg-emerald-900/20' : ''}
+                      ${!confirmPassword ? 'border-slate-200 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] bg-white dark:bg-[#1a1a1a]' : ''}
                     `}
                     placeholder="••••••••"
                   />
@@ -482,7 +525,7 @@ export default function DoctorLogin() {
                       type="button"
                       tabIndex="-1"
                       onClick={() => setShowConfirmPasswordText(!showConfirmPasswordText)}
-                      className="text-slate-400 hover:text-slate-600 focus:outline-none"
+                      className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
                     >
                       {showConfirmPasswordText ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -494,43 +537,43 @@ export default function DoctorLogin() {
               </div>
             )}
 
-            {isLogin && (
-              <div className="flex items-center justify-between !mt-4">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-[#14B8A6] focus:ring-[#14B8A6] border-slate-300 rounded cursor-pointer"
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-600 font-medium cursor-pointer select-none">
-                    Remember me
-                  </label>
-                </div>
-
-                <div className="text-sm">
-                  <a href="#" className="font-bold text-[#14B8A6] hover:text-teal-600">
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-            )}
-
-            <div className="pt-2">
-              <button
-                type="submit"
-                className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(20,184,166,0.39)] hover:shadow-[0_6px_20px_rgba(20,184,166,0.23)] text-base font-bold text-white bg-gradient-to-r from-[#14B8A6] to-teal-500 hover:to-teal-400 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
-                disabled={!isLogin && (!isPasswordValid || !isConfirmMatch || !emailVerified || !licenseVerified)}
-              >
-                {isLogin ? 'Secure Access' : 'Register Securely'}
-                <ArrowRight size={20} />
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg shadow-teal-200/50 dark:shadow-none text-base font-bold text-white bg-gradient-to-r from-[#14B8A6] to-teal-500 hover:to-teal-400 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-2"
+              disabled={!isLogin && (!isPasswordValid || !isConfirmMatch || !emailVerified || !licenseVerified)}
+            >
+              {isLogin ? 'Secure Access' : 'Register Securely'}
+              <ArrowRight size={20} />
+            </button>
           </form>
 
-          <div className="mt-8 pt-4 border-t border-slate-100 text-center text-xs text-slate-500 font-medium flex items-center justify-center gap-2 relative z-10">
-            <ShieldCheck size={14} className="text-emerald-500" />
-            <span>Encrypted & HIPAA Compliant Network</span>
+          {/* Footer - Replaced Toggle Buttons */}
+          <div className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
+            {isLogin ? (
+              <p>
+                New provider?{' '}
+                <button
+                  type="button"
+                  onClick={() => setIsLogin(false)}
+                  className="font-bold text-[#14B8A6] dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
+                >
+                  Register your account
+                </button>
+              </p>
+            ) : (
+              <p>
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => setIsLogin(true)}
+                  className="font-bold text-[#14B8A6] dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
+                >
+                  Log in here
+                </button>
+              </p>
+            )}
           </div>
+
         </div>
       </div>
     </div>
