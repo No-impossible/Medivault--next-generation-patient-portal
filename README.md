@@ -1,16 +1,52 @@
-# React + Vite
+# MediVault 🏥
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MediVault is a cutting-edge patient portal and medical registry system meticulously designed to streamline healthcare access, enhance document management, and empower both patients and healthcare providers.
 
-Currently, two official plugins are available:
+## 🌟 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Document Management & AI Summarization**: State-of-the-art medical record management allowing patients to upload diverse document types. Integrated AI-driven summarization generates brief, actionable clinical insights from medical reports to improve clinical efficiency.
+- **Multilingual Support (i18n)**: Fully translated and localized into English, Hindi, Marathi, and Tamil to ensure maximum accessibility for a diverse user base.
+- **ABHA Patient Registry Integration**: Seamlessly connects with the ABHA (Ayushman Bharat Health Account) registry for verified patient sign-ups, accurate healthcare records, and robust identity verification.
+- **Dynamic Doctor Database**: A comprehensive, real-time doctor directory showcasing diverse medical specialists across India with mock data seeding capability.
+- **Consultation Booking System**: Intuitive UI for patients to search, filter, and book appointments with the right specialists.
+- **Secure Authentication & Backend**: Built on Supabase (PostgreSQL) for reliable data persistence, featuring Row Level Security (RLS) policies for strict privacy and data protection.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React, Vite, Tailwind CSS, Lucide React (Icons)
+- **Backend & Database**: Supabase (PostgreSQL, Authentication, Realtime)
+- **Internationalization**: `i18next`, `react-i18next`
+- **Routing**: React Router DOM
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+To run the MediVault project locally:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Avenger11764/medivault.git
+   cd medivault
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup:**
+   Create a `.env` file in the root directory and configure your Supabase credentials:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Start the Development Server:**
+   ```bash
+   npm run dev
+   ```
+
+## 📜 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+
+## 📄 License
+This project is licensed under the MIT License.

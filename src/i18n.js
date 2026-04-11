@@ -1,0 +1,166 @@
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+
+const resources = {
+  en: {
+    translation: {
+      nav_about: 'About',
+      nav_features: 'Features',
+      nav_security: 'Security',
+      nav_contact: 'Contact',
+      nav_login: 'Login',
+      hero_title: 'Your Complete Medical History, ',
+      hero_title_highlight: 'Secured Digitally.',
+      hero_subtitle: 'The central vault for your medical reports, connecting you instantly to doctors and pharmacies using national standards like ABHA.',
+      hero_cta: 'Learn How It Works',
+      feat_title: 'How MediVault Helps You',
+      feat_1_title: 'Secure Digital Wallet',
+      feat_1_desc: 'Upload PDFs or photos of old reports. Our AI organizes them for instant access.',
+      feat_2_title: 'Online Consultations',
+      feat_2_desc: 'Connect with verified doctors anywhere, anytime, using secure video calls.',
+      feat_3_title: 'Smart Pharmacy Ordering',
+      feat_3_desc: 'Get digital prescriptions fulfilled directly via PharmEasy or Apollo.',
+      dash_title: 'Access Your Dashboard',
+      dash_patient_title: 'For Patients',
+      dash_doctor_title: 'For Healthcare Providers',
+      dash_patient_btn: 'Patient Login / Sign Up',
+      dash_doctor_btn: 'Doctor Login / Portal',
+      login_welcome: 'Welcome back \uD83D\uDC4B',
+      login_subtitle: 'Sign in to your patient portal',
+      login_google: 'Continue with Google',
+      login_facebook: 'Continue with Facebook',
+      login_or: 'OR',
+      login_email: 'Email Address',
+      login_password: 'Password',
+      login_forgot: 'Forgot Password?',
+      login_submit: 'Sign In to Patient Portal',
+      login_new: 'New to MediVault?',
+      login_create: 'Create an Account',
+      login_back: 'Back to Home'
+    }
+  },
+  hi: {
+    translation: {
+      nav_about: 'के बारे में',
+      nav_features: 'विशेषताएं',
+      nav_security: 'सुरक्षा',
+      nav_contact: 'संपर्क',
+      nav_login: 'लॉग इन',
+      hero_title: 'आपका संपूर्ण चिकित्सा इतिहास, ',
+      hero_title_highlight: 'डिजिटल रूप से सुरक्षित।',
+      hero_subtitle: 'आपकी मेडिकल रिपोर्ट का केंद्रीय वॉल्ट, जो ABHA जैसे राष्ट्रीय मानकों का उपयोग करके तुरंत डॉक्टरों और फार्मेसियों से जोड़ता है।',
+      hero_cta: 'जानें कैसे काम करता है',
+      feat_title: 'MediVault कैसे आपकी मदद करता है',
+      feat_1_title: 'सुरक्षित डिजिटल वॉलेट',
+      feat_1_desc: 'पुरानी रिपोर्ट के पीडीएफ या फोटो अपलोड करें।',
+      feat_2_title: 'ऑनलाइन परामर्श',
+      feat_2_desc: 'सुरक्षित वीडियो कॉल से कभी भी सत्यापित डॉक्टरों से जुड़ें।',
+      feat_3_title: 'स्मार्ट फार्मेसी ऑर्डर',
+      feat_3_desc: 'सीधे डिजिटल नुस्खे पूरा करें।',
+      dash_title: 'अपना डैशबोर्ड एक्सेस करें',
+      dash_patient_title: 'मरीजों के लिए',
+      dash_doctor_title: 'स्वास्थ्य सेवा प्रदाताओं के लिए',
+      dash_patient_btn: 'मरीज लॉगिन / साइन अप',
+      dash_doctor_btn: 'डॉक्टर लॉगिन / पोर्टल',
+      login_welcome: 'वापसी पर स्वागत है \uD83D\uDC4B',
+      login_subtitle: 'अपने पेशेंट पोर्टल में साइन इन करें',
+      login_google: 'गूगल के साथ जारी रखें',
+      login_facebook: 'फेसबुक के साथ जारी रखें',
+      login_or: 'या',
+      login_email: 'ईमेल पता',
+      login_password: 'पासवर्ड',
+      login_forgot: 'पासवर्ड भूल गए?',
+      login_submit: 'पेशेंट पोर्टल में साइन इन करें',
+      login_new: 'MediVault में नए हैं?',
+      login_create: 'खाता बनाएं',
+      login_back: 'होम पर वापस जाएं'
+    }
+  },
+  mr: {
+    translation: {
+      nav_about: 'बद्दल',
+      nav_features: 'वैशिष्ट्ये',
+      nav_security: 'सुरक्षा',
+      nav_contact: 'संपर्क',
+      nav_login: 'लॉगिन करा',
+      hero_title: 'तुमचा संपूर्ण वैद्यकीय इतिहास, ',
+      hero_title_highlight: 'डिजिटल सुरक्षित.',
+      hero_subtitle: 'तुमच्या वैद्यकीय अहवालांसाठी मध्यवर्ती वॉल्ट.',
+      hero_cta: 'हे कसे कार्य करते ते जाणून घ्या',
+      feat_title: 'MediVault तुम्हाला कशी मदत करते',
+      feat_1_title: 'सुरक्षित डिजिटल वॉलेट',
+      feat_1_desc: 'जुन्या अहवालांचे फोटो अपलोड करा.',
+      feat_2_title: 'ऑनलाइन सल्लामसलत',
+      feat_2_desc: 'प्रमाणित डॉक्टरांशी कधीही कनेक्ट व्हा.',
+      feat_3_title: 'स्मार्ट फार्मसी',
+      feat_3_desc: 'डिजिटल प्रिस्क्रिप्शन मिळवा.',
+      dash_title: 'डॅशबोर्ड ऍक्सेस करा',
+      dash_patient_title: 'रुग्णांसाठी',
+      dash_doctor_title: 'डॉक्टरांसाठी',
+      dash_patient_btn: 'रुग्ण लॉगिन / साइन अप',
+      dash_doctor_btn: 'डॉक्टर लॉगिन',
+      login_welcome: 'Welcome back \uD83D\uDC4B',
+      login_subtitle: 'Sign in to your patient portal',
+      login_google: 'Continue with Google',
+      login_facebook: 'Continue with Facebook',
+      login_or: 'OR',
+      login_email: 'Email Address',
+      login_password: 'Password',
+      login_forgot: 'Forgot Password?',
+      login_submit: 'Sign In to Patient Portal',
+      login_new: 'New to MediVault?',
+      login_create: 'Create an Account',
+      login_back: 'Back to Home'
+    }
+  },
+  ta: {
+    translation: {
+      nav_about: 'பற்றி',
+      nav_features: 'அம்சங்கள்',
+      nav_security: 'பாதுகாப்பு',
+      nav_contact: 'தொடர்பு',
+      nav_login: 'உள்நுழை',
+      hero_title: 'உங்கள் முழு மருத்துவ வரலாறு, ',
+      hero_title_highlight: 'டிஜிட்டல் பாதுகாப்பானது.',
+      hero_subtitle: 'உங்கள் மருத்துவ அறிக்கைகளுக்கான மைய பெட்டகம்.',
+      hero_cta: 'எப்படி செயல்படுகிறது',
+      feat_title: 'உங்களுக்கு எப்படி உதவுகிறது',
+      feat_1_title: 'பாதுகாப்பான டிஜிட்டல் வாலட்',
+      feat_1_desc: 'பழைய அறிக்கைகளை பதிவேற்றவும்.',
+      feat_2_title: 'ஆன்லைன் ஆலோசனை',
+      feat_2_desc: 'எந்த நேரத்திலும் மருத்துவர்களுடன் இணையுங்கள்.',
+      feat_3_title: 'உடனடி மருந்தகம்',
+      feat_3_desc: 'டிஜிட்டல் மருந்து சீட்டுகளை பெறுங்கள்.',
+      dash_title: 'உங்கள் டாஷ்போர்டு',
+      dash_patient_title: 'நோயாளிகளுக்கு',
+      dash_doctor_title: 'மருத்துவர்களுக்கு',
+      dash_patient_btn: 'நோயாளி உள்நுழைவு',
+      dash_doctor_btn: 'மருத்துவர் உள்நுழைவு',
+      login_welcome: 'Welcome back \uD83D\uDC4B',
+      login_subtitle: 'Sign in to your patient portal',
+      login_google: 'Continue with Google',
+      login_facebook: 'Continue with Facebook',
+      login_or: 'OR',
+      login_email: 'Email Address',
+      login_password: 'Password',
+      login_forgot: 'Forgot Password?',
+      login_submit: 'Sign In to Patient Portal',
+      login_new: 'New to MediVault?',
+      login_create: 'Create an Account',
+      login_back: 'Back to Home'
+    }
+  }
+};
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: "en",
+    fallbackLng: "en",
+    interpolation: {
+      escapeValue: false 
+    }
+  });
+
+export default i18n;

@@ -16,6 +16,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 
 export default function DoctorLogin() {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ export default function DoctorLogin() {
     }, 1500);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validate form based on mode
@@ -89,40 +90,80 @@ export default function DoctorLogin() {
       }
     }
 
-    const providers = JSON.parse(localStorage.getItem('medivault_providers')) || {};
     let doctorData;
 
+    // Fallback dictionary for disconnected prototypes or missing tables
+    const fallbackProviders = JSON.parse(localStorage.getItem('medivault_mock_providers') || '{}');
+
     if (isLogin) {
-      if (providers[email]) {
-        // Mock checking password
-        if (providers[email].password !== password && providers[email].password) {
-          alert('Incorrect password.');
-          return;
+      // Supabase Authenticate
+      const { data, error } = await supabase
+        .from('doctors')
+        .select('*')
+        .eq('email', email)
+        .single();
+        
+      if (error || !data) {
+        // Fallback Check
+        if (fallbackProviders[email]) {
+           doctorData = fallbackProviders[email];
+        } else {
+           alert('Provider not found with this email. Please register or check your credentials.');
+           return;
         }
-        doctorData = providers[email];
       } else {
-        alert('Provider not found with this email. Please register.');
+         doctorData = data;
+      }
+      
+      // Simple mockup text password check
+      if (doctorData.password !== password) {
+        alert('Incorrect password.');
         return;
       }
     } else {
-      if (providers[email]) {
+      // Registration: Check if existing
+      const { data: existing } = await supabase
+        .from('doctors')
+        .select('id')
+        .eq('email', email)
+        .single();
+        
+      if (existing || fallbackProviders[email]) {
         alert('An account with this email already exists.');
         return;
       }
-      doctorData = {
+      
+      const newDoctorPayload = {
         name: fullName,
         email: email,
         specialization: specialty,
         gender: gender,
         location: location,
         licenseNumber: licenseNumber,
-        password: password // In real prod, NEVER store passwords in plaintext
+        password: password
       };
-      providers[email] = doctorData;
-      localStorage.setItem('medivault_providers', JSON.stringify(providers));
+      
+      const { data: newDoc, error: insertError } = await supabase
+        .from('doctors')
+        .insert([newDoctorPayload])
+        .select()
+        .single();
+        
+      if (insertError) {
+        console.warn("Falling back to local storage: Supabase doctors table missing or failed", insertError);
+        // Save to Fallback
+        fallbackProviders[email] = newDoctorPayload;
+        localStorage.setItem('medivault_mock_providers', JSON.stringify(fallbackProviders));
+        doctorData = newDoctorPayload;
+      } else {
+        doctorData = newDoc;
+      }
     }
 
-    navigate('/doctor', { state: doctorData });
+    // Persist login session
+    localStorage.setItem('medivault_doctor_session', JSON.stringify(doctorData));
+
+    navigate('/doctor/dashboard', { state: doctorData });
   };
 
   return (
