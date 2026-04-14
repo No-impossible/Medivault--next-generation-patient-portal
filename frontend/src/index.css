@@ -71,7 +71,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: smooth !important;
+  scroll-padding-top: 5.5rem; /* Offsets scroll landings past the sticky header */
 }
 
 body {

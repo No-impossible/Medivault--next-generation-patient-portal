@@ -201,8 +201,9 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
       <main className="flex-1">
 
         {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-        <section id="home" className="w-full pt-4 pb-12 md:pt-6 md:pb-20 lg:pt-8 lg:pb-28 xl:pt-12 xl:pb-36 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border border-muted rounded-3xl bg-gradient-to-br from-background to-muted/30">
+        <section id="home" className="w-full min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 md:py-16 lg:py-20 overflow-hidden">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-full border border-muted rounded-[2rem] bg-gradient-to-br from-background to-muted/30 shadow-2xl overflow-hidden">
             <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
               <motion.div
                 initial="hidden"
@@ -269,6 +270,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 </div>
               </motion.div>
             </div>
+          </div>
           </div>
         </section>
 
