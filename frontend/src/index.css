@@ -48,25 +48,26 @@
   }
 
   .dark {
-    --background: 224 40% 5%;
-    --foreground: 224 20% 95%;
-    --card: 224 40% 8%;
-    --card-foreground: 224 20% 95%;
-    --popover: 224 40% 8%;
-    --popover-foreground: 224 20% 95%;
-    --primary: 224 90% 66%;
+    /* 3-tier surface hierarchy: base → elevated → overlay */
+    --background: 222 47% 6%;       /* #0b1120 — deep navy-charcoal base */
+    --foreground: 210 20% 93%;      /* #e8ecf1 — soft off-white text */
+    --card: 222 40% 9%;             /* #101a2e — elevated surface */
+    --card-foreground: 210 20% 93%;
+    --popover: 222 38% 11%;         /* #142035 — overlay/dropdown surface */
+    --popover-foreground: 210 20% 93%;
+    --primary: 224 85% 65%;         /* slightly brighter blue for dark bg */
     --primary-foreground: 0 0% 100%;
-    --secondary: 224 30% 15%;
-    --secondary-foreground: 224 20% 95%;
-    --muted: 224 20% 15%;
-    --muted-foreground: 224 15% 65%;
-    --accent: 224 30% 20%;
-    --accent-foreground: 224 20% 95%;
-    --destructive: 0 62.8% 30.6%;
+    --secondary: 222 30% 14%;       /* subtle raised bg for badges/pills */
+    --secondary-foreground: 210 20% 90%;
+    --muted: 222 25% 13%;           /* muted surface for cards/sections */
+    --muted-foreground: 215 15% 58%;/* readable mid-tone — WCAG AA on dark */
+    --accent: 222 30% 18%;          /* accent surface (hover states, tags) */
+    --accent-foreground: 210 20% 93%;
+    --destructive: 0 63% 35%;
     --destructive-foreground: 210 40% 98%;
-    --border: 224 30% 15%;
-    --input: 224 30% 15%;
-    --ring: 224 90% 66%;
+    --border: 222 25% 16%;          /* subtle but visible border */
+    --input: 222 25% 16%;
+    --ring: 224 85% 65%;
   }
 }
 
@@ -82,14 +83,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #ffffff;
-  color: #0f172a;
-  transition: background-color 0.5s ease, color 0.5s ease;
-}
-
-.dark body {
-  background-color: #121212;
-  color: #f1f5f9;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* Custom Scrollbar for patient records view */
@@ -100,7 +96,7 @@ body {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: hsl(var(--border));
   border-radius: 10px;
 }
 
