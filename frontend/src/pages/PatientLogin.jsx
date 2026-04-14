@@ -70,7 +70,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         {/* Back button */}
         <button
           onClick={onBack}
-          className="absolute top-8 left-8 flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors group"
+          className="absolute top-8 left-8 flex items-center gap-2 text-primary hover:text-indigo-800 font-medium text-sm transition-colors group"
         >
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           {t('login_back')}
@@ -78,7 +78,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
 
         {/* Logo */}
         <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
+          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-sm">
             <Heart className="h-5 w-5 text-white" fill="currentColor" />
           </div>
           <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
@@ -97,8 +97,8 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             }}
           />
           {/* Fallback icon panel */}
-          <div className="w-full h-full items-center justify-center bg-indigo-100 rounded-3xl hidden">
-            <ShieldCheck size={100} className="text-indigo-400 opacity-60" />
+          <div className="w-full h-full items-center justify-center bg-primary/10 rounded-3xl hidden">
+            <ShieldCheck size={100} className="text-primary opacity-60" />
           </div>
         </div>
 
@@ -106,7 +106,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         <div className="text-center max-w-xs">
           <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-3 leading-snug">
             Your medical history.<br />
-            <span style={{ color: '#7C83FD' }}>Secured. Always accessible.</span>
+            <span style={{ color: 'hsl(var(--primary))' }}>Secured. Always accessible.</span>
           </h2>
           <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm leading-relaxed">
             MediVault keeps all your reports, prescriptions, and health records in one encrypted, government-standard vault.
@@ -114,7 +114,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         </div>
 
         {/* Bottom badges */}
-        <div className="absolute bottom-8 flex items-center gap-4 text-xs text-indigo-400 font-medium">
+        <div className="absolute bottom-8 flex items-center gap-4 text-xs text-primary font-medium">
           <span className="flex items-center gap-1"><ShieldCheck size={13} /> ABHA Ready</span>
           <span>·</span>
           <span>AES-256 Encrypted</span>
@@ -128,11 +128,11 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         
         {/* Language Switcher */}
         <div className="absolute top-8 right-8 z-10 flex items-center gap-2">
-          <Globe size={18} className="text-indigo-600 dark:text-indigo-400" />
+          <Globe size={18} className="text-primary dark:text-primary" />
           <select 
             onChange={(e) => i18n.changeLanguage(e.target.value)}
             value={i18n.language}
-            className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none cursor-pointer hover:text-primary dark:hover:text-primary transition-colors"
           >
             <option value="en" className="dark:bg-slate-800">English</option>
             <option value="hi" className="dark:bg-slate-800">हिंदी</option>
@@ -144,7 +144,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
         {/* Mobile back button */}
         <button
           onClick={onBack}
-          className="lg:hidden self-start mb-6 flex items-center gap-2 text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 text-sm font-medium transition-colors group"
+          className="lg:hidden self-start mb-6 flex items-center gap-2 text-primary hover:text-indigo-700 dark:hover:text-primary text-sm font-medium transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           Home
@@ -154,7 +154,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2 lg:hidden">
-              <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center shadow-sm">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
                 <Heart className="h-4 w-4 text-white" fill="currentColor" />
               </div>
               <span className="text-xl font-bold text-slate-800 tracking-tight">MediVault</span>
@@ -175,9 +175,9 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           </div>
 
           {/* ABHA Login */}
-          <div className="bg-indigo-50 dark:bg-indigo-900/30/50 dark:bg-indigo-900/10 rounded-2xl p-5 mb-6 border border-indigo-100 dark:border-indigo-900/50 transition-colors">
+          <div className="bg-primary/10 dark:bg-indigo-900/30/50 dark:bg-indigo-900/10 rounded-2xl p-5 mb-6 border border-primary/30 dark:border-indigo-900/50 transition-colors">
             <div className="flex items-center gap-2 mb-3">
-              <ShieldCheck size={16} className="text-indigo-500" />
+              <ShieldCheck size={16} className="text-primary" />
               <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Login with ABHA Account</p>
             </div>
             <div className="flex gap-2">
@@ -186,14 +186,14 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                 value={abhaIdInput}
                 onChange={(e) => setAbhaIdInput(e.target.value)}
                 placeholder="14-digit ABHA ID"
-                className="flex-1 border border-indigo-200 dark:border-slate-700 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 rounded-xl px-4 py-2.5 text-sm transition-all focus:border-indigo-400 dark:focus:border-indigo-500 focus:outline-none"
+                className="flex-1 border border-primary/30 dark:border-slate-700 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 rounded-xl px-4 py-2.5 text-sm transition-all focus:border-primary/30 dark:focus:border-indigo-500 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={handleAbhaLogin}
                 disabled={isLoading}
-                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shadow-indigo-200/50 dark:shadow-none hover:translate-y-[-1px] transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shadow-primary/30/50 dark:shadow-none hover:translate-y-[-1px] transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), #6366f1)' }}
               >
                 {isLoading ? (
                   <>
@@ -229,8 +229,8 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                 placeholder="you@example.com"
                 required
                 className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 dark:focus:ring-indigo-900 transition-all"
-                style={{ focusRingColor: '#7C83FD' }}
-                onFocus={(e) => e.target.style.borderColor = '#7C83FD'}
+                style={{ focusRingColor: 'hsl(var(--primary))' }}
+                onFocus={(e) => e.target.style.borderColor = 'hsl(var(--primary))'}
                 onBlur={(e) => e.target.style.borderColor = ''}
               />
             </div>
@@ -239,7 +239,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">{t('login_password')}</label>
-                <button type="button" className="text-xs font-medium" style={{ color: '#7C83FD' }}>
+                <button type="button" className="text-xs font-medium" style={{ color: 'hsl(var(--primary))' }}>
                   {t('login_forgot')}
                 </button>
               </div>
@@ -252,7 +252,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                   placeholder="••••••••"
                   required
                   className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 pr-12 text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 dark:focus:ring-indigo-900 transition-all"
-                  onFocus={(e) => e.target.style.borderColor = '#7C83FD'}
+                  onFocus={(e) => e.target.style.borderColor = 'hsl(var(--primary))'}
                   onBlur={(e) => e.target.style.borderColor = ''}
                 />
                 <button
@@ -268,8 +268,8 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             {/* Submit */}
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg shadow-indigo-200/50 dark:shadow-none hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
-              style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
+              className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg shadow-primary/30/50 dark:shadow-none hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
+              style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), #6366f1)' }}
             >
               {t('login_submit')}
             </button>
@@ -281,7 +281,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             <button
               onClick={onSignUp}
               className="font-semibold hover:underline transition-colors"
-              style={{ color: '#7C83FD' }}
+              style={{ color: 'hsl(var(--primary))' }}
             >
               {t('login_create')}
             </button>

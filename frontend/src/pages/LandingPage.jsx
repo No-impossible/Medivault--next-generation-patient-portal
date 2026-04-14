@@ -167,7 +167,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
               <motion.div key={index} variants={itemFadeIn}>
                 <a
                   href={item.href}
-                  className="flex items-center justify-between rounded-xl px-4 py-3 text-lg font-medium hover:bg-accent"
+                  className="flex items-center justify-between rounded-xl px-4 py-3 text-lg font-medium hover:bg-accent/90"
                   onClick={toggleMenu}
                 >
                   {item.label}
@@ -201,7 +201,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
       <main className="flex-1">
 
         {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-        <section id="home" className="w-full py-12 md:py-20 lg:py-28 xl:py-36 overflow-hidden">
+        <section id="home" className="w-full pt-4 pb-12 md:pt-6 md:pb-20 lg:pt-8 lg:pb-28 xl:pt-12 xl:pb-36 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border border-muted rounded-3xl bg-gradient-to-br from-background to-muted/30">
             <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
               <motion.div
@@ -318,9 +318,9 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 <motion.div
                   variants={itemFadeIn}
                   whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                  className="bg-teal-50 dark:bg-teal-900/20 border border-teal-100 p-8 rounded-2xl text-center mt-8 hover:shadow-lg transition-all"
+                  className="bg-accent/10 dark:bg-teal-900/20 border border-accent/30 p-8 rounded-2xl text-center mt-8 hover:shadow-lg transition-all"
                 >
-                  <Heart size={40} className="text-teal-500 mx-auto mb-4" />
+                  <Heart size={40} className="text-accent mx-auto mb-4" />
                   <h4 className="font-bold text-foreground">Better Care</h4>
                   <p className="text-sm text-muted-foreground mt-2">Instant access to medical history enables precise diagnoses.</p>
                 </motion.div>
@@ -356,7 +356,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 >
                   {t('feat_title')}
                 </motion.h2>
-                <div className="w-20 h-1 bg-teal-500 mx-auto rounded-full"></div>
+                <div className="w-20 h-1 bg-accent mx-auto rounded-full"></div>
               </div>
             </div>
 
@@ -380,9 +380,9 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                   icon: <Video size={32} />,
                   title: t('feat_2_title'),
                   desc: t('feat_2_desc'),
-                  color: 'text-teal-500',
-                  bgColor: 'bg-teal-50 dark:bg-teal-900/20',
-                  borderHover: 'hover:border-teal-300',
+                  color: 'text-accent',
+                  bgColor: 'bg-accent/10 dark:bg-teal-900/20',
+                  borderHover: 'hover:border-accent/30',
                 },
                 {
                   icon: <Pill size={32} />,
@@ -399,7 +399,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                   whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   className={`group relative overflow-hidden rounded-2xl border bg-background p-10 shadow-sm transition-all hover:shadow-xl ${feat.borderHover}`}
                 >
-                  <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-all duration-300"></div>
+                  <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-primary/5 group-hover:bg-primary/90/10 transition-all duration-300"></div>
                   <div className="relative space-y-4">
                     <div className={`w-16 h-16 ${feat.bgColor} ${feat.color} rounded-xl flex items-center justify-center mb-6`}>
                       {feat.icon}
@@ -418,7 +418,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
         <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mb-4">{t('dash_title')}</h2>
-            <div className="w-20 h-1 bg-[#1E40AF] dark:bg-[#7C83FD] mx-auto rounded-full"></div>
+            <div className="w-20 h-1 bg-secondary dark:bg-primary mx-auto rounded-full"></div>
           </div>
           
           <div className="bg-white dark:bg-[#1e1e1e] rounded-[2rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-gray-100 dark:border-gray-800 min-h-[600px] transition-colors duration-500">
@@ -441,17 +441,17 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                     e.target.nextSibling.style.display = 'flex';
                   }}
                 />
-                <div className="w-full h-full flex items-center justify-center bg-indigo-100 rounded-3xl hidden">
-                  {portalRole === 'patient' ? <ShieldCheck size={100} className="text-indigo-400 opacity-60" /> : <Stethoscope size={100} className="text-emerald-400 opacity-60" />}
+                <div className="w-full h-full flex items-center justify-center bg-primary/10 rounded-3xl hidden">
+                  {portalRole === 'patient' ? <ShieldCheck size={100} className="text-primary opacity-60" /> : <Stethoscope size={100} className="text-emerald-400 opacity-60" />}
                 </div>
               </div>
 
               <div className="text-center max-w-xs animate-in fade-in duration-500 key={portalRole}">
                 <h2 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-3 leading-snug">
                   {portalRole === 'patient' ? (
-                    <>Your medical history.<br /><span style={{ color: '#7C83FD' }}>Secured. Always accessible.</span></>
+                    <>Your medical history.<br /><span style={{ color: 'hsl(var(--primary))' }}>Secured. Always accessible.</span></>
                   ) : (
-                    <>Practice Management.<br /><span style={{ color: '#059669' }}>Streamlined and Intuitive.</span></>
+                    <>Practice Management.<br /><span style={{ color: 'hsl(var(--accent))' }}>Streamlined and Intuitive.</span></>
                   )}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
@@ -461,7 +461,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 </p>
               </div>
 
-              <div className={`absolute bottom-8 flex items-center gap-4 text-xs font-medium opacity-80 ${portalRole === 'patient' ? 'text-indigo-500' : 'text-emerald-700'}`}>
+              <div className={`absolute bottom-8 flex items-center gap-4 text-xs font-medium opacity-80 ${portalRole === 'patient' ? 'text-primary' : 'text-emerald-700'}`}>
                 {portalRole === 'patient' ? (
                   <><span className="flex items-center gap-1"><ShieldCheck size={13} /> ABHA Ready</span><span>·</span><span>AES-256 Encrypted</span><span>·</span><span>HIPAA</span></>
                 ) : (
@@ -476,13 +476,13 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 <div className="bg-gray-50 dark:bg-slate-800 p-1.5 rounded-2xl inline-flex shadow-inner border border-gray-200 dark:border-gray-700 w-full max-w-md">
                   <button
                     onClick={() => setPortalRole('patient')}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${portalRole === 'patient' ? 'bg-[#7C83FD] text-white shadow-md' : 'text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:text-slate-100 dark:hover:text-slate-200'}`}
+                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${portalRole === 'patient' ? 'bg-primary text-white shadow-md' : 'text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:text-slate-100 dark:hover:text-slate-200'}`}
                   >
                     Patient
                   </button>
                   <button
                     onClick={() => setPortalRole('doctor')}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${portalRole === 'doctor' ? 'bg-[#14B8A6] text-white shadow-md' : 'text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:text-slate-100 dark:hover:text-slate-200'}`}
+                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${portalRole === 'doctor' ? 'bg-accent text-white shadow-md' : 'text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:text-slate-100 dark:hover:text-slate-200'}`}
                   >
                     Doctor
                   </button>
@@ -492,43 +492,43 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 {portalRole === 'patient' ? (
                   <div className="w-full max-w-md transition-all duration-500 transform translate-y-0 opacity-100">
-                    <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/30 text-[#7C83FD] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-indigo-100 dark:border-indigo-800">
+                    <div className="w-20 h-20 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-primary/30 dark:border-indigo-800">
                       <User size={40} />
                     </div>
                     <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-6">{t('dash_patient_title')}</h3>
                     <ul className="text-slate-600 dark:text-slate-300 mb-10 space-y-4 text-[16px] font-medium">
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-[#7C83FD]" /> View Medical Records
+                        <Lock size={18} className="text-primary" /> View Medical Records
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-[#7C83FD]" /> Order Medicines
+                        <Lock size={18} className="text-primary" /> Order Medicines
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-[#7C83FD]" /> Book Tele-Consults
+                        <Lock size={18} className="text-primary" /> Book Tele-Consults
                       </li>
                     </ul>
-                    <button onClick={onPatientLogin} className="w-full bg-[#7C83FD] hover:bg-indigo-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-indigo-200 dark:shadow-none transition-all hover:-translate-y-1">
+                    <button onClick={onPatientLogin} className="w-full bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-primary/30 dark:shadow-none transition-all hover:-translate-y-1">
                       {t('dash_patient_btn')}
                     </button>
                   </div>
                 ) : (
                   <div className="w-full max-w-md transition-all duration-500 transform translate-y-0 opacity-100">
-                    <div className="w-20 h-20 bg-teal-50 dark:bg-teal-900/30 text-[#14B8A6] dark:text-teal-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-teal-100 dark:border-teal-800">
+                    <div className="w-20 h-20 bg-accent/10 dark:bg-teal-900/30 text-accent dark:text-accent rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-accent/30 dark:border-teal-800">
                       <Stethoscope size={40} />
                     </div>
                     <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-6">{t('dash_doctor_title')}</h3>
                     <ul className="text-slate-600 dark:text-slate-300 mb-10 space-y-4 text-[16px] font-medium">
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-[#14B8A6] dark:text-teal-400" /> View Patient History
+                        <Lock size={18} className="text-accent dark:text-accent" /> View Patient History
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-[#14B8A6] dark:text-teal-400" /> Write Digital Prescriptions
+                        <Lock size={18} className="text-accent dark:text-accent" /> Write Digital Prescriptions
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-[#14B8A6] dark:text-teal-400" /> Schedule Appointments
+                        <Lock size={18} className="text-accent dark:text-accent" /> Schedule Appointments
                       </li>
                     </ul>
-                    <button onClick={() => navigate('/auth', { state: { role: 'doctor' }})} className="w-full bg-[#14B8A6] hover:bg-teal-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-teal-200 dark:shadow-none transition-all hover:-translate-y-1">
+                    <button onClick={() => navigate('/auth', { state: { role: 'doctor' }})} className="w-full bg-accent hover:bg-accent/90 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-accent/30 dark:shadow-none transition-all hover:-translate-y-1">
                       {t('dash_doctor_btn')}
                     </button>
                   </div>
@@ -602,8 +602,8 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                       <a href="mailto:support@medivault.com" className="text-primary font-medium hover:underline">support@medivault.com</a>
                     </>
                   ),
-                  color: 'text-teal-500',
-                  bgColor: 'bg-teal-50 dark:bg-teal-900/20',
+                  color: 'text-accent',
+                  bgColor: 'bg-accent/10 dark:bg-teal-900/20',
                 },
                 {
                   icon: <Phone size={32} />,
@@ -677,7 +677,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 whileHover={{ rotate: 5, scale: 1.1 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
               >
-                <Heart fill="currentColor" size={24} className="text-teal-400" />
+                <Heart fill="currentColor" size={24} className="text-accent" />
               </motion.div>
               <span className="text-xl font-bold">MediVault</span>
             </div>

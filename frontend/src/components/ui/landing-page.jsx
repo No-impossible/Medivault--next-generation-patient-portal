@@ -181,7 +181,7 @@ export function DesignAgency() {
               <motion.div key={index} variants={itemFadeIn}>
                 <a
                   href={`#${item.toLowerCase()}`}
-                  className="flex items-center justify-between rounded-3xl px-3 py-2 text-lg font-medium hover:bg-accent"
+                  className="flex items-center justify-between rounded-3xl px-3 py-2 text-lg font-medium hover:bg-accent/90"
                   onClick={toggleMenu}
                 >
                   {item}
@@ -432,7 +432,7 @@ export function DesignAgency() {
                   whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   className="group relative overflow-hidden rounded-3xl border p-6 shadow-sm transition-all hover:shadow-md bg-background/80"
                 >
-                  <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-300"></div>
+                  <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-primary/10 group-hover:bg-primary/90/20 transition-all duration-300"></div>
                   <div className="relative space-y-3">
                     <div className="mb-4">{service.icon}</div>
                     <h3 className="text-xl font-bold">{service.title}</h3>

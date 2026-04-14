@@ -20,7 +20,7 @@ import { updatePatient } from '../supabaseClient';
 const Toggle = ({ enabled, onClick }) => (
   <button 
     onClick={onClick}
-    className={`w-11 h-6 rounded-full transition-colors relative ${enabled ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-700'}`}
+    className={`w-11 h-6 rounded-full transition-colors relative ${enabled ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}
   >
     <div className={`absolute top-1 left-1 w-4 h-4 bg-white dark:bg-[#1e1e1e] rounded-full transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
   </button>
@@ -79,13 +79,13 @@ export default function PatientSettings({ user }) {
       <section id="account" className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-slate-50">
           <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <User size={20} className="text-indigo-500" />
+            <User size={20} className="text-primary" />
             Account Information
           </h2>
         </div>
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-3xl font-black">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-3xl font-black">
               {user?.name?.[0] || 'P'}
             </div>
             <div className="space-y-1">
@@ -151,13 +151,13 @@ export default function PatientSettings({ user }) {
               </div>
             )}
             {!isAbhaLinked && (
-              <button onClick={() => alert('Please contact MediVault support to link an ABHA ID after registration.')} className="bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg transition-all">
+              <button onClick={() => alert('Please contact MediVault support to link an ABHA ID after registration.')} className="bg-primary hover:bg-primary/90/50 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg transition-all">
                 Connect ABHA ID
               </button>
             )}
           </div>
         </div>
-        <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl" />
+        <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
       </section>
 
       {/* Emergency Contacts Section */}
@@ -178,7 +178,7 @@ export default function PatientSettings({ user }) {
               user.emergencyContacts.map((contact, idx) => (
                 <div key={idx} className="p-4 bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 rounded-2xl flex items-center justify-between group hover:border-red-200 transition-colors cursor-pointer">
                   <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 ${idx === 0 ? 'bg-red-100 text-red-600' : 'bg-indigo-100 text-indigo-600'} rounded-full flex items-center justify-center`}>
+                    <div className={`w-10 h-10 ${idx === 0 ? 'bg-red-100 text-red-600' : 'bg-primary/10 text-primary'} rounded-full flex items-center justify-center`}>
                       {idx === 0 ? <User size={18} /> : <Phone size={18} />}
                     </div>
                     <div>
@@ -201,7 +201,7 @@ export default function PatientSettings({ user }) {
       <div className="grid md:grid-cols-2 gap-8">
         <section className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 space-y-6">
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <Bell size={20} className="text-indigo-500" />
+            <Bell size={20} className="text-primary" />
             Notifications
           </h3>
           <div className="space-y-4">
@@ -231,7 +231,7 @@ export default function PatientSettings({ user }) {
 
         <section className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 space-y-6">
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <Lock size={20} className="text-indigo-500" />
+            <Lock size={20} className="text-primary" />
             Security & Privacy
           </h3>
           <div className="space-y-2">
@@ -258,7 +258,7 @@ export default function PatientSettings({ user }) {
         <button className="px-6 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] transition-all">
           Cancel Changes
         </button>
-        <button onClick={handleSave} className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-lg hover:bg-indigo-700 transition-all">
+        <button onClick={handleSave} className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg hover:bg-primary/90 transition-all">
           Save Settings
         </button>
       </div>

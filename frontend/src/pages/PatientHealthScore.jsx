@@ -33,7 +33,7 @@ export default function PatientHealthScore() {
   if (!fullBodyReport) {
     return (
       <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 flex flex-col items-center justify-center text-center mt-12">
-        <div className="w-24 h-24 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-400 rounded-full flex items-center justify-center mb-6">
+        <div className="w-24 h-24 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-full flex items-center justify-center mb-6">
           <Activity size={48} />
         </div>
         <h2 className="text-3xl font-black text-slate-800 dark:text-slate-100">Unlock your Health Score</h2>
@@ -42,7 +42,7 @@ export default function PatientHealthScore() {
         </p>
         <button 
           onClick={() => navigate('/dashboard/patient/records')}
-          className="bg-indigo-600 text-white font-bold hover:bg-indigo-700 px-8 py-3.5 rounded-xl shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5 mt-8"
+          className="bg-primary text-white font-bold hover:bg-primary/90 px-8 py-3.5 rounded-xl shadow-lg shadow-primary/30 transition-all hover:-translate-y-0.5 mt-8"
         >
           Go to Records
         </button>
@@ -72,19 +72,19 @@ export default function PatientHealthScore() {
             <h2 className="text-xl font-bold text-indigo-200 mb-6">MediVault Overall Score</h2>
             <div className="text-7xl font-black mb-2 flex items-baseline justify-center gap-2">
               {fullBodyReport.score}
-              <span className="text-2xl font-semibold text-indigo-400">/100</span>
+              <span className="text-2xl font-semibold text-primary">/100</span>
             </div>
             <p className="text-emerald-400 font-bold uppercase tracking-widest text-sm mt-6 flex items-center justify-center gap-2">
               <ShieldCheck size={18} /> Safe & Optimal
             </p>
           </div>
-          <div className="absolute right-0 bottom-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl" />
+          <div className="absolute right-0 bottom-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl" />
         </div>
 
         {/* Global Overview */}
         <div className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 text-lg border-b border-slate-100 dark:border-slate-800 pb-4">
-            <Target className="text-indigo-500"/>
+            <Target className="text-primary"/>
             Risk Factors
           </h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 dark:text-slate-500 leading-relaxed">
@@ -112,7 +112,7 @@ export default function PatientHealthScore() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
           <div>
             <h3 className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 text-lg">
-              <TrendingUp className="text-indigo-500" />
+              <TrendingUp className="text-primary" />
               Progress Trends: Fasting Sugar
             </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Tracking your 3-year historical uploads.</p>
@@ -165,10 +165,10 @@ export default function PatientHealthScore() {
       <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 pt-8 border-t border-slate-200 dark:border-slate-700">Biometric Report Breakdown</h3>
       <div className="grid grid-cols-1 gap-4">
         {Object.entries(fullBodyReport.metrics).map(([key, data]) => (
-          <div key={key} className="bg-white dark:bg-[#1e1e1e] border border-slate-100 dark:border-slate-800 shadow-sm rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all hover:border-indigo-100 hover:shadow-md">
+          <div key={key} className="bg-white dark:bg-[#1e1e1e] border border-slate-100 dark:border-slate-800 shadow-sm rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all hover:border-primary/30 hover:shadow-md">
             
             <div className="flex items-center gap-5 md:w-1/3">
-              <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-xl flex items-center justify-center shrink-0">
                 {getMetricIcon(key)}
               </div>
               <h4 className="font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap">{formatMetricName(key)}</h4>

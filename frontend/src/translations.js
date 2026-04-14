@@ -5,7 +5,7 @@ export const translations = {
     nav_features: 'Features',
     nav_security: 'Security',
     nav_contact: 'Contact',
-    nav_login: 'Login',
+    nav_login: 'Get Started',
 
     // Hero
     hero_title: 'Your Complete Medical History, ',

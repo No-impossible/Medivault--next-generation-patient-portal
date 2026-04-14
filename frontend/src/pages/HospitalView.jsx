@@ -149,7 +149,7 @@ export default function HospitalView() {
           ) : (
             records.map((record) => (
               <div key={record.id} className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-6 hover:shadow-md transition-shadow group flex flex-col md:flex-row gap-6 md:items-center">
-                <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-xl flex items-center justify-center shrink-0">
                   <FileText size={24} />
                 </div>
                 <div className="flex-1">

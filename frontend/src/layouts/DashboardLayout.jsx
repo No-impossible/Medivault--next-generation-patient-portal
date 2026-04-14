@@ -93,7 +93,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
 
   const quickActions = [
     { name: 'Book Consultation', icon: <Plus size={16} />, bgClass: 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50', textClass: 'text-blue-700 dark:text-blue-300', iconBg: 'bg-blue-100 dark:bg-blue-800', action: () => navigate(`/dashboard/patient/book-consultation`) },
-    { name: 'Order Medicine', icon: <Plus size={16} />, bgClass: 'bg-teal-50 hover:bg-teal-100 dark:bg-teal-900/30 dark:hover:bg-teal-900/50', textClass: 'text-teal-700 dark:text-teal-300', iconBg: 'bg-teal-100 dark:bg-teal-800', action: () => navigate(`/dashboard/patient/order-medicine`) },
+    { name: 'Order Medicine', icon: <Plus size={16} />, bgClass: 'bg-accent/10 hover:bg-accent/90/10 dark:bg-teal-900/30 dark:hover:bg-teal-900/50', textClass: 'text-teal-700 dark:text-teal-300', iconBg: 'bg-accent/10 dark:bg-teal-800', action: () => navigate(`/dashboard/patient/order-medicine`) },
   ];
 
   return (
@@ -114,7 +114,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
       `}>
         <div className="flex items-center justify-between h-20 px-6 border-b border-slate-100">
           <div className="flex items-center gap-3 cursor-pointer relative z-10 group" onClick={() => navigate(`/dashboard/${role}`)}>
-            <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
+            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
               <Heart className="h-5 w-5 text-white" fill="currentColor" />
             </div>
             <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
@@ -140,7 +140,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
                   ${isActive 
-                    ? `bg-${role === 'patient' ? 'blue' : 'teal'}-50 text-${role === 'patient' ? '[#1E40AF]' : '[#14B8A6]'}` 
+                    ? `bg-${role === 'patient' ? 'blue' : 'teal'}-50 text-${role === 'patient' ? '[hsl(var(--secondary-foreground))]' : '[hsl(var(--accent))]'}` 
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }
                 `}
@@ -206,7 +206,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
                 onClick={() => setIsQrModalOpen(true)}
                 className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold text-xs transition-all hover:-translate-y-0.5"
               >
-                <QrCode size={16} className="text-indigo-600" />
+                <QrCode size={16} className="text-primary" />
                 <span className="hidden sm:inline">Check-in</span>
               </button>
             )}
@@ -215,7 +215,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
               className="flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] p-2 rounded-xl transition-colors"
               onClick={() => navigate(`/dashboard/${role}/settings`)}
             >
-            <div className={`w-10 h-10 rounded-full bg-${role === 'patient' ? 'blue' : 'teal'}-100 flex items-center justify-center text-${role === 'patient' ? '[#1E40AF]' : '[#14B8A6]'} font-bold`}>
+            <div className={`w-10 h-10 rounded-full bg-${role === 'patient' ? 'blue' : 'teal'}-100 flex items-center justify-center text-${role === 'patient' ? '[hsl(var(--secondary-foreground))]' : '[hsl(var(--accent))]'} font-bold`}>
               {user?.name?.[0] || (role === 'patient' ? 'P' : 'Dr')}
             </div>
               <div className="hidden sm:block">

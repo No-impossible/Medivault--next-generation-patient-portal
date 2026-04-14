@@ -196,7 +196,7 @@ export default function PatientOrderMedicine() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-[#1E40AF] flex items-center gap-3">
+          <h1 className="text-3xl font-black text-secondary-foreground flex items-center gap-3">
             <Pill size={32} /> Smart Pharmacy
           </h1>
           <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">Upload prescriptions for instant AI-powered medication extraction and seamless ordering.</p>
@@ -207,7 +207,7 @@ export default function PatientOrderMedicine() {
         
         {/* Left Column: Upload & Scan */}
         <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-lg shadow-blue-900/5">
-          <div className="flex items-center gap-2 mb-6 text-[#1E40AF] font-bold text-lg border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div className="flex items-center gap-2 mb-6 text-secondary-foreground font-bold text-lg border-b border-slate-100 dark:border-slate-800 pb-4">
             <ScanLine size={24} /> Upload & Scan
           </div>
 
@@ -221,7 +221,7 @@ export default function PatientOrderMedicine() {
                   value={manualQuery}
                   onChange={(e) => setManualQuery(e.target.value)}
                   placeholder="Or search medicines manually by name..." 
-                  className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-[#1E40AF] focus:border-transparent font-medium text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:text-slate-500"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-secondary focus:border-transparent font-medium text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:text-slate-500"
                 />
               </form>
 
@@ -267,7 +267,7 @@ export default function PatientOrderMedicine() {
 
               {status === 'SCANNING' && (
                 <>
-                  <div className="absolute inset-0 bg-[#1E40AF]/10 z-0" />
+                  <div className="absolute inset-0 bg-secondary/10 z-0" />
                   <div className="absolute left-0 right-0 h-1 bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,1)] animate-[scan_2s_ease-in-out_infinite] z-10" />
                 </>
               )}
@@ -278,7 +278,7 @@ export default function PatientOrderMedicine() {
           {status === 'SCANNING' && (
             <div className="mt-8 bg-blue-50 p-6 rounded-2xl border border-blue-100">
               <div className="flex justify-between items-end mb-3">
-                <p className="text-sm font-bold text-[#1E40AF] flex items-center gap-2">
+                <p className="text-sm font-bold text-secondary-foreground flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
                   Analyzing handwriting via MediVault AI...
                 </p>
@@ -295,7 +295,7 @@ export default function PatientOrderMedicine() {
         {/* Right Column: Extracted Results */}
         <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-lg shadow-blue-900/5 min-h-[500px] flex flex-col">
           <div className="flex items-center justify-between mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
-            <div className="flex items-center gap-2 text-[#1E40AF] font-bold text-lg">
+            <div className="flex items-center gap-2 text-secondary-foreground font-bold text-lg">
               <CheckCircle2 size={24} /> Extracted Results
             </div>
             {status === 'RESULTS' && (
@@ -386,7 +386,7 @@ export default function PatientOrderMedicine() {
                   <button 
                     onClick={handleConfirmAndSave}
                     disabled={status === 'SAVING'}
-                    className="w-full bg-[#1E40AF] hover:bg-blue-900 text-white py-4 rounded-xl font-black shadow-xl shadow-blue-200 transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full bg-secondary hover:bg-blue-900 text-white py-4 rounded-xl font-black shadow-xl shadow-blue-200 transition-all hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {status === 'SAVING' ? 'Saving securely to vault...' : 'Confirm & Save to Vault'}
                   </button>

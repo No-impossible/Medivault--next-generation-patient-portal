@@ -15,7 +15,7 @@ export default function PatientConsultations() {
         </div>
         <button 
           onClick={() => navigate('/dashboard/patient/book-consultation')}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5"
+          className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/30 transition-all hover:-translate-y-0.5"
         >
           <CalendarPlus size={20} />
           Book New Consult
@@ -24,7 +24,7 @@ export default function PatientConsultations() {
 
       {!consultations || consultations.length === 0 ? (
         <div className="bg-white dark:bg-[#1e1e1e] border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-3xl p-16 flex flex-col items-center justify-center text-center">
-          <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-300 rounded-full flex items-center justify-center mb-6">
+          <div className="w-20 h-20 bg-primary/10 dark:bg-indigo-900/30 text-indigo-300 rounded-full flex items-center justify-center mb-6">
             <Calendar size={40} />
           </div>
           <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">No active consultations</h3>
@@ -33,7 +33,7 @@ export default function PatientConsultations() {
           </p>
           <button 
             onClick={() => navigate('/dashboard/patient/book-consultation')}
-            className="text-slate-700 dark:text-slate-300 font-bold bg-white dark:bg-[#1e1e1e] border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-300 hover:bg-indigo-50 dark:bg-indigo-900/30 px-8 py-3 rounded-xl transition-all"
+            className="text-slate-700 dark:text-slate-300 font-bold bg-white dark:bg-[#1e1e1e] border-2 border-slate-200 dark:border-slate-700 hover:border-primary/30 hover:bg-primary/90/10 dark:bg-indigo-900/30 px-8 py-3 rounded-xl transition-all"
           >
             Find a Doctor
           </button>
@@ -41,11 +41,11 @@ export default function PatientConsultations() {
       ) : (
         <div className="space-y-6">
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <Activity className="text-indigo-500" /> Upcoming Appointments
+            <Activity className="text-primary" /> Upcoming Appointments
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {consultations.map(consult => (
-              <div key={consult.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-3xl p-6 relative overflow-hidden group hover:border-indigo-300 hover:shadow-xl hover:-translate-y-1 transition-all">
+              <div key={consult.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-3xl p-6 relative overflow-hidden group hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all">
                 
                 {/* Status Badge */}
                 <div className="absolute top-6 right-6 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 rounded-full text-xs font-bold flex items-center gap-1.5 border border-emerald-100">
@@ -59,7 +59,7 @@ export default function PatientConsultations() {
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{consult.doctorName}</h4>
-                    <p className="text-indigo-600 text-sm font-semibold">{consult.department}</p>
+                    <p className="text-primary text-sm font-semibold">{consult.department}</p>
                   </div>
                 </div>
 
@@ -87,7 +87,7 @@ export default function PatientConsultations() {
                   </div>
                   <button 
                     onClick={() => alert(`Opening details for ${consult.doctorName}`)}
-                    className="text-indigo-600 font-bold text-sm bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-600 hover:text-white px-5 py-2 rounded-xl transition-all flex items-center gap-1 group-hover:shadow-md"
+                    className="text-primary font-bold text-sm bg-primary/10 dark:bg-indigo-900/30 hover:bg-primary/90 hover:text-white px-5 py-2 rounded-xl transition-all flex items-center gap-1 group-hover:shadow-md"
                   >
                     {consult.type === 'Online Video Consult' ? 'Join Call' : 'View Details'} <ChevronRight size={16} />
                   </button>

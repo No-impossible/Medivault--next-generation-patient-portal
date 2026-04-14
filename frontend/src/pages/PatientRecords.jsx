@@ -152,7 +152,7 @@ export default function PatientRecords() {
         <button 
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 disabled:hover:translate-y-0 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5"
+          className="bg-primary hover:bg-primary/90 disabled:opacity-70 disabled:hover:translate-y-0 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/30 transition-all hover:-translate-y-0.5"
         >
           {isUploading ? <Loader2 size={20} className="animate-spin" /> : <UploadCloud size={20} />}
           {isUploading ? 'Uploading & Analyzing...' : 'Upload Document'}
@@ -174,13 +174,13 @@ export default function PatientRecords() {
           <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 max-w-sm mb-8 leading-relaxed">
             Securely upload your prescriptions, lab reports, and imaging here. 
             <br/><br/>
-            <span className="text-indigo-600 font-semibold bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full text-xs">
+            <span className="text-primary font-semibold bg-primary/10 dark:bg-indigo-900/30 px-3 py-1 rounded-full text-xs">
               💡 Tip: Upload a file named "Checkup.pdf" to auto-generate your Health Score!
             </span>
           </p>
           <button 
             onClick={() => fileInputRef.current?.click()}
-            className="text-slate-700 dark:text-slate-300 font-bold bg-white dark:bg-[#1e1e1e] border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-300 hover:bg-indigo-50 dark:bg-indigo-900/30 px-8 py-3 rounded-xl transition-all"
+            className="text-slate-700 dark:text-slate-300 font-bold bg-white dark:bg-[#1e1e1e] border-2 border-slate-200 dark:border-slate-700 hover:border-primary/30 hover:bg-primary/90/10 dark:bg-indigo-900/30 px-8 py-3 rounded-xl transition-all"
           >
             Browse Files
           </button>
@@ -188,15 +188,15 @@ export default function PatientRecords() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {records.map(record => (
-            <div key={record.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-100/50 transition-all group">
+            <div key={record.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-primary/30 hover:shadow-xl hover:shadow-indigo-100/50 transition-all group">
               <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-xl flex items-center justify-center shrink-0">
                   <File size={24} />
                 </div>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => record.fileURL && window.open(record.fileURL, '_blank')}
-                    className="text-slate-400 dark:text-slate-500 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50 dark:bg-indigo-900/30 transition-colors opacity-0 group-hover:opacity-100"
+                    className="text-slate-400 dark:text-slate-500 hover:text-primary p-2 rounded-lg hover:bg-primary/90/10 dark:bg-indigo-900/30 transition-colors opacity-0 group-hover:opacity-100"
                     title="View Document"
                   >
                     <ExternalLink size={18} />
@@ -223,7 +223,7 @@ export default function PatientRecords() {
                 {record.aiSummary && (
                   <button 
                     onClick={() => setSelectedAIReport(record)}
-                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 px-2.5 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors"
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 dark:bg-indigo-900/30 px-2.5 py-1.5 rounded-lg hover:bg-primary/90/10 transition-colors"
                   >
                     <BrainCircuit size={12} /> AI Brief
                   </button>
@@ -250,12 +250,12 @@ export default function PatientRecords() {
             </button>
             
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-xl flex items-center justify-center">
                 <BrainCircuit size={24} />
               </div>
               <div>
                 <h2 className="text-xl font-black text-slate-800 dark:text-slate-100">AI Medical Brief</h2>
-                <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider flex items-center gap-1">
+                <p className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1">
                   Confidence: {selectedAIReport.aiSummary?.confidence || 'N/A'}
                 </p>
               </div>
@@ -274,7 +274,7 @@ export default function PatientRecords() {
                 <ul className="space-y-2">
                   {selectedAIReport.aiSummary?.keyFindings?.map((finding, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400 dark:text-slate-500">
-                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary/50 mt-2 shrink-0" />
                       {finding}
                     </li>
                   ))}
@@ -290,7 +290,7 @@ export default function PatientRecords() {
                 }}
                 className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all"
               >
-                <ExternalLink size={16} className="text-indigo-600" /> View Original
+                <ExternalLink size={16} className="text-primary" /> View Original
               </button>
             </div>
           </div>
