@@ -201,9 +201,17 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
       <main className="flex-1">
 
         {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-        <section id="home" className="w-full min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 md:py-16 lg:py-20 overflow-hidden">
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="w-full border border-muted rounded-[2rem] bg-gradient-to-br from-background to-muted/30 shadow-2xl overflow-hidden">
+        <section id="home" className="relative w-full min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 md:py-16 lg:py-20 overflow-hidden isolate">
+          {/* Subtle Ambient Background */}
+          <div className="absolute inset-0 -z-10 w-full h-full bg-background overflow-hidden">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[50%] rounded-full bg-primary/20 blur-[100px] opacity-80 mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[50%] rounded-full bg-accent/20 blur-[100px] opacity-80 mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
+            {/* Minimal Dot Pattern */}
+            <div className="absolute inset-0 bg-[radial-gradient(hsl(var(--primary))_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.04] dark:opacity-[0.06] pointer-events-none"></div>
+          </div>
+          
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="w-full border border-muted/50 rounded-[2rem] bg-background/60 backdrop-blur-2xl shadow-2xl overflow-hidden">
             <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
               <motion.div
                 initial="hidden"
@@ -275,7 +283,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
         </section>
 
         {/* ═══════════════════ ABOUT SECTION ═══════════════════ */}
-        <section id="about" className="w-full py-16 md:py-24">
+        <section id="about" className="w-full pt-16 md:pt-24 pb-8 md:pb-10">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -290,7 +298,6 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 transition={{ duration: 0.6 }}
                 className="space-y-5"
               >
-                <div className="inline-block rounded-full bg-muted px-4 py-1.5 text-sm font-medium">About Us</div>
                 <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">About MediVault</h2>
                 <div className="w-20 h-1 bg-primary rounded-full"></div>
                 <p className="text-muted-foreground text-lg leading-relaxed">
@@ -332,7 +339,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
         </section>
 
         {/* ═══════════════════ FEATURES SECTION ═══════════════════ */}
-        <section id="features" className="w-full py-16 md:py-24">
+        <section id="features" className="w-full pt-8 md:pt-10 pb-16 md:pb-24">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -416,14 +423,14 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
         </section>
 
         {/* ═══════════════════ DUAL-ENTRY PORTAL ═══════════════════ */}
-      <section id="entry-section" className="py-24 bg-gray-50 dark:bg-[#121212] flex justify-center items-center transition-colors duration-500">
+      <section id="entry-section" className="py-12 md:py-16 bg-gray-50 dark:bg-[#121212] flex justify-center items-center transition-colors duration-500">
         <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mb-4">{t('dash_title')}</h2>
             <div className="w-20 h-1 bg-secondary dark:bg-primary mx-auto rounded-full"></div>
           </div>
           
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-[2rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-gray-100 dark:border-gray-800 min-h-[600px] transition-colors duration-500">
+          <div id="login-portal" className="bg-white dark:bg-[#1e1e1e] rounded-[2rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-gray-100 dark:border-gray-800 min-h-[600px] transition-colors duration-500">
             {/* ───── LEFT PANEL (Dynamic based on Role) ───── */}
             <div
               className={`hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-16 transition-all duration-700`}
