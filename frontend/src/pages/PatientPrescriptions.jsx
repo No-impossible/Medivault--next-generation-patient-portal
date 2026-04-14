@@ -116,7 +116,7 @@ export default function PatientPrescriptions() {
   if (loading) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
-        <div className="animate-spin text-[#1E40AF]">
+        <div className="animate-spin text-secondary-foreground">
           <FileText size={40} />
         </div>
       </div>
@@ -128,12 +128,12 @@ export default function PatientPrescriptions() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-[#1E40AF]">Prescription History</h1>
+          <h1 className="text-3xl font-black text-secondary-foreground">Prescription History</h1>
           <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">View your past prescriptions and quickly reorder medicines.</p>
         </div>
         <button 
           onClick={() => navigate('/dashboard/patient/order-medicine')}
-          className="bg-[#1E40AF] hover:bg-blue-900 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:-translate-y-0.5 transition-all"
+          className="bg-secondary hover:bg-blue-900 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:-translate-y-0.5 transition-all"
         >
           <Plus size={20} /> New Scan
         </button>
@@ -150,7 +150,7 @@ export default function PatientPrescriptions() {
           </p>
           <button 
             onClick={() => navigate('/dashboard/patient/order-medicine')}
-            className="bg-[#1E40AF] text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-900 transition-all hover:-translate-y-1 flex items-center gap-2"
+            className="bg-secondary text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-900 transition-all hover:-translate-y-1 flex items-center gap-2"
           >
             <Plus size={20} /> Upload Your First Prescription
           </button>

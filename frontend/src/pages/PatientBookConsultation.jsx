@@ -158,9 +158,9 @@ export default function PatientBookConsultation() {
             <div 
               key={dept.id} 
               onClick={() => handleDeptSelect(dept.id)}
-              className="bg-white dark:bg-[#1e1e1e] border text-center border-slate-200 dark:border-slate-700 rounded-3xl p-8 hover:border-indigo-400 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group"
+              className="bg-white dark:bg-[#1e1e1e] border text-center border-slate-200 dark:border-slate-700 rounded-3xl p-8 hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group"
             >
-              <div className="w-20 h-20 mx-auto bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+              <div className="w-20 h-20 mx-auto bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/90 group-hover:text-white transition-colors">
                 {dept.icon}
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">{dept.name}</h3>
@@ -185,7 +185,7 @@ export default function PatientBookConsultation() {
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-2">
                   <div>
                     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">{doc.name}</h3>
-                    <p className="text-sm font-semibold text-indigo-600 mb-3">{DEPARTMENTS.find(d=>d.id===selectedDept)?.name}</p>
+                    <p className="text-sm font-semibold text-primary mb-3">{DEPARTMENTS.find(d=>d.id===selectedDept)?.name}</p>
                   </div>
                   <div className="bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 mx-auto md:mx-0">
                     <Star size={14} fill="currentColor" /> {doc.rating}
@@ -206,7 +206,7 @@ export default function PatientBookConsultation() {
                   </div>
                   <button 
                     onClick={() => handleDoctorSelect(doc)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-md transition-colors"
+                    className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-md transition-colors"
                   >
                     Book Slot
                   </button>
@@ -219,7 +219,7 @@ export default function PatientBookConsultation() {
 
       {step === 'confirm' && selectedDoctor && (
         <div className="max-w-2xl mx-auto bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden animate-in zoom-in-95 duration-300">
-          <div className="bg-indigo-600 p-8 text-center text-white relative">
+          <div className="bg-primary p-8 text-center text-white relative">
             <CheckCircle size={48} className="mx-auto text-indigo-300 mb-4" />
             <h2 className="text-2xl font-black mb-2">Review Appointment</h2>
             <p className="text-indigo-200">Please confirm your booking details below.</p>
@@ -241,7 +241,7 @@ export default function PatientBookConsultation() {
               <div className="md:col-span-2 border border-slate-100 dark:border-slate-800 rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-sm font-bold text-slate-800 dark:text-slate-100">Select Date</p>
-                  <p className="text-xs text-indigo-600 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded-lg">Available Slots</p>
+                  <p className="text-xs text-primary font-bold bg-primary/10 dark:bg-indigo-900/30 px-2 py-1 rounded-lg">Available Slots</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {availableDates.map(date => (
@@ -250,8 +250,8 @@ export default function PatientBookConsultation() {
                       onClick={() => setSelectedDate(date)}
                       className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
                         selectedDate === date 
-                          ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200' 
-                          : 'bg-white dark:bg-[#1e1e1e] border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:border-indigo-300 hover:text-indigo-600'
+                          ? 'bg-primary border-indigo-600 text-white shadow-md shadow-primary/30' 
+                          : 'bg-white dark:bg-[#1e1e1e] border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:border-primary/30 hover:text-primary'
                       }`}
                     >
                       {date}
@@ -269,8 +269,8 @@ export default function PatientBookConsultation() {
                       onClick={() => setSelectedTime(time)}
                       className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
                         selectedTime === time 
-                          ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200' 
-                          : 'bg-white dark:bg-[#1e1e1e] border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:border-indigo-300 hover:text-indigo-600'
+                          ? 'bg-primary border-indigo-600 text-white shadow-md shadow-primary/30' 
+                          : 'bg-white dark:bg-[#1e1e1e] border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:border-primary/30 hover:text-primary'
                       }`}
                     >
                       {time}
@@ -315,7 +315,7 @@ export default function PatientBookConsultation() {
               disabled={!selectedDate || !selectedTime}
               className={`w-full py-4 rounded-2xl font-black text-lg shadow-xl transition-all mt-6 ${
                 selectedDate && selectedTime 
-                ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 hover:-translate-y-1' 
+                ? 'bg-primary hover:bg-primary/90 text-white shadow-primary/30 hover:-translate-y-1' 
                 : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
               }`}
             >
@@ -340,11 +340,11 @@ export default function PatientBookConsultation() {
             </div>
             <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">Appointment Confirmed!</h3>
             <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-8">
-              Your consultation with <span className="font-bold text-indigo-600">{selectedDoctor?.name}</span> is confirmed for {selectedDate} at {selectedTime}.
+              Your consultation with <span className="font-bold text-primary">{selectedDoctor?.name}</span> is confirmed for {selectedDate} at {selectedTime}.
             </p>
             <button 
               onClick={handleModalClose}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md shadow-indigo-200"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md shadow-primary/30"
             >
               Okay, View Consultations
             </button>

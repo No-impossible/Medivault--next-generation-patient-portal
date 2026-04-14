@@ -41,7 +41,7 @@ function Field({ label, id, type = 'text', value, onChange, placeholder, autoFil
           required={required}
           className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none transition-all"
           style={{ borderColor: autoFilled ? '#6ee7b7' : '#e5e7eb', background: autoFilled ? '#f0fdf4' : 'white' }}
-          onFocus={(e) => { if (!autoFilled) e.target.style.borderColor = '#7C83FD'; }}
+          onFocus={(e) => { if (!autoFilled) e.target.style.borderColor = 'hsl(var(--primary))'; }}
           onBlur={(e) => { if (!autoFilled) e.target.style.borderColor = '#e5e7eb'; }}
         />
       )}
@@ -169,14 +169,14 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
       >
         <button
           onClick={onBack}
-          className="absolute top-8 left-8 flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors group"
+          className="absolute top-8 left-8 flex items-center gap-2 text-primary hover:text-indigo-800 font-medium text-sm transition-colors group"
         >
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           Back to Home
         </button>
 
         <div className="absolute top-7 left-1/2 -translate-x-1/2 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
+          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-sm">
             <Heart className="h-5 w-5 text-white" fill="currentColor" />
           </div>
           <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
@@ -195,14 +195,14 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
         <div className="text-center max-w-xs">
           <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-3 leading-snug">
             Begin your health<br />
-            <span style={{ color: '#7C83FD' }}>digital journey.</span>
+            <span style={{ color: 'hsl(var(--primary))' }}>digital journey.</span>
           </h2>
           <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm leading-relaxed">
             Use your ABHA ID to instantly populate your profile, or fill in your details manually.
           </p>
         </div>
 
-        <div className="absolute bottom-8 flex items-center gap-4 text-xs text-indigo-400 font-medium">
+        <div className="absolute bottom-8 flex items-center gap-4 text-xs text-primary font-medium">
           <span className="flex items-center gap-1"><ShieldCheck size={13} /> ABHA Ready</span>
           <span>·</span>
           <span>AES-256 Encrypted</span>
@@ -215,7 +215,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
       <div className="flex-1 overflow-y-auto flex flex-col items-center px-6 py-10 bg-white dark:bg-[#1e1e1e]">
         <button
           onClick={onBack}
-          className="lg:hidden self-start mb-4 flex items-center gap-2 text-indigo-500 hover:text-indigo-700 text-sm font-medium transition-colors group"
+          className="lg:hidden self-start mb-4 flex items-center gap-2 text-primary hover:text-indigo-700 text-sm font-medium transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           Home
@@ -224,7 +224,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
         <div className="w-full max-w-lg">
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-2 lg:hidden">
-              <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center shadow-sm">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
                 <Heart className="h-4 w-4 text-white" fill="currentColor" />
               </div>
               <span className="text-xl font-bold text-slate-800 tracking-tight">MediVault</span>
@@ -254,7 +254,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
             >
               {/* Header row */}
               <div className="flex items-center gap-2 mb-3">
-                <ShieldCheck size={16} className={abhaFetched ? 'text-emerald-500' : 'text-indigo-400'} />
+                <ShieldCheck size={16} className={abhaFetched ? 'text-emerald-500' : 'text-primary'} />
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-100 flex-1">
                   {abhaFetched ? '✅ ABHA details fetched!' : 'Have an ABHA ID? Auto-fill your details'}
                 </p>
@@ -266,8 +266,8 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
                     onClick={() => setAbhaPopup((v) => !v)}
                     className="w-5 h-5 rounded-full border text-xs font-bold flex items-center justify-center transition-colors"
                     style={{
-                      borderColor: abhaPopup ? '#7C83FD' : '#a5b4fc',
-                      color: abhaPopup ? '#7C83FD' : '#818cf8',
+                      borderColor: abhaPopup ? 'hsl(var(--primary))' : '#a5b4fc',
+                      color: abhaPopup ? 'hsl(var(--primary))' : '#818cf8',
                       background: abhaPopup ? '#eef0ff' : 'transparent',
                     }}
                     title="What is ABHA?"
@@ -278,10 +278,10 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
                   {/* Popup tooltip */}
                   {abhaPopup && (
                     <div
-                      className="absolute right-0 top-7 z-50 w-64 rounded-xl shadow-xl border border-indigo-100 p-4 text-xs text-slate-600 dark:text-slate-400 dark:text-slate-500"
+                      className="absolute right-0 top-7 z-50 w-64 rounded-xl shadow-xl border border-primary/30 p-4 text-xs text-slate-600 dark:text-slate-400 dark:text-slate-500"
                       style={{ background: 'white' }}
                     >
-                      <p className="font-bold text-indigo-600 mb-1.5">🪪 What is ABHA?</p>
+                      <p className="font-bold text-primary mb-1.5">🪪 What is ABHA?</p>
                       <p className="leading-relaxed">
                         <strong>ABHA</strong> (Ayushman Bharat Health Account) is your <strong>14-digit</strong> government health ID under India's Ayushman Bharat Digital Mission. It securely links all your medical records across providers.
                       </p>
@@ -298,14 +298,14 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
                   onChange={(e) => { setAbhaId(e.target.value); setAbhaError(''); }}
                   placeholder="e.g. 1234 5678 9012 34"
                   maxLength={18}
-                  className="flex-1 border border-indigo-200 bg-white dark:bg-[#1e1e1e] rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:border-indigo-400 transition-all"
+                  className="flex-1 border border-primary/30 bg-white dark:bg-[#1e1e1e] rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none focus:border-primary/30 transition-all"
                 />
                 <button
                   type="button"
                   onClick={handleAbhaFetch}
                   disabled={abhaFetching || !abhaId.trim()}
                   className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, #7C83FD, #6366f1)' }}
+                  style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), #6366f1)' }}
                 >
                   {abhaFetching ? <Loader size={16} className="animate-spin" /> : null}
                   {abhaFetching ? 'Fetching…' : 'Fetch My Details'}
@@ -363,7 +363,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <div className="relative">
                 <input id="signup-password" type={showPassword ? 'text' : 'password'} value={form.password} onChange={setField('password')} placeholder="Min. 8 characters" required
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
-                  onFocus={(e) => e.target.style.borderColor='#7C83FD'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
+                  onFocus={(e) => e.target.style.borderColor='hsl(var(--primary))'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 transition-colors">
                   {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -398,7 +398,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <div className="relative">
                 <input id="confirm-password" type={showConfirm ? 'text' : 'password'} value={form.confirmPassword} onChange={setField('confirmPassword')} placeholder="Repeat password" required
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
-                  onFocus={(e) => e.target.style.borderColor='#7C83FD'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
+                  onFocus={(e) => e.target.style.borderColor='hsl(var(--primary))'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
                 />
                 <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 transition-colors">
                   {showConfirm ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -415,7 +415,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               className={`w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg transition-all mt-2 ${
                 isPasswordValid ? 'hover:opacity-90 hover:-translate-y-0.5' : 'opacity-50 cursor-not-allowed'
               }`}
-              style={{ background: isPasswordValid ? 'linear-gradient(135deg, #7C83FD, #6366f1)' : '#cbd5e1' }}
+              style={{ background: isPasswordValid ? 'linear-gradient(135deg, hsl(var(--primary)), #6366f1)' : '#cbd5e1' }}
             >
               Create My Patient Account
             </button>
@@ -423,7 +423,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
 
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-5">
             Already have an account?{' '}
-            <button onClick={onLogin} className="font-semibold hover:underline" style={{ color: '#7C83FD' }}>
+            <button onClick={onLogin} className="font-semibold hover:underline" style={{ color: 'hsl(var(--primary))' }}>
               Sign In
             </button>
           </p>

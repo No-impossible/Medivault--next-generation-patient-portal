@@ -41,17 +41,23 @@ export default function App() {
   }, []);
 
   const scrollToEntry = (e) => {
-    e.preventDefault();
-    const target = document.getElementById('entry-section');
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    
+    // Clear URL hash to ensure native router mechanics do not lock the viewport
+    if (window.location.hash) {
+      window.history.replaceState(null, null, ' ');
+    }
+
+    const target = document.getElementById('login-portal');
     if (!target) {
       navigate('/');
       setTimeout(() => {
-        const newTarget = document.getElementById('entry-section');
-        if (newTarget) newTarget.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+        const newTarget = document.getElementById('login-portal');
+        if (newTarget) newTarget.scrollIntoView();
+      }, 150);
       return;
     }
-    target.scrollIntoView({ behavior: 'smooth' });
+    target.scrollIntoView();
   };
 
   const handleLoginSuccess = (userData) => {

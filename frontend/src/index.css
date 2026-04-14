@@ -26,52 +26,54 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 224 30% 99%;
+    --foreground: 224 40% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 224 40% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 224 40% 10%;
+    --primary: 224 90% 66%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 224 30% 92%;
+    --secondary-foreground: 224 50% 15%;
+    --muted: 224 20% 94%;
+    --muted-foreground: 224 16% 45%;
+    --accent: 224 30% 90%;
+    --accent-foreground: 224 50% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 224 20% 88%;
+    --input: 224 20% 88%;
+    --ring: 224 90% 66%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* 3-tier surface hierarchy: base → elevated → overlay */
+    --background: 222 47% 6%;       /* #0b1120 — deep navy-charcoal base */
+    --foreground: 210 20% 93%;      /* #e8ecf1 — soft off-white text */
+    --card: 222 40% 9%;             /* #101a2e — elevated surface */
+    --card-foreground: 210 20% 93%;
+    --popover: 222 38% 11%;         /* #142035 — overlay/dropdown surface */
+    --popover-foreground: 210 20% 93%;
+    --primary: 224 85% 65%;         /* slightly brighter blue for dark bg */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 30% 14%;       /* subtle raised bg for badges/pills */
+    --secondary-foreground: 210 20% 90%;
+    --muted: 222 25% 13%;           /* muted surface for cards/sections */
+    --muted-foreground: 215 15% 58%;/* readable mid-tone — WCAG AA on dark */
+    --accent: 222 30% 18%;          /* accent surface (hover states, tags) */
+    --accent-foreground: 210 20% 93%;
+    --destructive: 0 63% 35%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 222 25% 16%;          /* subtle but visible border */
+    --input: 222 25% 16%;
+    --ring: 224 85% 65%;
   }
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: smooth !important;
+  scroll-padding-top: 5.5rem; /* Offsets scroll landings past the sticky header */
 }
 
 body {
@@ -81,14 +83,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #ffffff;
-  color: #0f172a;
-  transition: background-color 0.5s ease, color 0.5s ease;
-}
-
-.dark body {
-  background-color: #121212;
-  color: #f1f5f9;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* Custom Scrollbar for patient records view */
@@ -99,7 +96,7 @@ body {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: hsl(var(--border));
   border-radius: 10px;
 }
 

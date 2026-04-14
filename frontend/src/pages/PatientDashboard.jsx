@@ -39,7 +39,7 @@ export default function PatientDashboard({ user }) {
         </div>
         <button 
           onClick={() => navigate('/dashboard/patient/records')}
-          className="bg-[#1E40AF] hover:bg-blue-900 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:-translate-y-0.5 transition-all"
+          className="bg-secondary hover:bg-blue-900 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:-translate-y-0.5 transition-all"
         >
           <Plus size={20} />
           Upload New Record
@@ -52,7 +52,7 @@ export default function PatientDashboard({ user }) {
           <div 
             key={stat.label} 
             onClick={stat.onClick}
-            className={`bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all ${stat.onClick ? 'cursor-pointer hover:shadow-md hover:border-indigo-100 hover:-translate-y-1' : 'hover:shadow-md'}`}
+            className={`bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all ${stat.onClick ? 'cursor-pointer hover:shadow-md hover:border-primary/30 hover:-translate-y-1' : 'hover:shadow-md'}`}
           >
             <div className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center bg-${stat.color}-50 text-${stat.color}-600`}>
               {stat.icon}
@@ -71,7 +71,7 @@ export default function PatientDashboard({ user }) {
             {records?.length > 0 && (
               <button 
                 onClick={() => navigate('/dashboard/patient/records')}
-                className="text-sm font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                className="text-sm font-bold text-primary hover:text-indigo-800 flex items-center gap-1"
               >
                 View All <ChevronRight size={16} />
               </button>
@@ -89,7 +89,7 @@ export default function PatientDashboard({ user }) {
               </p>
               <button 
                 onClick={() => navigate('/dashboard/patient/records')}
-                className="text-indigo-600 font-bold text-sm bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 px-6 py-2 rounded-xl transition-all"
+                className="text-primary font-bold text-sm bg-primary/10 dark:bg-indigo-900/30 hover:bg-primary/90/10 px-6 py-2 rounded-xl transition-all"
               >
                 Upload Your First Record
               </button>
@@ -99,7 +99,7 @@ export default function PatientDashboard({ user }) {
               {records.slice(0, 3).map((record, idx) => (
                 <div key={record.id} className={`p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] transition-colors ${idx !== 0 ? 'border-t border-slate-100 dark:border-slate-800' : ''}`}>
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-xl flex items-center justify-center shrink-0">
                       <FileText size={20} />
                     </div>
                     <div>
@@ -109,7 +109,7 @@ export default function PatientDashboard({ user }) {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg hidden sm:block">{record.size}</span>
-                    <button onClick={() => record.fileURL && window.open(record.fileURL, '_blank')} className="text-slate-400 dark:text-slate-500 hover:text-indigo-600 p-2 bg-transparent hover:bg-indigo-50 dark:bg-indigo-900/30 rounded-lg transition-colors"><Download size={18} /></button>
+                    <button onClick={() => record.fileURL && window.open(record.fileURL, '_blank')} className="text-slate-400 dark:text-slate-500 hover:text-primary p-2 bg-transparent hover:bg-primary/90/10 dark:bg-indigo-900/30 rounded-lg transition-colors"><Download size={18} /></button>
                   </div>
                 </div>
               ))}
@@ -121,7 +121,7 @@ export default function PatientDashboard({ user }) {
         <div className="space-y-6">
           <div className="bg-indigo-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
             <div className="relative z-10 space-y-3">
-              <Shield size={24} className="text-indigo-400" />
+              <Shield size={24} className="text-primary" />
               <h3 className="font-bold">Vault Security</h3>
               <p className="text-indigo-200 text-xs leading-relaxed">
                 Your medical data is protected with 256-bit AES encryption.
@@ -153,7 +153,7 @@ export default function PatientDashboard({ user }) {
               <X size={24} />
             </button>
             
-            <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+            <div className="w-16 h-16 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-2xl flex items-center justify-center mb-6">
               <Shield size={32} />
             </div>
             
@@ -197,7 +197,7 @@ export default function PatientDashboard({ user }) {
             <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end">
               <button 
                 onClick={() => setShowSecurityModal(false)}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5"
+                className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary/30 transition-all hover:-translate-y-0.5"
               >
                 I Understand
               </button>

@@ -209,7 +209,7 @@ export default function DoctorLogin() {
           
           <div className="absolute inset-0 rounded-[2.5rem] bg-white p-2 shadow-2xl transition-all duration-500 ring-1 ring-white/50" 
                style={{ boxShadow: '0 30px 60px -15px rgba(20, 184, 166, 0.4)' }}>
-            <div className="w-full h-full rounded-[2rem] overflow-hidden bg-teal-50 relative group/img">
+            <div className="w-full h-full rounded-[2rem] overflow-hidden bg-accent/10 relative group/img">
               <img
                 src="/steth_hero.png"
                 alt="Premium Medical Stethoscope"
@@ -222,7 +222,7 @@ export default function DoctorLogin() {
               <div className="absolute inset-0 bg-teal-900/10 group-hover/img:bg-transparent transition-colors duration-500"></div>
               {/* Fallback pattern */}
               <div className="w-full h-full items-center justify-center hidden bg-gradient-to-br from-teal-50 to-emerald-100 relative overflow-hidden">
-                <Stethoscope size={120} className="text-teal-400 opacity-80 drop-shadow-lg transition-transform duration-500 hover:scale-110 hover:rotate-6" />
+                <Stethoscope size={120} className="text-accent opacity-80 drop-shadow-lg transition-transform duration-500 hover:scale-110 hover:rotate-6" />
                 <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] animate-[shimmer_3s_infinite_linear] opacity-30 pointer-events-none"></div>
               </div>
             </div>
@@ -252,11 +252,11 @@ export default function DoctorLogin() {
 
         {/* Bottom badges */}
         <div className="absolute bottom-8 flex flex-wrap justify-center items-center gap-6 text-xs text-teal-800 font-bold opacity-80 bg-white/30 backdrop-blur-md px-6 py-3 rounded-full border border-white/40 shadow-sm transition-transform duration-500 hover:scale-105">
-          <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-teal-600" /> Secure Gateway</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
-          <span className="flex items-center gap-1.5"><Heart size={14} className="text-teal-600" /> Patient First</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
-          <span className="flex items-center gap-1.5"><Lock size={14} className="text-teal-600" /> Zero-Knowledge</span>
+          <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-accent" /> Secure Gateway</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-accent/50"></span>
+          <span className="flex items-center gap-1.5"><Heart size={14} className="text-accent" /> Patient First</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-accent/50"></span>
+          <span className="flex items-center gap-1.5"><Lock size={14} className="text-accent" /> Zero-Knowledge</span>
         </div>
       </div>
 
@@ -266,7 +266,7 @@ export default function DoctorLogin() {
         {/* Mobile back button */}
         <button
           onClick={() => navigate('/')}
-          className="lg:hidden self-start mb-6 flex items-center gap-2 text-teal-600 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300 text-sm font-medium transition-colors group"
+          className="lg:hidden self-start mb-6 flex items-center gap-2 text-accent dark:text-accent hover:text-teal-800 dark:hover:text-teal-300 text-sm font-medium transition-colors group"
         >
           <ArrowRight className="rotate-180 group-hover:-translate-x-1 transition-transform" size={16} />
           Home
@@ -306,7 +306,7 @@ export default function DoctorLogin() {
                       required
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
                       placeholder="e.g. Dr. Sarah Jenkins"
                     />
                   </div>
@@ -323,7 +323,7 @@ export default function DoctorLogin() {
                       required
                       value={specialty}
                       onChange={(e) => setSpecialty(e.target.value)}
-                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none appearance-none"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none appearance-none"
                     >
                       <option value="" disabled className="dark:bg-slate-800">Select</option>
                       <option value="Cardiologist" className="dark:bg-slate-800">Cardiologist</option>
@@ -346,7 +346,7 @@ export default function DoctorLogin() {
                       required
                       value={gender}
                       onChange={(e) => setGender(e.target.value)}
-                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none appearance-none"
+                      className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none appearance-none"
                     >
                       <option value="" disabled className="dark:bg-slate-800">Select</option>
                       <option value="Female" className="dark:bg-slate-800">Female</option>
@@ -370,7 +370,7 @@ export default function DoctorLogin() {
                         required
                         value={licenseNumber}
                         onChange={(e) => { setLicenseNumber(e.target.value); setLicenseVerified(false); }}
-                        className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none uppercase"
+                        className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-accent focus:border-accent sm:text-sm py-3 bg-slate-50 border transition-colors outline-none uppercase"
                         placeholder="e.g. MCI/12/34567"
                       />
                       {licenseVerified && (
@@ -432,7 +432,7 @@ export default function DoctorLogin() {
                     required
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setEmailVerified(false); }}
-                    className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                    className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
                     placeholder="doctor@hospital.com"
                   />
                   {/* Verified Icon Badge inside input if verified */}
@@ -478,7 +478,7 @@ export default function DoctorLogin() {
                     required
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-[#14B8A6] focus:border-[#14B8A6] sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
+                    className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-accent focus:border-accent sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
 
                     placeholder="e.g. Apollo Hospital, Bangalore"
                   />
@@ -491,7 +491,7 @@ export default function DoctorLogin() {
               <div className="flex justify-between items-center mb-1">
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
                 {isLogin && (
-                  <button type="button" className="text-xs font-semibold text-[#14B8A6] hover:text-teal-700 dark:hover:text-teal-400 transition-colors">
+                  <button type="button" className="text-xs font-semibold text-accent hover:text-teal-700 dark:hover:text-accent transition-colors">
                     Forgot password?
                   </button>
                 )}
@@ -506,7 +506,7 @@ export default function DoctorLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setShowConfirmPassword(true)}
-                  className="pl-10 pr-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                  className="pl-10 pr-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
                   placeholder="••••••••"
                 />
                 <button
@@ -566,7 +566,7 @@ export default function DoctorLogin() {
                     className={`pl-10 pr-16 block w-full rounded-xl border sm:text-sm py-3 transition-colors outline-none text-slate-900 dark:text-slate-100 dark:border-slate-700 dark:bg-[#1a1a1a]
                       ${confirmPassword && !isConfirmMatch ? 'border-red-300 dark:border-red-800 focus:ring-red-400 focus:border-red-400 bg-red-50/50 dark:bg-red-900/20' : ''}
                       ${confirmPassword && isConfirmMatch ? 'border-emerald-300 dark:border-emerald-800 focus:ring-emerald-400 focus:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20/50 dark:bg-emerald-900/20' : ''}
-                      ${!confirmPassword ? 'border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-[#14B8A6] bg-white dark:bg-[#1a1a1a]' : ''}
+                      ${!confirmPassword ? 'border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent bg-white dark:bg-[#1a1a1a]' : ''}
                     `}
                     placeholder="••••••••"
                   />
@@ -594,7 +594,7 @@ export default function DoctorLogin() {
 
             <button
               type="submit"
-              className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg shadow-teal-200/50 dark:shadow-none text-base font-bold text-white bg-gradient-to-r from-[#14B8A6] to-teal-500 hover:to-teal-400 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-2"
+              className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg shadow-accent/30/50 dark:shadow-none text-base font-bold text-white bg-gradient-to-r from-[hsl(var(--accent))] to-teal-500 hover:to-teal-400 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-2"
               disabled={!isLogin && (!isPasswordValid || !isConfirmMatch || !emailVerified || !licenseVerified)}
             >
               {isLogin ? 'Secure Access' : 'Register Securely'}
@@ -610,7 +610,7 @@ export default function DoctorLogin() {
                 <button
                   type="button"
                   onClick={() => setIsLogin(false)}
-                  className="font-bold text-[#14B8A6] dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
+                  className="font-bold text-accent dark:text-accent hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
                 >
                   Register your account
                 </button>
@@ -621,7 +621,7 @@ export default function DoctorLogin() {
                 <button
                   type="button"
                   onClick={() => setIsLogin(true)}
-                  className="font-bold text-[#14B8A6] dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
+                  className="font-bold text-accent dark:text-accent hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
                 >
                   Log in here
                 </button>

@@ -5,7 +5,7 @@ export const translations = {
     nav_features: 'Features',
     nav_security: 'Security',
     nav_contact: 'Contact',
-    nav_login: 'Login',
+    nav_login: 'Get Started',
 
     // Hero
     hero_title: 'Your Complete Medical History, ',
@@ -49,7 +49,7 @@ export const translations = {
     nav_features: 'विशेषताएं',
     nav_security: 'सुरक्षा',
     nav_contact: 'संपर्क',
-    nav_login: 'लॉगिन',
+    nav_login: 'शुरू करें',
 
     // Hero
     hero_title: 'आपका संपूर्ण चिकित्सा इतिहास, ',
@@ -93,7 +93,7 @@ export const translations = {
     nav_features: 'Características',
     nav_security: 'Seguridad',
     nav_contact: 'Contacto',
-    nav_login: 'Acceso',
+    nav_login: 'Empezar',
 
     // Hero
     hero_title: 'Su historial médico completo, ',
@@ -137,7 +137,7 @@ export const translations = {
     nav_features: 'Fonctionnalités',
     nav_security: 'Sécurité',
     nav_contact: 'Contact',
-    nav_login: 'Connexion',
+    nav_login: 'Commencer',
 
     // Hero
     hero_title: 'Votre historique médical complet, ',

@@ -49,7 +49,7 @@ const AbhaSearch = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3.5 text-base border-gray-300 border rounded-xl focus:ring-2 focus:ring-[#1E40AF] focus:border-[#1E40AF] bg-gray-50/50 text-gray-900 placeholder-gray-400 outline-none transition-shadow shadow-sm"
+              className="block w-full pl-11 pr-4 py-3.5 text-base border-gray-300 border rounded-xl focus:ring-2 focus:ring-secondary focus:border-secondary bg-gray-50/50 text-gray-900 placeholder-gray-400 outline-none transition-shadow shadow-sm"
               placeholder="Enter 14-digit ABHA ID (e.g., 91-1122-3344-5566)"
               disabled={loading}
             />
@@ -58,7 +58,7 @@ const AbhaSearch = () => {
           <button
             type="submit"
             disabled={loading || !searchQuery.trim()}
-            className="inline-flex justify-center items-center px-8 py-3.5 border border-transparent text-base font-semibold rounded-xl shadow-sm text-white bg-[#1E40AF] hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E40AF] disabled:opacity-75 disabled:cursor-wait transition-all min-w-[200px]"
+            className="inline-flex justify-center items-center px-8 py-3.5 border border-transparent text-base font-semibold rounded-xl shadow-sm text-white bg-secondary hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary disabled:opacity-75 disabled:cursor-wait transition-all min-w-[200px]"
           >
             {loading ? (
               <>
@@ -82,11 +82,11 @@ const AbhaSearch = () => {
         {patientData && !loading && !error && (
           <div className="mt-8 bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-gray-800 rounded-xl shadow-md p-6 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
              {/* Accent left border */}
-             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#1E40AF]"></div>
+             <div className="absolute top-0 left-0 w-1.5 h-full bg-secondary"></div>
              
              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-8 ml-2">
                 <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center border-4 border-white shadow-sm flex-shrink-0">
-                  <User className="h-12 w-12 text-[#1E40AF]" />
+                  <User className="h-12 w-12 text-secondary-foreground" />
                 </div>
                 
                 <div className="flex-grow space-y-3 w-full">
@@ -115,7 +115,7 @@ const AbhaSearch = () => {
                 </div>
 
                 <div className="mt-4 lg:mt-0 w-full lg:w-auto pt-4 lg:pt-0 border-t lg:border-t-0 border-gray-100 dark:border-gray-800">
-                  <button className="w-full lg:w-auto px-6 py-3 bg-[#1E40AF] text-white text-sm font-semibold rounded-xl shadow-sm hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-[#1E40AF] focus:ring-offset-2 transition-all">
+                  <button className="w-full lg:w-auto px-6 py-3 bg-secondary text-white text-sm font-semibold rounded-xl shadow-sm hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition-all">
                     Request Consent to View Records
                   </button>
                 </div>
