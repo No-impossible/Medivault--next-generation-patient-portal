@@ -192,6 +192,72 @@ export default function DoctorDashboard() {
     return [];
   });
 
+  const handleViewAppointmentDetails = async (apt) => {
+    if (!apt.abhaId) {
+      // If no ABHA ID, just set a basic profile based on what we have
+      setSelectedProfilePatient({
+        name: apt.patientName,
+        abhaId: 'No ABHA ID Provided',
+        age: 'N/A',
+        gender: 'N/A',
+        bloodGroup: 'N/A',
+        phone: 'N/A',
+        email: 'N/A',
+        address: 'N/A',
+        allergies: ['N/A'],
+        chronicConditions: ['N/A']
+      });
+      setActiveTab('patients');
+      return;
+    }
+
+    try {
+      // Fetch full profile from Supabase
+      const { data, error } = await supabase
+        .from('mock_abha_users')
+        .select('*')
+        .eq('abhaId', apt.abhaId)
+        .single();
+
+      if (error || !data) {
+        throw new Error('Patient record not found in central registry.');
+      }
+
+      const birthYear = data.dob ? new Date(data.dob).getFullYear() : null;
+      const age = birthYear ? new Date().getFullYear() - birthYear : 'Unknown';
+
+      setSelectedProfilePatient({
+        name: data.name,
+        abhaId: data.abhaId,
+        age: age,
+        gender: data.gender || 'Not specified',
+        bloodGroup: data.bloodGroup || 'Not specified',
+        phone: data.mobile || 'Not specified',
+        email: data.email || 'Not specified',
+        address: data.address || 'Not specified',
+        allergies: ['Fetched from Registry'],
+        chronicConditions: ['Fetched from Registry']
+      });
+      setActiveTab('patients');
+    } catch (err) {
+      console.error('Fetch Patient profile error:', err);
+      // Fallback if fetch fails
+      setSelectedProfilePatient({
+        name: apt.patientName,
+        abhaId: apt.abhaId,
+        age: 'Registry Fetch Failed',
+        gender: 'N/A',
+        bloodGroup: 'N/A',
+        phone: 'N/A',
+        email: 'N/A',
+        address: 'N/A',
+        allergies: ['N/A'],
+        chronicConditions: ['N/A']
+      });
+      setActiveTab('patients');
+    }
+  };
+
   const handleAddAppointment = (newApt) => {
     const updated = [...appointments, newApt];
     setAppointments(updated);
@@ -578,7 +644,7 @@ export default function DoctorDashboard() {
                           <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{apt.patientName}</h3>
                           <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 flex items-center gap-1.5 mt-1">
                             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-                            Follow-up Consultation
+                            {apt.abhaId || 'No ABHA ID'}
                           </p>
                         </div>
                       </div>
@@ -590,7 +656,10 @@ export default function DoctorDashboard() {
                           </p>
                           <p className="text-sm text-slate-600 dark:text-slate-400 dark:text-slate-500 font-medium">at {apt.time}</p>
                         </div>
-                        <button className="text-emerald-600 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 px-4 py-2 rounded-lg font-medium text-sm transition-colors cursor-pointer border border-emerald-100/50">
+                        <button 
+                          onClick={() => handleViewAppointmentDetails(apt)}
+                          className="text-emerald-600 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 px-4 py-2 rounded-lg font-medium text-sm transition-colors cursor-pointer border border-emerald-100/50"
+                        >
                           View details
                         </button>
                       </div>
