@@ -39,9 +39,9 @@ export const translations = {
     // Dashboard Selection
     dash_title: 'Access Your Dashboard',
     dash_patient_title: 'For Patients',
-    dash_doctor_title: 'For Healthcare Providers',
+    dash_doctor_title: 'Clinical Practitioner Portal',
     dash_patient_btn: 'Patient Login / Sign Up',
-    dash_doctor_btn: 'Doctor Login / Portal'
+    dash_doctor_btn: 'Authenticate & Access Portal'
   },
   Hindi: {
     // Navbar

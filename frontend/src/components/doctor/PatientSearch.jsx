@@ -100,7 +100,7 @@ export default function PatientSearch({ onScanClick, onSavePatient }) {
             {/* Background Image */}
             <div className="absolute inset-0 bg-slate-900 group">
               <img src="/patient_search_hero.png" className="w-full h-full object-cover opacity-80" alt="Beautiful Medical Background" />
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-900/60 via-emerald-900/40 to-slate-900/80"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-teal-900/60 to-slate-900/90"></div>
             </div>
 
             {/* Content */}
@@ -109,7 +109,7 @@ export default function PatientSearch({ onScanClick, onSavePatient }) {
               <p className="text-emerald-50 max-w-xl text-sm md:text-base font-medium drop-shadow mb-8 leading-relaxed">Securely retrieve and access comprehensive medical histories, verified prescriptions, and health timelines instantly via ABHA network.</p>
 
               <form onSubmit={handleSearch} className="relative group w-full max-w-2xl px-2">
-                <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-emerald-500 group-focus-within:text-emerald-600 transition-colors z-10">
+                <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-emerald-600 group-focus-within:text-emerald-500 transition-colors z-10">
                   <Search size={22} />
                 </div>
                 <input
@@ -123,13 +123,23 @@ export default function PatientSearch({ onScanClick, onSavePatient }) {
                   <button
                     type="submit"
                     disabled={isSearching}
-                    className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 focus:ring-4 focus:ring-emerald-300 text-white rounded-xl px-6 py-3 font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95"
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 focus:ring-4 focus:ring-emerald-300 text-white rounded-xl px-6 py-3 font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95"
                   >
                     {isSearching ? <Loader2 className="animate-spin" size={20} /> : 'Fetch Records'}
                   </button>
                 </div>
               </form>
             </div>
+          </div>
+
+          <div className="flex justify-center mb-8">
+            <button 
+              onClick={onScanClick}
+              className="group flex items-center gap-3 bg-white dark:bg-[#1e1e1e] hover:bg-emerald-500 text-emerald-600 hover:text-white px-8 py-4 rounded-2xl font-black text-sm transition-all duration-300 shadow-sm hover:shadow-emerald-500/25 border-2 border-emerald-100 hover:border-emerald-500 hover:-translate-y-1"
+            >
+              <QrCode size={22} className="text-emerald-500 group-hover:text-white transition-colors" />
+              <span>Scan a QR to fetch patient details</span>
+            </button>
           </div>
 
           {error && (

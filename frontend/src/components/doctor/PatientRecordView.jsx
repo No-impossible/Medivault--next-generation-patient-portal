@@ -25,7 +25,7 @@ export default function PatientRecordView({ patient }) {
         
         {/* Profile Card */}
         <div className="bg-white dark:bg-[#1e1e1e] rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-100 to-transparent rounded-bl-full -z-0 opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-200/40 to-transparent rounded-bl-full -z-0 opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
           
           <div className="flex items-center gap-4 mb-6 relative z-10">
             <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 shadow-sm">
@@ -33,8 +33,8 @@ export default function PatientRecordView({ patient }) {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{patient.name}</h2>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 rounded-lg text-xs font-semibold mt-2 border border-emerald-100">
-                <HeartPulse size={14} /> Active ABDM Link
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 rounded-lg text-xs font-black mt-2 border border-emerald-200/50 uppercase tracking-tight">
+                <HeartPulse size={14} className="text-emerald-500" /> Active ABDM Link
               </div>
             </div>
           </div>
@@ -111,11 +111,11 @@ export default function PatientRecordView({ patient }) {
             </div>
             <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Write Rx</span>
           </div>
-          <div className="bg-emerald-500 p-4 rounded-2xl shadow-sm border border-emerald-600 text-white flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-emerald-600 transition-colors">
-            <div className="w-12 h-12 bg-white dark:bg-[#1e1e1e]/20 rounded-full flex items-center justify-center">
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-4 rounded-2xl shadow-lg border border-emerald-400/20 text-white flex flex-col items-center justify-center gap-2 cursor-pointer hover:shadow-emerald-500/40 hover:-translate-y-1 transition-all">
+            <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
               <Plus size={24} />
             </div>
-            <span className="text-sm font-medium">New Consult</span>
+            <span className="text-sm font-bold">New Consult</span>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ export default function PatientRecordView({ patient }) {
               </div>
               <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50 dark:bg-[#121212] hover:bg-white dark:bg-[#1e1e1e] p-4 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-emerald-200 hover:shadow-md transition-all">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-100/50 px-2 py-1 rounded-md">12 Nov 2025</span>
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md border border-emerald-200/30">12 Nov 2025</span>
                   <span className="text-xs text-slate-400 dark:text-slate-500">Apollo Hospital</span>
                 </div>
                 <h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm mb-1">Cardiology Consult</h4>

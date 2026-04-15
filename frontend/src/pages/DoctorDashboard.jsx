@@ -192,6 +192,72 @@ export default function DoctorDashboard() {
     return [];
   });
 
+  const handleViewAppointmentDetails = async (apt) => {
+    if (!apt.abhaId) {
+      // If no ABHA ID, just set a basic profile based on what we have
+      setSelectedProfilePatient({
+        name: apt.patientName,
+        abhaId: 'No ABHA ID Provided',
+        age: 'N/A',
+        gender: 'N/A',
+        bloodGroup: 'N/A',
+        phone: 'N/A',
+        email: 'N/A',
+        address: 'N/A',
+        allergies: ['N/A'],
+        chronicConditions: ['N/A']
+      });
+      setActiveTab('patients');
+      return;
+    }
+
+    try {
+      // Fetch full profile from Supabase
+      const { data, error } = await supabase
+        .from('mock_abha_users')
+        .select('*')
+        .eq('abhaId', apt.abhaId)
+        .single();
+
+      if (error || !data) {
+        throw new Error('Patient record not found in central registry.');
+      }
+
+      const birthYear = data.dob ? new Date(data.dob).getFullYear() : null;
+      const age = birthYear ? new Date().getFullYear() - birthYear : 'Unknown';
+
+      setSelectedProfilePatient({
+        name: data.name,
+        abhaId: data.abhaId,
+        age: age,
+        gender: data.gender || 'Not specified',
+        bloodGroup: data.bloodGroup || 'Not specified',
+        phone: data.mobile || 'Not specified',
+        email: data.email || 'Not specified',
+        address: data.address || 'Not specified',
+        allergies: ['Fetched from Registry'],
+        chronicConditions: ['Fetched from Registry']
+      });
+      setActiveTab('patients');
+    } catch (err) {
+      console.error('Fetch Patient profile error:', err);
+      // Fallback if fetch fails
+      setSelectedProfilePatient({
+        name: apt.patientName,
+        abhaId: apt.abhaId,
+        age: 'Registry Fetch Failed',
+        gender: 'N/A',
+        bloodGroup: 'N/A',
+        phone: 'N/A',
+        email: 'N/A',
+        address: 'N/A',
+        allergies: ['N/A'],
+        chronicConditions: ['N/A']
+      });
+      setActiveTab('patients');
+    }
+  };
+
   const handleAddAppointment = (newApt) => {
     const updated = [...appointments, newApt];
     setAppointments(updated);
@@ -216,14 +282,14 @@ export default function DoctorDashboard() {
         </div>
 
         <div className="flex-1 overflow-y-auto py-8 flex flex-col gap-3 px-5 custom-scrollbar">
-          <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 px-3">Practice Management</p>
+          <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 px-3">Clinical Operations</p>
           
           <button 
             onClick={() => { setActiveTab('lookup'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'lookup' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'lookup' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <Search size={20} className={activeTab === 'lookup' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <Search size={20} className={activeTab === 'lookup' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Patient Lookup</span>
             </div>
             {activeTab === 'lookup' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -231,10 +297,10 @@ export default function DoctorDashboard() {
 
           <button 
             onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'patients' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'patients' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <Users size={20} className={activeTab === 'patients' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <Users size={20} className={activeTab === 'patients' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Patient Profiles</span>
             </div>
             {activeTab === 'patients' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -242,10 +308,10 @@ export default function DoctorDashboard() {
 
           <button 
             onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'appointments' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'appointments' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <Calendar size={20} className={activeTab === 'appointments' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <Calendar size={20} className={activeTab === 'appointments' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Appointments</span>
             </div>
             {activeTab === 'appointments' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -253,10 +319,10 @@ export default function DoctorDashboard() {
 
           <button 
             onClick={() => { setActiveTab('prescriptions'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'prescriptions' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'prescriptions' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <FileText size={20} className={activeTab === 'prescriptions' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <FileText size={20} className={activeTab === 'prescriptions' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Prescriptions</span>
             </div>
             {activeTab === 'prescriptions' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -292,21 +358,9 @@ export default function DoctorDashboard() {
                 'Manage Prescriptions'
               )}
             </h1>
-            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
-              {doctorData.name} / Provider Access
-            </p>
           </div>
 
           <div className="flex items-center gap-4 sm:gap-8 animate-in fade-in slide-in-from-right-4 duration-500">
-            <button 
-              onClick={() => setShowQrModal(true)}
-              className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-500 text-emerald-600 hover:text-white px-5 py-2.5 rounded-xl font-black text-sm transition-all duration-300 shadow-sm hover:shadow-emerald-500/25 border border-emerald-100 hover:border-emerald-500 hover:-translate-y-0.5"
-            >
-              <QrCode size={18} />
-              <span className="hidden sm:inline">Scan Patient QR</span>
-            </button>
-
             <div className="relative hidden xl:block">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
               <input 
@@ -321,7 +375,7 @@ export default function DoctorDashboard() {
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">{doctorData.name}</p>
                 <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest mt-0.5">{doctorData.specialization}</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 flex items-center justify-center text-emerald-600 font-black text-lg border-2 border-white shadow-md ring-2 ring-emerald-50 group-hover:ring-emerald-200 transition-all">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 flex items-center justify-center text-emerald-600 font-black text-lg border-2 border-white shadow-md ring-2 ring-emerald-50 group-hover:ring-emerald-200 transition-all shadow-emerald-500/10">
                 {initials}
               </div>
             </div>
@@ -590,7 +644,7 @@ export default function DoctorDashboard() {
                           <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{apt.patientName}</h3>
                           <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 flex items-center gap-1.5 mt-1">
                             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-                            Follow-up Consultation
+                            {apt.abhaId || 'No ABHA ID'}
                           </p>
                         </div>
                       </div>
@@ -602,7 +656,10 @@ export default function DoctorDashboard() {
                           </p>
                           <p className="text-sm text-slate-600 dark:text-slate-400 dark:text-slate-500 font-medium">at {apt.time}</p>
                         </div>
-                        <button className="text-emerald-600 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 px-4 py-2 rounded-lg font-medium text-sm transition-colors cursor-pointer border border-emerald-100/50">
+                        <button 
+                          onClick={() => handleViewAppointmentDetails(apt)}
+                          className="text-emerald-600 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 px-4 py-2 rounded-lg font-medium text-sm transition-colors cursor-pointer border border-emerald-100/50"
+                        >
                           View details
                         </button>
                       </div>
