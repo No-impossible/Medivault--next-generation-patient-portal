@@ -216,7 +216,7 @@ export default function DoctorDashboard() {
         </div>
 
         <div className="flex-1 overflow-y-auto py-8 flex flex-col gap-3 px-5 custom-scrollbar">
-          <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 px-3">Practice Management</p>
+          <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 px-3">Clinical Operations</p>
           
           <button 
             onClick={() => { setActiveTab('lookup'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
@@ -292,10 +292,6 @@ export default function DoctorDashboard() {
                 'Manage Prescriptions'
               )}
             </h1>
-            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
-              {doctorData.name} / Provider Access
-            </p>
           </div>
 
           <div className="flex items-center gap-4 sm:gap-8 animate-in fade-in slide-in-from-right-4 duration-500">

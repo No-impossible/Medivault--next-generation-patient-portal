@@ -440,10 +440,10 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
             <div className="w-20 h-1 bg-primary mx-auto rounded-full"></div>
           </div>
           
-          <div id="login-portal" className="bg-card rounded-[2rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-border min-h-[600px] transition-colors duration-500">
+          <div id="login-portal" className="bg-card rounded-[2rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row lg:items-stretch border border-border min-h-[500px] transition-colors duration-500">
             {/* ───── LEFT PANEL (Dynamic based on Role) ───── */}
             <div
-              className={`hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-16 transition-all duration-700 bg-muted/50`}
+              className={`hidden lg:flex lg:w-1/2 self-stretch flex-col items-center justify-center relative overflow-hidden px-12 py-16 transition-all duration-700 bg-muted/50`}
               style={{ 
                 background: isDark
                   ? (portalRole === 'patient'
@@ -474,13 +474,13 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                   {portalRole === 'patient' ? (
                     <>Your medical history.<br /><span style={{ color: 'hsl(var(--primary))' }}>Secured. Always accessible.</span></>
                   ) : (
-                    <>Practice Management.<br /><span className="text-primary">Streamlined and Intuitive.</span></>
+                    <>Clinical Workflow Orchestration.<br /><span className="text-primary">Secure. Unified. Compliant.</span></>
                   )}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
                   {portalRole === 'patient' 
                     ? "MediVault keeps all your reports, prescriptions, and health records in one encrypted, government-standard vault."
-                    : "Manage patient records, write prescriptions, and seamlessly sync with the global ABHA network natively."}
+                    : "Manage longitudinal patient history, issue authenticated digital prescriptions, and integrate with the national ABHA network seamlessly."}
                 </p>
               </div>
 
@@ -494,7 +494,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
             </div>
 
             {/* ───── RIGHT PANEL (Toggle & Access) ───── */}
-            <div className="w-full lg:w-1/2 p-10 sm:p-16 flex flex-col justify-center relative bg-card transition-colors duration-500">
+            <div className="w-full lg:w-1/2 self-stretch p-8 sm:p-12 flex flex-col justify-center relative bg-card transition-colors duration-500">
               <div className="flex justify-center mb-10">
                 <div className="bg-muted p-1.5 rounded-2xl inline-flex shadow-inner border border-border w-full max-w-md">
                   <button
@@ -512,50 +512,51 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                 </div>
               </div>
 
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-                {portalRole === 'patient' ? (
-                  <div className="w-full max-w-md transition-all duration-500 transform translate-y-0 opacity-100">
-                    <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-primary/20">
+              {/* Grid overlay: both cards occupy the same cell so the container always matches the tallest */}
+              <div className="flex-1 grid grid-cols-1 grid-rows-1 items-stretch text-center">
+                  {/* ── Patient Card ── */}
+                  <div className={`row-start-1 col-start-1 w-full max-w-md mx-auto flex flex-col items-center h-full transition-all duration-500 ${portalRole === 'patient' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                    <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-primary/20 flex-shrink-0">
                       <User size={40} />
                     </div>
-                    <h3 className="text-2xl font-black text-foreground mb-6">{t('dash_patient_title')}</h3>
-                    <ul className="text-muted-foreground mb-10 space-y-4 text-[16px] font-medium">
+                    <h3 className="text-2xl font-black text-foreground mb-6 flex-shrink-0">{t('dash_patient_title')}</h3>
+                    <ul className="text-muted-foreground mb-6 space-y-3 text-[16px] font-medium w-full flex-1 flex flex-col justify-center">
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-primary" /> View Medical Records
+                        <Lock size={18} className="text-primary flex-shrink-0" /> View Medical Records
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-primary" /> Order Medicines
+                        <Lock size={18} className="text-primary flex-shrink-0" /> Order Medicines
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-primary" /> Book Tele-Consults
+                        <Lock size={18} className="text-primary flex-shrink-0" /> Book Tele-Consults
                       </li>
                     </ul>
-                    <button onClick={onPatientLogin} className="w-full bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:-translate-y-1">
+                    <button onClick={onPatientLogin} className="w-full max-w-md bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:-translate-y-1 flex-shrink-0 mt-auto">
                       {t('dash_patient_btn')}
                     </button>
                   </div>
-                ) : (
-                  <div className="w-full max-w-md transition-all duration-500 transform translate-y-0 opacity-100">
-                    <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-primary/20">
+
+                  {/* ── Doctor Card ── */}
+                  <div className={`row-start-1 col-start-1 w-full max-w-md mx-auto flex flex-col items-center h-full transition-all duration-500 ${portalRole === 'doctor' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                    <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-primary/20 flex-shrink-0">
                       <Stethoscope size={40} />
                     </div>
-                    <h3 className="text-2xl font-black text-foreground mb-6">{t('dash_doctor_title')}</h3>
-                    <ul className="text-muted-foreground mb-10 space-y-4 text-[16px] font-medium">
+                    <h3 className="text-2xl font-black text-foreground mb-6 flex-shrink-0">{t('dash_doctor_title')}</h3>
+                    <ul className="text-muted-foreground mb-6 space-y-3 text-[16px] font-medium w-full flex-1 flex flex-col justify-center">
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-primary" /> View Patient History
+                        <Lock size={18} className="text-primary flex-shrink-0" /> Retrieve Longitudinal Records
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-primary" /> Write Digital Prescriptions
+                        <Lock size={18} className="text-primary flex-shrink-0" /> Generate e-Prescriptions
                       </li>
                       <li className="flex items-center justify-center gap-2">
-                        <Lock size={18} className="text-primary" /> Schedule Appointments
+                        <Lock size={18} className="text-primary flex-shrink-0" /> Appointment Orchestration
                       </li>
                     </ul>
-                    <button onClick={() => navigate('/auth', { state: { role: 'doctor' }})} className="w-full bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:-translate-y-1">
+                    <button onClick={() => navigate('/auth', { state: { role: 'doctor' }})} className="w-full max-w-md bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:-translate-y-1 flex-shrink-0 mt-auto">
                       {t('dash_doctor_btn')}
                     </button>
                   </div>
-                )}
               </div>
             </div>
           </div>
