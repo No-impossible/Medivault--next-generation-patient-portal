@@ -220,10 +220,10 @@ export default function DoctorDashboard() {
           
           <button 
             onClick={() => { setActiveTab('lookup'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'lookup' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'lookup' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <Search size={20} className={activeTab === 'lookup' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <Search size={20} className={activeTab === 'lookup' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Patient Lookup</span>
             </div>
             {activeTab === 'lookup' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -231,10 +231,10 @@ export default function DoctorDashboard() {
 
           <button 
             onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'patients' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'patients' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <Users size={20} className={activeTab === 'patients' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <Users size={20} className={activeTab === 'patients' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Patient Profiles</span>
             </div>
             {activeTab === 'patients' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -242,10 +242,10 @@ export default function DoctorDashboard() {
 
           <button 
             onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'appointments' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'appointments' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <Calendar size={20} className={activeTab === 'appointments' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <Calendar size={20} className={activeTab === 'appointments' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Appointments</span>
             </div>
             {activeTab === 'appointments' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -253,10 +253,10 @@ export default function DoctorDashboard() {
 
           <button 
             onClick={() => { setActiveTab('prescriptions'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
-            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'prescriptions' && !token ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20 border border-emerald-400/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
+            className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'prescriptions' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
-              <FileText size={20} className={activeTab === 'prescriptions' && !token ? 'text-emerald-100' : 'text-slate-400 dark:text-slate-500'} />
+              <FileText size={20} className={activeTab === 'prescriptions' && !token ? 'text-emerald-100' : 'text-emerald-500'} />
               <span>Prescriptions</span>
             </div>
             {activeTab === 'prescriptions' && !token && <ChevronRight size={16} className="text-emerald-100" />}
@@ -295,14 +295,6 @@ export default function DoctorDashboard() {
           </div>
 
           <div className="flex items-center gap-4 sm:gap-8 animate-in fade-in slide-in-from-right-4 duration-500">
-            <button 
-              onClick={() => setShowQrModal(true)}
-              className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-500 text-emerald-600 hover:text-white px-5 py-2.5 rounded-xl font-black text-sm transition-all duration-300 shadow-sm hover:shadow-emerald-500/25 border border-emerald-100 hover:border-emerald-500 hover:-translate-y-0.5"
-            >
-              <QrCode size={18} />
-              <span className="hidden sm:inline">Scan Patient QR</span>
-            </button>
-
             <div className="relative hidden xl:block">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
               <input 
@@ -317,7 +309,7 @@ export default function DoctorDashboard() {
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">{doctorData.name}</p>
                 <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest mt-0.5">{doctorData.specialization}</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 flex items-center justify-center text-emerald-600 font-black text-lg border-2 border-white shadow-md ring-2 ring-emerald-50 group-hover:ring-emerald-200 transition-all">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 flex items-center justify-center text-emerald-600 font-black text-lg border-2 border-white shadow-md ring-2 ring-emerald-50 group-hover:ring-emerald-200 transition-all shadow-emerald-500/10">
                 {initials}
               </div>
             </div>

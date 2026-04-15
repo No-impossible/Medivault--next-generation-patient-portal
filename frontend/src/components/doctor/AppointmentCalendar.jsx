@@ -39,12 +39,12 @@ export default function AppointmentCalendar({ onCancel, onBooked }) {
   if (booked) {
     return (
       <div className="flex flex-col items-center justify-center h-full animate-in zoom-in duration-500">
-        <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-6 shadow-sm border-4 border-emerald-50">
+        <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 rounded-full flex items-center justify-center mb-6 shadow-sm border-4 border-emerald-100">
           <CheckCircle2 size={48} />
         </div>
         <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">Booking Confirmed!</h2>
         <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-lg">Appointment secured for {patientName}</p>
-        <p className="text-emerald-700 font-medium mt-2 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-lg">
+        <p className="text-emerald-700 dark:text-emerald-400 font-bold mt-2 bg-emerald-50 dark:bg-emerald-900/30 px-6 py-2 rounded-xl border border-emerald-200/50">
           {selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at {selectedSlot}
         </p>
       </div>
@@ -88,7 +88,7 @@ export default function AppointmentCalendar({ onCancel, onBooked }) {
                   onClick={() => { setSelectedDate(date); setSelectedSlot(null); }}
                   className={`flex flex-col items-center justify-center min-w-16 p-3 rounded-2xl border transition-all cursor-pointer ${
                     isSelected 
-                      ? 'bg-emerald-500 border-emerald-600 text-white shadow-md scale-105' 
+                      ? 'bg-gradient-to-br from-emerald-500 to-teal-600 border-emerald-600 text-white shadow-lg shadow-emerald-500/20 scale-105' 
                       : 'bg-white dark:bg-[#1e1e1e] border-gray-200 text-slate-600 dark:text-slate-400 dark:text-slate-500 hover:border-emerald-300 hover:bg-emerald-50 dark:bg-emerald-900/20'
                   }`}
                 >
@@ -166,8 +166,8 @@ export default function AppointmentCalendar({ onCancel, onBooked }) {
               disabled={!selectedSlot || !patientName.trim() || isBooking}
               className={`mt-auto w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center transition-all ${
                 (!selectedSlot || !patientName.trim()) 
-                  ? 'bg-slate-800 text-slate-500 dark:text-slate-400 dark:text-slate-500 cursor-not-allowed' 
-                  : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.3)] shadow-emerald-500/20 cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
+                  ? 'bg-slate-800 text-slate-500 dark:text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-50' 
+                  : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-xl shadow-emerald-500/20 cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
               }`}
             >
               {isBooking ? (
