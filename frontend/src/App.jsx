@@ -74,12 +74,7 @@ export default function App() {
 
   return (
     <>
-      {mounted && createPortal(
-        <div className="fixed bottom-6 right-6 z-[99999] scale-[0.6] sm:scale-75 origin-bottom-right" style={{ zIndex: 99999 }}>
-          <CinematicThemeSwitcher />
-        </div>,
-        document.body
-      )}
+
       <Routes>
         {/* Public Share Route */}
         <Route path="/share/:token" element={<HospitalView />} />
