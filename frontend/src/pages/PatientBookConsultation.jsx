@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { fetchDoctors, seedMockDoctors } from '../services/healthService';
 import { addConsultation } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 const DEPARTMENTS = [
   { id: 'general', name: 'General Physician', icon: <Stethoscope size={32} />, exp: 'Fevers, Colds, General Health' },
@@ -29,6 +30,8 @@ const DEPARTMENTS = [
 // MOCK_DOCTORS replaced with Supabase data
 
 export default function PatientBookConsultation() {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const { user, setConsultations } = useOutletContext();
   const [step, setStep] = useState('department'); // department -> doctors -> confirm
@@ -319,7 +322,7 @@ export default function PatientBookConsultation() {
                 : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
               }`}
             >
-              {selectedDate && selectedTime ? 'Confirm & Book Appointment' : 'Select Date & Time to Proceed'}
+              {selectedDate && selectedTime ? `Confirm & ${t('book_btn')}` : 'Select Date & Time to Proceed'}
             </button>
           </div>
         </div>

@@ -1,8 +1,11 @@
 import React from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, Video, VideoOff, ChevronRight, Activity, CalendarPlus, Building } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PatientConsultations() {
+  const { t } = useTranslation();
+
   const { consultations } = useOutletContext();
   const navigate = useNavigate();
 
@@ -10,7 +13,7 @@ export default function PatientConsultations() {
     <div className="max-w-6xl w-full mx-auto space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-6">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">My Consultations</h1>
+          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">{t('consultations_title')}</h1>
           <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mt-1">Manage your upcoming and past medical appointments.</p>
         </div>
         <button 
@@ -18,7 +21,7 @@ export default function PatientConsultations() {
           className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/30 transition-all hover:-translate-y-0.5"
         >
           <CalendarPlus size={20} />
-          Book New Consult
+          {t('consultations_book_new')} Consult
         </button>
       </div>
 
@@ -89,7 +92,7 @@ export default function PatientConsultations() {
                     onClick={() => alert(`Opening details for ${consult.doctorName}`)}
                     className="text-primary font-bold text-sm bg-primary/10 dark:bg-indigo-900/30 hover:bg-primary/90 hover:text-white px-5 py-2 rounded-xl transition-all flex items-center gap-1 group-hover:shadow-md"
                   >
-                    {consult.type === 'Online Video Consult' ? 'Join Call' : 'View Details'} <ChevronRight size={16} />
+                    {consult.type === 'Online Video Consult' ? t('consultations_join') : 'View Details'} <ChevronRight size={16} />
                   </button>
                 </div>
               </div>
