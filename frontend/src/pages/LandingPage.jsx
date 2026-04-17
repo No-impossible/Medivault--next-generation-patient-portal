@@ -729,3 +729,5 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
     </div>
   );
 }
+
+// added mobile support
