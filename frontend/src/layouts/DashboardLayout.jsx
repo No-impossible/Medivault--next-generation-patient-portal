@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { fetchConsultations } from '../supabaseClient';
 import ShareHistoryQR from '../components/ShareHistoryQR';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardLayout({ role, onLogout, user, setUser }) {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -78,22 +79,24 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
     // Quote rotation removed to prevent layout re-renders that reset inner nested routes
   }, [quotes.length]);
 
+  const { t } = useTranslation();
+
   const handleLogout = () => {
     onLogout();
     navigate('/');
   };
 
   const navLinks = [
-    { name: 'Overview', path: `/dashboard/${role}`, icon: <LayoutDashboard size={20} /> },
-    { name: role === 'patient' ? 'My Records' : 'Patients', path: `/dashboard/${role}/records`, icon: <FolderOpen size={20} /> },
-    { name: 'Consultations', path: `/dashboard/${role}/consultations`, icon: <CalendarCheck size={20} /> },
-    ...(role === 'patient' ? [{ name: 'Prescriptions', path: '/dashboard/patient/prescriptions', icon: <FileText size={20} /> }] : []),
-    { name: 'Settings', path: `/dashboard/${role}/settings`, icon: <Settings size={20} /> },
+    { name: t('nav_overview'), path: `/dashboard/${role}`, icon: <LayoutDashboard size={20} /> },
+    { name: role === 'patient' ? t('nav_my_records') : t('nav_patients'), path: `/dashboard/${role}/records`, icon: <FolderOpen size={20} /> },
+    { name: t('nav_consultations'), path: `/dashboard/${role}/consultations`, icon: <CalendarCheck size={20} /> },
+    ...(role === 'patient' ? [{ name: t('nav_prescriptions'), path: '/dashboard/patient/prescriptions', icon: <FileText size={20} /> }] : []),
+    { name: t('nav_settings'), path: `/dashboard/${role}/settings`, icon: <Settings size={20} /> },
   ];
 
   const quickActions = [
-    { name: 'Book Consultation', icon: <Plus size={16} />, bgClass: 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50', textClass: 'text-blue-700 dark:text-blue-300', iconBg: 'bg-blue-100 dark:bg-blue-800', action: () => navigate(`/dashboard/patient/book-consultation`) },
-    { name: 'Order Medicine', icon: <Plus size={16} />, bgClass: 'bg-accent/10 hover:bg-accent/90/10 dark:bg-teal-900/30 dark:hover:bg-teal-900/50', textClass: 'text-teal-700 dark:text-teal-300', iconBg: 'bg-accent/10 dark:bg-teal-800', action: () => navigate(`/dashboard/patient/order-medicine`) },
+    { name: t('action_book_consultation'), icon: <Plus size={16} />, bgClass: 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50', textClass: 'text-blue-700 dark:text-blue-300', iconBg: 'bg-blue-100 dark:bg-blue-800', action: () => navigate(`/dashboard/patient/book-consultation`) },
+    { name: t('action_order_medicine'), icon: <Plus size={16} />, bgClass: 'bg-accent/10 hover:bg-accent/90/10 dark:bg-teal-900/30 dark:hover:bg-teal-900/50', textClass: 'text-teal-700 dark:text-teal-300', iconBg: 'bg-accent/10 dark:bg-teal-800', action: () => navigate(`/dashboard/patient/order-medicine`) },
   ];
 
   return (
@@ -127,7 +130,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
 
         <div className="px-4 py-8 flex flex-col h-[calc(100vh-5rem)]">
           <div className="mb-6 px-4">
-            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Menu</p>
+            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">{t('nav_menu')}</p>
           </div>
           
           <nav className="flex-1 space-y-2">
@@ -154,7 +157,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
           {/* Quick Actions in Sidebar */}
           {role === 'patient' && (
             <div className="mt-8 space-y-4 px-2">
-              <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quick Actions</div>
+              <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('nav_quick_actions')}</div>
               <div className="grid grid-cols-1 gap-2">
                 {quickActions.map((action) => (
                   <button onClick={action.action} key={action.name} className={`flex items-center gap-3 w-full p-3 rounded-xl text-xs font-bold transition-colors ${action.bgClass} ${action.textClass}`}>
@@ -207,7 +210,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
                 className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold text-xs transition-all hover:-translate-y-0.5"
               >
                 <QrCode size={16} className="text-primary" />
-                <span className="hidden sm:inline">Check-in</span>
+                <span className="hidden sm:inline">{t('dash_checkin')}</span>
               </button>
             )}
 
@@ -220,7 +223,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             </div>
               <div className="hidden sm:block">
                 <p className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight">
-                  {user?.name || (role === 'patient' ? 'Patient' : 'Doctor')}
+                  {user?.name || (role === 'patient' ? t('role_patient') : t('role_doctor'))}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 capitalize">{role}</p>
               </div>
@@ -252,19 +255,19 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6 mx-auto">
               <ShieldAlert size={32} />
             </div>
-            <h2 className="text-2xl font-black text-center text-slate-800 dark:text-slate-100 mb-2">Emergency SOS</h2>
+            <h2 className="text-2xl font-black text-center text-slate-800 dark:text-slate-100 mb-2">{t('dash_sos_title')}</h2>
             <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-center mb-6 leading-relaxed">
-              This will instantly alert emergency services and share your medical vault location with authorized responders. Use this only in critical situations.
+              {t('sos_desc')}
             </p>
             <div className="bg-slate-50 dark:bg-[#121212] rounded-2xl p-4 mb-6 space-y-3">
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">Automatic call to 102/112</p>
+                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">{t('sos_call')}</p>
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
-                  Alerting emergency contacts:<br/>
+                  {t('sos_alerting')}<br/>
                   <span className="font-bold">
                     {user?.emergencyContacts?.length > 0 
                       ? user.emergencyContacts.map(c => c.name).join(', ') 
@@ -274,7 +277,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">Sharing current health profile & live location</p>
+                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">{t('sos_sharing')}</p>
               </div>
             </div>
             <div className="flex flex-col gap-3">
@@ -285,7 +288,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
                   setIsSosModalOpen(false);
                 }}
               >
-                CONFIRM EMERGENCY
+                {t('sos_confirm')}
               </button>
               <button 
                 className="w-full py-3 text-slate-500 dark:text-slate-400 dark:text-slate-500 font-bold hover:text-slate-700 dark:text-slate-300"
@@ -314,16 +317,16 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
               <LogOut size={32} />
             </div>
-            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 text-center mb-2">Sign Out?</h2>
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 text-center mb-2">{t('logout_title')}</h2>
             <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-center text-sm mb-8 leading-relaxed">
-              Are you sure you want to securely log out of your MediVault account? You will need to re-authenticate to access your vault.
+              {t('logout_desc')}
             </p>
             <div className="flex flex-col gap-3 w-full">
               <button 
                 onClick={handleLogout}
                 className="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 rounded-xl font-bold tracking-wide shadow-lg shadow-red-200 transition-all hover:-translate-y-0.5"
               >
-                Yes, Sign Out
+                {t('logout_btn')}
               </button>
               <button 
                 onClick={() => setShowLogoutConfirm(false)}
