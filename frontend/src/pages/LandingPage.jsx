@@ -110,11 +110,9 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
             <a href="#security" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">{t('nav_security')}</a>
             <a href="#contact" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">{t('nav_contact')}</a>
 
-            <div className="flex items-center space-x-4 pl-4 border-l border-border ml-2">
-              {/* Theme toggle moved to global App.jsx layout */}
-
+            <div className="flex items-center space-x-2 pl-4 border-l border-border ml-2">
               {/* Language Switcher */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mr-2">
                 <Globe size={16} className="text-primary" />
                 <select
                   onChange={(e) => i18n.changeLanguage(e.target.value)}
@@ -127,6 +125,8 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                   <option value="ta">தமிழ்</option>
                 </select>
               </div>
+
+              <CinematicThemeSwitcher />
             </div>
 
             <Button onClick={scrollToEntry} size="sm" className="rounded-xl ml-2 text-primary-foreground">
@@ -187,18 +187,21 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
             ))}
             <motion.div variants={itemFadeIn} className="flex flex-col gap-3 pt-4 px-4">
               {/* Mobile Language Switcher */}
-              <div className="flex items-center gap-2 mb-2">
-                <Globe size={16} className="text-primary" />
-                <select
-                  onChange={(e) => i18n.changeLanguage(e.target.value)}
-                  value={i18n.language}
-                  className="bg-transparent text-sm font-medium text-foreground focus:outline-none cursor-pointer"
-                >
-                  <option value="en">English</option>
-                  <option value="hi">हिंदी</option>
-                  <option value="mr">मराठी</option>
-                  <option value="ta">தமிழ்</option>
-                </select>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Globe size={16} className="text-primary" />
+                  <select
+                    onChange={(e) => i18n.changeLanguage(e.target.value)}
+                    value={i18n.language}
+                    className="bg-transparent text-sm font-medium text-foreground focus:outline-none cursor-pointer"
+                  >
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="mr">मराठी</option>
+                    <option value="ta">தமிழ்</option>
+                  </select>
+                </div>
+                <CinematicThemeSwitcher />
               </div>
               <Button onClick={() => { toggleMenu(); scrollToEntry(new Event('click')); }} className="w-full rounded-xl">
                 {t('nav_login')}
