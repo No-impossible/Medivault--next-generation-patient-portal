@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useOutletContext } from 'react-router-dom';
 import { updatePatient } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 const Toggle = ({ enabled, onClick }) => (
   <button 
@@ -27,6 +28,8 @@ const Toggle = ({ enabled, onClick }) => (
 );
 
 export default function PatientSettings({ user }) {
+  const { t } = useTranslation();
+
   const [notifications, setNotifications] = useState(() => {
     try {
       const saved = localStorage.getItem(`medivault_settings_${user?.id || 'guest'}`);
@@ -35,6 +38,8 @@ export default function PatientSettings({ user }) {
       return { email: true, sms: false, app: true };
     }
   });
+
+  const { i18n } = useTranslation();
 
   const { setUser } = useOutletContext();
   const [showContactModal, setShowContactModal] = useState(false);
@@ -71,8 +76,8 @@ export default function PatientSettings({ user }) {
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">Settings</h1>
-        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mt-1">Manage your account, privacy, and health vault settings.</p>
+        <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">{t('settings_title')}</h1>
+        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mt-1">{t('settings_desc')}</p>
       </div>
 
       {/* Account Section */}
@@ -96,25 +101,25 @@ export default function PatientSettings({ user }) {
 
           <div className="grid md:grid-cols-2 gap-6 pt-2">
             <div>
-              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Full Name</label>
+              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('settings_full_name')}</label>
               <div className="p-3 bg-slate-50 dark:bg-[#121212] rounded-xl border border-slate-100 dark:border-slate-800 text-sm font-medium text-slate-800 dark:text-slate-100">
                 {user?.name || 'Not provided'}
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Date of Birth</label>
+              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('settings_dob')}</label>
               <div className="p-3 bg-slate-50 dark:bg-[#121212] rounded-xl border border-slate-100 dark:border-slate-800 text-sm font-medium text-slate-800 dark:text-slate-100">
                 {user?.dob || 'Oct 24, 1995'}
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Email Address</label>
+              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('settings_email')}</label>
               <div className="p-3 bg-slate-50 dark:bg-[#121212] rounded-xl border border-slate-100 dark:border-slate-800 text-sm font-medium text-slate-800 dark:text-slate-100">
                 {user?.email || 'test@example.com'}
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Mobile</label>
+              <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('settings_mobile')}</label>
               <div className="p-3 bg-slate-50 dark:bg-[#121212] rounded-xl border border-slate-100 dark:border-slate-800 text-sm font-medium text-slate-800 dark:text-slate-100">
                 {user?.mobile || '+91 98765 43210'}
               </div>
@@ -131,7 +136,7 @@ export default function PatientSettings({ user }) {
               <ShieldCheck size={24} className="text-indigo-300" />
             </div>
             <div>
-              <h2 className="text-xl font-bold mb-2">ABHA Health ID</h2>
+              <h2 className="text-xl font-bold mb-2">{t('settings_abha_title')}</h2>
               <p className="text-indigo-200 text-sm leading-relaxed">
                 {isAbhaLinked 
                   ? 'Your MediVault account is securely linked to the ABDM ecosystem.' 
@@ -252,6 +257,29 @@ export default function PatientSettings({ user }) {
             </button>
           </div>
         </section>
+
+        <section className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 space-y-6">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <Globe size={20} className="text-primary" />
+            Language & Region
+          </h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Display Language</label>
+              <select
+                value={i18n.language || "en"}
+                onChange={(e) => i18n.changeLanguage(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+              >
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="mr">मराठी</option>
+                <option value="ta">தமிழ்</option>
+              </select>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Choose the language for your patient portal interface.</p>
+            </div>
+          </div>
+        </section>
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
@@ -270,10 +298,10 @@ export default function PatientSettings({ user }) {
             <button onClick={() => setShowContactModal(false)} className="absolute top-6 right-6 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212]">
               <X size={24} />
             </button>
-            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 mb-6">Add Emergency Contact</h2>
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 mb-6">{t('settings_add_emergency_contact')}</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('settings_full_name')}</label>
                 <input type="text" value={newContact.name} onChange={e => setNewContact({...newContact, name: e.target.value})} className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm" placeholder="e.g. Jane Doe" />
               </div>
               <div>
