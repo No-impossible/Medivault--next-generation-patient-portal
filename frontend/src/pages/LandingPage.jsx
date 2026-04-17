@@ -731,3 +731,4 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
 }
 
 // added mobile support
+// refined spacing
