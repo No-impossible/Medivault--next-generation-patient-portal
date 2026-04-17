@@ -3,8 +3,11 @@ import { UploadCloud, Pill, ShoppingCart, ScanLine, AlertCircle, CheckCircle2, C
 import { supabase, uploadReport } from '../supabaseClient';
 import { useOutletContext } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
+import { useTranslation } from 'react-i18next';
 
 export default function PatientOrderMedicine() {
+  const { t } = useTranslation();
+
   const { user } = useOutletContext();
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);

@@ -10,8 +10,11 @@ import {
   AlertCircle,
   X 
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PatientPrescriptions() {
+  const { t } = useTranslation();
+
   const { user } = useOutletContext();
   const navigate = useNavigate();
   const [prescriptions, setPrescriptions] = useState([]);
@@ -128,8 +131,8 @@ export default function PatientPrescriptions() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-secondary-foreground">Prescription History</h1>
-          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">View your past prescriptions and quickly reorder medicines.</p>
+          <h1 className="text-3xl font-black text-secondary-foreground">{t('prescriptions_title')}</h1>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mt-1">{t('prescriptions_desc')}</p>
         </div>
         <button 
           onClick={() => navigate('/dashboard/patient/order-medicine')}
@@ -192,7 +195,7 @@ export default function PatientPrescriptions() {
 
               {/* Medicines List */}
               <div className="p-5 flex-1">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Extracted Medicines</p>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">{t('prescriptions_extracted')}</p>
                 <div className="space-y-4">
                   {Array.isArray(record.medicines) && record.medicines.map((med, idx) => (
                     <div key={idx} className="bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors">
@@ -217,7 +220,7 @@ export default function PatientPrescriptions() {
                   ))}
                   
                   {(!record.medicines || record.medicines.length === 0) && (
-                    <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 italic">No medicines specifically logged.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 italic">{t('prescriptions_no_meds')}</p>
                   )}
                 </div>
               </div>
