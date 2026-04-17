@@ -1,8 +1,11 @@
 import React from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Activity, Beaker, HeartPulse, Droplets, Target, ShieldCheck, ChevronLeft, TrendingUp, ArrowDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PatientHealthScore() {
+  const { t } = useTranslation();
+
   const { fullBodyReport } = useOutletContext();
   const navigate = useNavigate();
 

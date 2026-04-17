@@ -15,18 +15,20 @@ import {
   Server,
   Key
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PatientDashboard({ user }) {
   const navigate = useNavigate();
   const { records, fullBodyReport, consultations } = useOutletContext();
+  const { t } = useTranslation();
   const userName = user?.name || 'Patient';
   const [showSecurityModal, setShowSecurityModal] = useState(false);
 
   const stats = [
-    { label: 'Medical Records', value: records?.length || '0', icon: <FileText size={20} />, color: 'blue', onClick: () => navigate('/dashboard/patient/records') },
-    { label: 'Consultations', value: consultations?.length || '0', icon: <Calendar size={20} />, color: 'teal', onClick: () => navigate('/dashboard/patient/consultations') },
-    { label: 'Upcoming', value: consultations?.filter(c=>c.status==='upcoming').length || '0', icon: <Clock size={20} />, color: 'indigo', onClick: () => navigate('/dashboard/patient/consultations') },
-    { label: 'Health Score', value: fullBodyReport ? fullBodyReport.score : '--', icon: <TrendingUp size={20} />, color: 'emerald', onClick: () => navigate('/dashboard/patient/health-score') },
+    { label: t('dash_medical_records'), value: records?.length || '0', icon: <FileText size={20} />, color: 'blue', onClick: () => navigate('/dashboard/patient/records') },
+    { label: t('nav_consultations'), value: consultations?.length || '0', icon: <Calendar size={20} />, color: 'teal', onClick: () => navigate('/dashboard/patient/consultations') },
+    { label: t('dash_upcoming'), value: consultations?.filter(c=>c.status==='upcoming').length || '0', icon: <Clock size={20} />, color: 'indigo', onClick: () => navigate('/dashboard/patient/consultations') },
+    { label: t('dash_health_score'), value: fullBodyReport ? fullBodyReport.score : '--', icon: <TrendingUp size={20} />, color: 'emerald', onClick: () => navigate('/dashboard/patient/health-score') },
   ];
 
   return (
@@ -34,15 +36,15 @@ export default function PatientDashboard({ user }) {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">Welcome, {userName}</h1>
-          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500">Here's what's happening with your health today.</p>
+          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">{t('dash_welcome')}{userName}</h1>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500">{t('dash_sub_welcome')}</p>
         </div>
         <button 
           onClick={() => navigate('/dashboard/patient/records')}
           className="bg-secondary hover:bg-blue-900 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:-translate-y-0.5 transition-all"
         >
           <Plus size={20} />
-          Upload New Record
+          {t('dash_upload_record')}
         </button>
       </div>
 
@@ -64,16 +66,16 @@ export default function PatientDashboard({ user }) {
       </div>
 
       <div className="flex flex-col gap-8">
-        {/* Recent Records (Empty State) */}
+        {/* {t('dash_recent_records')} (Empty State) */}
         <div className="w-full space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Recent Records</h2>
+            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">{t('dash_recent_records')}</h2>
             {records?.length > 0 && (
               <button 
                 onClick={() => navigate('/dashboard/patient/records')}
                 className="text-sm font-bold text-primary hover:text-indigo-800 flex items-center gap-1"
               >
-                View All <ChevronRight size={16} />
+                {t('dash_view_all')} <ChevronRight size={16} />
               </button>
             )}
           </div>
@@ -83,15 +85,15 @@ export default function PatientDashboard({ user }) {
               <div className="w-16 h-16 bg-slate-50 dark:bg-[#121212] text-slate-300 rounded-full flex items-center justify-center mb-4">
                 <FileText size={32} />
               </div>
-              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">No records found</h3>
+              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">{t('dash_no_records')}</h3>
               <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm max-w-xs mb-6">
-                You haven't uploaded any medical records yet. Your vault is empty.
+                {t('dash_empty_vault_desc')}
               </p>
               <button 
                 onClick={() => navigate('/dashboard/patient/records')}
                 className="text-primary font-bold text-sm bg-primary/10 dark:bg-indigo-900/30 hover:bg-primary/90/10 px-6 py-2 rounded-xl transition-all"
               >
-                Upload Your First Record
+                {t('dash_upload_first')}
               </button>
             </div>
           ) : (
@@ -122,9 +124,9 @@ export default function PatientDashboard({ user }) {
           <div className="bg-indigo-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
             <div className="relative z-10 space-y-3">
               <Shield size={24} className="text-primary" />
-              <h3 className="font-bold">Vault Security</h3>
+              <h3 className="font-bold">{t('dash_vault_security')}</h3>
               <p className="text-indigo-200 text-xs leading-relaxed">
-                Your medical data is protected with 256-bit AES encryption.
+                {t('dash_vault_desc')}
               </p>
               <button 
                 onClick={() => setShowSecurityModal(true)}
@@ -157,9 +159,9 @@ export default function PatientDashboard({ user }) {
               <Shield size={32} />
             </div>
             
-            <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">Military-Grade Protection</h2>
+            <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">{t('sec_modal_title')}</h2>
             <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-8 leading-relaxed">
-              We take the privacy and security of your medical data very seriously. Here is how we protect your health records.
+              {t('sec_modal_desc')}
             </p>
             
             <div className="space-y-6">
@@ -168,8 +170,8 @@ export default function PatientDashboard({ user }) {
                   <Lock size={20} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-800 dark:text-slate-100">End-to-End Encryption</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">All data is encrypted using AES-256 before it leaves your device. Only you hold the keys to access your medical records.</p>
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">{t('sec_modal_1_title')}</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">{t('sec_modal_1_desc')}</p>
                 </div>
               </div>
               
@@ -178,8 +180,8 @@ export default function PatientDashboard({ user }) {
                   <Server size={20} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-800 dark:text-slate-100">HIPAA Compliant Storage</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Our servers meet and exceed national health data protection standards. Your data is distributed across secure, isolated networks.</p>
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">{t('sec_modal_2_title')}</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">{t('sec_modal_2_desc')}</p>
                 </div>
               </div>
               
@@ -188,8 +190,8 @@ export default function PatientDashboard({ user }) {
                   <Key size={20} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-800 dark:text-slate-100">Zero-Knowledge Architecture</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">We cannot read, scan, or sell your health data. The architecture guarantees that only you and your authorized doctors can see your file contents.</p>
+                  <h4 className="font-bold text-slate-800 dark:text-slate-100">{t('sec_modal_3_title')}</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">{t('sec_modal_3_desc')}</p>
                 </div>
               </div>
             </div>

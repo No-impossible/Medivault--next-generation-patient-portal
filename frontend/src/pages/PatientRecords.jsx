@@ -2,8 +2,11 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, Activity, BrainCircuit, ExternalLink, X, Loader2 } from 'lucide-react';
 import { uploadReport, addPatientRecord, fetchPatientRecords, deletePatientRecord } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 export default function PatientRecords() {
+  const { t } = useTranslation();
+
   const { user, records, setRecords, setFullBodyReport } = useOutletContext();
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -146,7 +149,7 @@ export default function PatientRecords() {
     <div className="max-w-6xl w-full mx-auto space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">My Medical Records</h1>
+          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">{t('records_title')}</h1>
           <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mt-1">All your health documents secured with AES-256 encryption.</p>
         </div>
         <button 
