@@ -24,6 +24,7 @@ import { supabase, fetchPatientRecords } from '../supabaseClient';
 import PatientSearch from '../components/doctor/PatientSearch';
 import AppointmentCalendar from '../components/doctor/AppointmentCalendar';
 import PatientRecordView from '../components/doctor/PatientRecordView';
+import QrScanner from '../components/ui/QrScanner';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ export default function DoctorDashboard() {
   const [selectedProfilePatient, setSelectedProfilePatient] = useState(null);
   const [profileSearchQuery, setProfileSearchQuery] = useState("");
   const [showQrModal, setShowQrModal] = useState(false);
+  const [showManualQrInput, setShowManualQrInput] = useState(false);
   const [qrInputValue, setQrInputValue] = useState("");
   
   // Public QR Access state
@@ -694,49 +696,85 @@ export default function DoctorDashboard() {
       {/* QR Input Modal */}
       {showQrModal && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200 border border-slate-100 dark:border-slate-800 relative">
-             <button onClick={() => setShowQrModal(false)} className="absolute top-6 right-6 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] transition-colors">
+          <div className="bg-white dark:bg-[#1e1e1e] rounded-[2.5rem] p-8 max-w-lg w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-200 border border-slate-100 dark:border-slate-800 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+             <button onClick={() => { setShowQrModal(false); setShowManualQrInput(false); }} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors z-20">
                <X size={24} />
              </button>
-             <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 ring-4 ring-emerald-50/50">
-               <QrCode size={32} />
+
+             <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 rounded-2xl flex items-center justify-center mb-6 ring-4 ring-emerald-50/50">
+                  <QrCode size={32} />
+                </div>
+                <h3 className="text-2xl font-black text-center text-slate-800 dark:text-slate-100 mb-2">Patient Digital Check-in</h3>
+                <p className="text-center text-slate-500 dark:text-slate-400 mb-8 font-medium text-sm leading-relaxed max-w-sm">Place the patient's secure vault QR code within the scanner frame to instantly retrieve medical history.</p>
+
+                {!showManualQrInput ? (
+                  <div className="w-full">
+                    <QrScanner 
+                      onScanSuccess={(scanned) => {
+                           const extToken = scanned.includes('token=') ? scanned.split('token=')[1].split('&')[0] : 
+                                           scanned.includes('/share/') ? scanned.split('/share/')[1] : scanned.trim();
+                           setSearchParams({ token: extToken });
+                           setShowQrModal(false);
+                      }}
+                      onClose={() => setShowQrModal(false)}
+                    />
+                    <button 
+                      onClick={() => setShowManualQrInput(true)}
+                      className="w-full mt-6 py-3 text-emerald-600 font-bold text-sm hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all"
+                    >
+                      Enter Token Manually
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-full animate-in slide-in-from-bottom-2 duration-300">
+                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">Secure Share Token</p>
+                     <input 
+                        type="text" 
+                        autoFocus
+                        placeholder="https://medivault.app/share/..." 
+                        value={qrInputValue}
+                        onChange={e => setQrInputValue(e.target.value)}
+                        onKeyDown={e => {
+                           if(e.key === 'Enter') {
+                               const scanned = qrInputValue;
+                               const extToken = scanned.includes('token=') ? scanned.split('token=')[1].split('&')[0] : 
+                                               scanned.includes('/share/') ? scanned.split('/share/')[1] : scanned.trim();
+                               setSearchParams({ token: extToken });
+                               setShowQrModal(false);
+                               setQrInputValue('');
+                               setShowManualQrInput(false);
+                           }
+                        }}
+                        className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-4 mb-6 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:bg-white dark:bg-[#1e1e1e] transition-all text-sm font-bold placeholder-slate-400"
+                     />
+                     
+                     <div className="flex gap-3">
+                        <button 
+                          onClick={() => {
+                             const scanned = qrInputValue;
+                             if (!scanned) return;
+                             const extToken = scanned.includes('token=') ? scanned.split('token=')[1].split('&')[0] : 
+                                             scanned.includes('/share/') ? scanned.split('/share/')[1] : scanned.trim();
+                             setSearchParams({ token: extToken });
+                             setShowQrModal(false);
+                             setQrInputValue('');
+                             setShowManualQrInput(false);
+                          }}
+                          className="flex-1 py-4 rounded-2xl font-black text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 transition-all shadow-lg shadow-emerald-500/20 text-sm tracking-wide"
+                        >
+                          Decrypt Profile
+                        </button>
+                        <button 
+                          onClick={() => setShowManualQrInput(false)}
+                          className="px-6 py-4 rounded-2xl font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 transition-all text-sm"
+                        >
+                          Back
+                        </button>
+                     </div>
+                  </div>
+                )}
              </div>
-             <h3 className="text-2xl font-black text-center text-slate-800 dark:text-slate-100 mb-2">Scan Patient Check-in</h3>
-             <p className="text-center text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-8 font-medium text-sm leading-relaxed px-2">Paste the secure emergency token or complete URL provided by the patient to decrypt their history.</p>
-             
-             <input 
-                type="text" 
-                autoFocus
-                placeholder="https://medivault.app/share/..." 
-                value={qrInputValue}
-                onChange={e => setQrInputValue(e.target.value)}
-                onKeyDown={e => {
-                   if(e.key === 'Enter') {
-                       const scanned = qrInputValue;
-                       const extToken = scanned.includes('token=') ? scanned.split('token=')[1].split('&')[0] : 
-                                       scanned.includes('/share/') ? scanned.split('/share/')[1] : scanned.trim();
-                       setSearchParams({ token: extToken });
-                       setShowQrModal(false);
-                       setQrInputValue('');
-                   }
-                }}
-                className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:bg-[#1e1e1e] transition-all text-sm font-medium"
-             />
-             
-             <button 
-                onClick={() => {
-                   if (!qrInputValue) return;
-                   const scanned = qrInputValue;
-                   const extToken = scanned.includes('token=') ? scanned.split('token=')[1].split('&')[0] : 
-                                   scanned.includes('/share/') ? scanned.split('/share/')[1] : scanned.trim();
-                   setSearchParams({ token: extToken });
-                   setShowQrModal(false);
-                   setQrInputValue('');
-                }}
-                className="w-full py-4 px-4 rounded-xl font-black text-white bg-emerald-500 hover:bg-emerald-600 transition-all shadow-md shadow-emerald-500/20 active:scale-95 text-base"
-             >
-                Decrypt & View Profile
-             </button>
           </div>
         </div>
       )}
