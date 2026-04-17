@@ -126,20 +126,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
       {/* ───── RIGHT PANEL ───── */}
       <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white dark:bg-[#121212] transition-colors duration-500 relative">
         
-        {/* Language Switcher */}
-        <div className="absolute top-8 right-8 z-10 flex items-center gap-2">
-          <Globe size={18} className="text-primary dark:text-primary" />
-          <select 
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
-            value={i18n.language}
-            className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none cursor-pointer hover:text-primary dark:hover:text-primary transition-colors"
-          >
-            <option value="en" className="dark:bg-slate-800">English</option>
-            <option value="hi" className="dark:bg-slate-800">हिंदी</option>
-            <option value="mr" className="dark:bg-slate-800">मराठी</option>
-            <option value="ta" className="dark:bg-slate-800">தமிழ்</option>
-          </select>
-        </div>
+
         
         {/* Mobile back button */}
         <button
