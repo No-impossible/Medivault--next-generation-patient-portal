@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { X, QrCode, ShieldCheck, Loader2, AlertCircle, Copy, Check } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { supabase } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 export default function ShareHistoryQR({ user, onClose }) {
+  const { t } = useTranslation();
+
   const QRCodeComponent = typeof QRCode === 'object' && QRCode.default ? QRCode.default : QRCode;
 
   const [token, setToken] = useState(null);
