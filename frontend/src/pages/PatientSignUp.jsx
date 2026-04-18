@@ -141,8 +141,36 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
     }
   };
 
+  // DOB Component Helpers
+  const years = Array.from({ length: 110 }, (_, i) => 2024 - i);
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+  const getDobParts = () => {
+    if (!form.dob) return { year: '', month: '', day: '' };
+    const [y, m, d] = form.dob.split('-');
+    return { year: y, month: parseInt(m) - 1, day: parseInt(d) };
+  };
+
+  const updateDob = (part, value) => {
+    const parts = getDobParts();
+    const newParts = { ...parts, [part]: value };
+    if (newParts.year && newParts.month !== '' && newParts.day) {
+      const m = String(newParts.month + 1).padStart(2, '0');
+      const d = String(newParts.day).padStart(2, '0');
+      setForm(prev => ({ ...prev, dob: `${newParts.year}-${m}-${d}` }));
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!form.dob) {
+      alert('Please select your full date of birth.');
+      return;
+    }
     if (form.password !== form.confirmPassword) {
       alert('Passwords do not match.');
       return;
@@ -320,7 +348,35 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
             {/* ── Auto-fillable fields ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Full Name" id="full-name" value={form.name} onChange={setField('name')} placeholder="As per health records" autoFilled={autoFilledFields.name} required />
-              <Field label="Date of Birth" id="dob" type="date" value={form.dob} onChange={setField('dob')} autoFilled={autoFilledFields.dob} required />
+              
+              <Field label="Date of Birth" id="dob-group" autoFilled={autoFilledFields.dob} required>
+                <div className="grid grid-cols-3 gap-2">
+                  <select 
+                    value={getDobParts().day} 
+                    onChange={(e) => updateDob('day', parseInt(e.target.value))}
+                    className={`border rounded-xl px-2 py-2.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.dob ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
+                  >
+                    <option value="">Day</option>
+                    {days.map(d => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                  <select 
+                    value={getDobParts().month} 
+                    onChange={(e) => updateDob('month', parseInt(e.target.value))}
+                    className={`border rounded-xl px-2 py-2.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.dob ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
+                  >
+                    <option value="">Month</option>
+                    {months.map((m, i) => <option key={m} value={i}>{m}</option>)}
+                  </select>
+                  <select 
+                    value={getDobParts().year} 
+                    onChange={(e) => updateDob('year', e.target.value)}
+                    className={`border rounded-xl px-2 py-2.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.dob ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
+                  >
+                    <option value="">Year</option>
+                    {years.map(y => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                </div>
+              </Field>
               <Field label="Gender" id="gender" autoFilled={autoFilledFields.gender} required>
                 <select
                   id="gender" value={form.gender} onChange={setField('gender')} required
