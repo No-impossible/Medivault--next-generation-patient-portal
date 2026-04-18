@@ -163,7 +163,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
                   <button 
                     onClick={action.action} 
                     key={action.name} 
-                    className={`flex items-center gap-3 w-full p-3 rounded-xl text-xs font-bold hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 ${action.bgClass} ${action.textClass}`}
+                    className={`flex items-center gap-3 w-full p-3.5 rounded-xl text-[11px] font-bold shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 ${action.bgClass} ${action.textClass}`}
                   >
                     <div className={`p-1 rounded-lg ${action.iconBg}`}>{action.icon}</div>
                     {action.name}
