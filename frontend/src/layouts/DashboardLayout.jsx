@@ -130,7 +130,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
 
         <div className="px-4 py-8 flex flex-col h-[calc(100vh-5rem)]">
           <div className="mb-6 px-4">
-            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">{t('nav_menu')}</p>
+            <p className="text-xs font-bold text-slate-400 dark:text-slate-200 uppercase tracking-wider mb-2">{t('nav_menu')}</p>
           </div>
           
           <nav className="flex-1 space-y-2">
