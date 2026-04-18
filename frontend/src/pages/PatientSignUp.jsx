@@ -345,7 +345,15 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               </Field>
             </div>
 
-            <Field label="Mobile Number" id="mobile" type="tel" value={form.mobile} onChange={setField('mobile')} placeholder="10-digit mobile number" autoFilled={autoFilledFields.mobile} required />
+            <Field 
+              label="Mobile Number" id="mobile" type="tel" 
+              value={form.mobile} 
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                setForm(prev => ({ ...prev, mobile: val }));
+              }} 
+              placeholder="10-digit mobile number" autoFilled={autoFilledFields.mobile} required 
+            />
             <Field label="Address" id="address" value={form.address} onChange={setField('address')} placeholder="City, State, PIN" autoFilled={autoFilledFields.address} />
 
             {/* Divider */}
