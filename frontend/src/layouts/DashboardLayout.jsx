@@ -160,7 +160,11 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
               <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('nav_quick_actions')}</div>
               <div className="grid grid-cols-1 gap-2">
                 {quickActions.map((action) => (
-                  <button onClick={action.action} key={action.name} className={`flex items-center gap-3 w-full p-3 rounded-xl text-xs font-bold transition-colors ${action.bgClass} ${action.textClass}`}>
+                  <button 
+                    onClick={action.action} 
+                    key={action.name} 
+                    className={`flex items-center gap-3 w-full p-3 rounded-xl text-xs font-bold hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 ${action.bgClass} ${action.textClass}`}
+                  >
                     <div className={`p-1 rounded-lg ${action.iconBg}`}>{action.icon}</div>
                     {action.name}
                   </button>
