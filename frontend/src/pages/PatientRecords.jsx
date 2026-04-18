@@ -194,6 +194,7 @@ export default function PatientRecords() {
           </button>
         </div>
       ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {records.map(record => {
             const isImage = record.type.includes('image');
             const isPDF = record.type.includes('pdf');
@@ -208,16 +209,21 @@ export default function PatientRecords() {
                   }`}>
                     {isPDF ? <FileType size={24} /> : isImage ? <Image size={24} /> : <File size={24} />}
                   </div>
-                <div className="flex gap-2">
-                  <button 
-                    onClick={() => record.fileURL && window.open(record.fileURL, '_blank')}
-                    className="text-slate-400 dark:text-slate-500 hover:text-primary p-2 rounded-lg hover:bg-primary/90/10 dark:bg-indigo-900/30 transition-colors opacity-0 group-hover:opacity-100"
-                    title="View Document"
-                  >
-                    <ExternalLink size={18} />
-                  </button>
-                  <button 
-                    onClick={() => handleDeleteRecord(record)}
+                    <a 
+                      href={record.fileURL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-slate-400 dark:text-slate-500 hover:text-primary p-2 rounded-lg hover:bg-primary/90/10 dark:bg-indigo-900/30 transition-colors opacity-0 group-hover:opacity-100"
+                      title="View Document"
+                    >
+                      <ExternalLink size={18} />
+                    </a>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteRecord(record);
+                      }}
                     className="text-slate-400 dark:text-slate-500 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
                     title="Delete"
                   >
@@ -240,13 +246,23 @@ export default function PatientRecords() {
                   <button 
                     onClick={() => setSelectedAIReport(record)}
                     className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 dark:bg-indigo-900/30 px-2.5 py-1.5 rounded-lg hover:bg-primary/90/10 transition-colors"
-                  >
-                    <BrainCircuit size={12} /> AI Brief
-                  </button>
-                )}
+                <div className="border-t border-slate-100 dark:border-slate-800 pt-4 flex items-center justify-between">
+                  <div className="flex items-center text-xs text-slate-400 dark:text-slate-500 gap-1.5">
+                    <Calendar size={14} />
+                    {record.date}
+                  </div>
+                  {record.aiSummary && (
+                    <button 
+                      onClick={() => setSelectedAIReport(record)}
+                      className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 dark:bg-indigo-900/30 px-2.5 py-1.5 rounded-lg hover:bg-primary/90/10 transition-colors"
+                    >
+                      <BrainCircuit size={12} /> AI Brief
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -300,14 +316,80 @@ export default function PatientRecords() {
 
             <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
               <span className="text-xs text-slate-400 dark:text-slate-500">For informational purposes only.</span>
-              <button 
-                onClick={() => {
-                  if(selectedAIReport?.fileURL) window.open(selectedAIReport.fileURL, '_blank');
-                }}
+              <a 
+                href={selectedAIReport?.fileURL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all"
               >
                 <ExternalLink size={16} className="text-primary" /> View Original
-              </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Confirmation Modal */}
+      {pendingFile && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setPendingFile(null)} />
+          <div className="relative bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
+              <UploadCloud size={24} className="text-primary" />
+              Finalize Upload
+            </h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Record Name</label>
+                <input 
+                  type="text" 
+                  value={uploadForm.name} 
+                  onChange={e => setUploadForm({...uploadForm, name: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  placeholder="e.g. Blood Report 2024"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Medical Category</label>
+                <select 
+                  value={uploadForm.category} 
+                  onChange={e => setUploadForm({...uploadForm, category: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                >
+                  <option>General</option>
+                  <option>Cardiology (Heart)</option>
+                  <option>Radiology (X-Ray/Scan)</option>
+                  <option>Ophthalmology (Eye)</option>
+                  <option>Laboratory (Blood/Tests)</option>
+                  <option>Orthopedics (Bones)</option>
+                  <option>Prescription</option>
+                </select>
+              </div>
+
+              <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10">
+                <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">File Details</p>
+                <p className="text-xs text-slate-700 dark:text-slate-300 font-medium truncate">{pendingFile.name}</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">{(pendingFile.size / 1024).toFixed(1)} KB · {pendingFile.type || 'Document'}</p>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button 
+                  onClick={() => setPendingFile(null)}
+                  className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold py-3 rounded-xl hover:bg-slate-200 transition-all"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={confirmUpload}
+                  disabled={isUploading}
+                  className="flex-1 bg-primary text-white font-bold py-3 rounded-xl hover:opacity-90 shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
+                >
+                  {isUploading ? <Loader2 size={18} className="animate-spin" /> : null}
+                  {isUploading ? 'Uploading...' : 'Confirm Save'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
