@@ -29,35 +29,40 @@ export default function PatientRecords() {
     }
   }, [user?.id, setRecords]);
 
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    setPendingFile(file);
+    setUploadForm({ 
+      name: file.name.split('.')[0], 
+      category: 'General' 
+    });
+  };
+
+  const confirmUpload = async () => {
+    if (!pendingFile) return;
+    const file = pendingFile;
 
     try {
       setIsUploading(true);
       
-      // Upload to Firebase Storage
+      // Upload to Storage
       let fileURL = '';
       try {
         fileURL = await uploadReport(file, user?.id || 'guest');
       } catch (err) {
         console.error("Storage error:", err);
-        // Fallback for demo if storage is not cleanly configured
         fileURL = URL.createObjectURL(file);
       }
 
-      // Generate a mock AI dynamic brief
+      // Generate a mock AI brief
       const isBlood = file.name.toLowerCase().includes('blood');
       const isXray = file.name.toLowerCase().includes('xray') || file.name.toLowerCase().includes('x-ray');
       const isCheckup = file.name.toLowerCase().includes('checkup');
       const isPrescription = file.name.toLowerCase().includes('prescription');
       
       let aiBrief = `This ${file.type.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation for ${user?.name || 'this patient'}. Overall indicators are mostly within normal limits, though continued monitoring is recommended.`;
-      let aiFindings = [
-         "No acute abnormalities detected.",
-         "Vitals and primary markers are stable.",
-         "Follow-up suggested in 3-6 months if symptoms persist."
-      ];
+      let aiFindings = ["No acute abnormalities detected.", "Vitals and primary markers are stable.", "Follow-up suggested in 3-6 months if symptoms persist."];
       let confidenceStr = "92%";
       
       if (isBlood) {
@@ -74,14 +79,12 @@ export default function PatientRecords() {
          confidenceStr = "98%";
       }
 
-      const mockAISummary = {
-        brief: aiBrief,
-        keyFindings: aiFindings,
-        confidence: confidenceStr
-      };
+      const mockAISummary = { brief: aiBrief, keyFindings: aiFindings, confidence: confidenceStr };
 
+      const extension = file.name.split('.').pop();
       const newRecordData = {
-        name: file.name,
+        name: `${uploadForm.name}.${extension}`,
+        category: uploadForm.category,
         size: (file.size / 1024).toFixed(1) + ' KB',
         date: new Date().toLocaleString('en-US', { 
           year: 'numeric', month: 'short', day: 'numeric', 
@@ -108,11 +111,10 @@ export default function PatientRecords() {
       // Simulate full body extraction for specific files
       if (file.name.toLowerCase().includes('checkup') || file.name.toLowerCase().includes('report') || file.name.toLowerCase().includes('blood')) {
         setTimeout(() => {
-          // Dynamic random-looking but deterministic score based on date and filename length
           const dynamicScore = 75 + (file.name.length % 20);
           setFullBodyReport({
             date: new Date().toISOString().split('T')[0],
-            score: dynamicScore, // 0-100
+            score: dynamicScore,
             metrics: {
               bmi: { value: 24.2, status: 'Normal', benchmark: '18.5 - 24.9' },
               bloodPressure: { value: dynamicScore > 85 ? '120/80' : '135/88', status: dynamicScore > 85 ? 'Optimal' : 'Borderline', benchmark: '120/80 mmHg' },
@@ -130,7 +132,8 @@ export default function PatientRecords() {
        alert("Failed to upload the document. Please try again.");
     } finally {
       setIsUploading(false);
-      e.target.value = null;
+      setPendingFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = null;
     }
   };
 
