@@ -30,6 +30,7 @@ const Toggle = ({ enabled, onClick }) => (
 
 export default function PatientSettings({ user }) {
   const { t } = useTranslation();
+  const { theme, setTheme } = useTheme();
 
   const [notifications, setNotifications] = useState(() => {
     try {
@@ -261,24 +262,12 @@ export default function PatientSettings({ user }) {
 
         <section className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 space-y-6">
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <Globe size={20} className="text-primary" />
-            Language & Region
+            Theme Preference
           </h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Display Language</label>
-              <select
-                value={i18n.language || "en"}
-                onChange={(e) => i18n.changeLanguage(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none"
-              >
-                <option value="en">English</option>
-                <option value="hi">हिंदी</option>
-                <option value="mr">मराठी</option>
-                <option value="ta">தமிழ்</option>
-              </select>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Choose the language for your patient portal interface.</p>
-            </div>
+          <div className="grid grid-cols-3 gap-3">
+            <button onClick={() => setTheme('light')} className="p-3 rounded-2xl border text-xs font-bold uppercase">Light Mode</button>
+            <button onClick={() => setTheme('dark')} className="p-3 rounded-2xl border text-xs font-bold uppercase">Dark Mode</button>
+            <button onClick={() => setTheme('system')} className="p-3 rounded-2xl border text-xs font-bold uppercase">System</button>
           </div>
         </section>
       </div>
