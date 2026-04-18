@@ -337,7 +337,16 @@ export default function PatientSettings({ user }) {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
-                <input type="tel" value={newContact.phone} onChange={e => setNewContact({...newContact, phone: e.target.value})} className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm" placeholder="e.g. +91 9876543210" />
+                <input 
+                  type="tel" 
+                  value={newContact.phone} 
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    setNewContact({...newContact, phone: val});
+                  }} 
+                  className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm bg-white dark:bg-[#121212] text-slate-800 dark:text-slate-100" 
+                  placeholder="10-digit mobile number" 
+                />
               </div>
               <button onClick={handleAddContact} className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl mt-4 transition-colors">
                 Save Contact
