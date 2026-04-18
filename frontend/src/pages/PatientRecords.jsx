@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, Activity, BrainCircuit, ExternalLink, X, Loader2 } from 'lucide-react';
+import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, Activity, BrainCircuit, ExternalLink, X, Loader2, Image, FileDigit, FileType } from 'lucide-react';
 import { uploadReport, addPatientRecord, fetchPatientRecords, deletePatientRecord } from '../supabaseClient';
 import { useTranslation } from 'react-i18next';
 
@@ -194,13 +194,20 @@ export default function PatientRecords() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {records.map(record => (
-            <div key={record.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-primary/30 hover:shadow-xl hover:shadow-indigo-100/50 transition-all group">
-              <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 bg-primary/10 dark:bg-indigo-900/30 text-primary rounded-xl flex items-center justify-center shrink-0">
-                  <File size={24} />
-                </div>
+          {records.map(record => {
+            const isImage = record.type.includes('image');
+            const isPDF = record.type.includes('pdf');
+            
+            return (
+              <div key={record.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-primary/30 hover:shadow-xl hover:shadow-indigo-100/50 transition-all group">
+                <div className="flex justify-between items-start mb-4">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                    isPDF ? 'bg-red-50 text-red-500 dark:bg-red-900/20' : 
+                    isImage ? 'bg-blue-50 text-blue-500 dark:bg-blue-900/20' : 
+                    'bg-primary/10 text-primary dark:bg-indigo-900/30'
+                  }`}>
+                    {isPDF ? <FileType size={24} /> : isImage ? <Image size={24} /> : <File size={24} />}
+                  </div>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => record.fileURL && window.open(record.fileURL, '_blank')}
