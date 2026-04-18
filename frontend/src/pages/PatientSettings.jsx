@@ -10,9 +10,11 @@ import {
   ChevronRight,
   ShieldCheck,
   Check,
-  HeartPulse,
   Phone,
-  X
+  X,
+  Moon,
+  Sun,
+  Monitor
 } from 'lucide-react';
 import { useOutletContext } from 'react-router-dom';
 import { updatePatient } from '../supabaseClient';
@@ -262,12 +264,44 @@ export default function PatientSettings({ user }) {
 
         <section className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 space-y-6">
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <Globe size={20} className="text-primary" />
+            Language & Region
+          </h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Display Language</label>
+              <select
+                value={i18n.language || "en"}
+                onChange={(e) => i18n.changeLanguage(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+              >
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="mr">मराठी</option>
+                <option value="ta">தமிழ்</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white dark:bg-[#1e1e1e] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 space-y-6">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <Moon size={20} className="text-primary" />
             Theme Preference
           </h3>
           <div className="grid grid-cols-3 gap-3">
-            <button onClick={() => setTheme('light')} className="p-3 rounded-2xl border text-xs font-bold uppercase">Light Mode</button>
-            <button onClick={() => setTheme('dark')} className="p-3 rounded-2xl border text-xs font-bold uppercase">Dark Mode</button>
-            <button onClick={() => setTheme('system')} className="p-3 rounded-2xl border text-xs font-bold uppercase">System</button>
+            <button onClick={() => setTheme('light')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border ${theme === 'light' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800'}`}>
+              <Sun size={20} />
+              <span className="text-[10px] font-bold uppercase">Light</span>
+            </button>
+            <button onClick={() => setTheme('dark')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border ${theme === 'dark' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800'}`}>
+              <Moon size={20} />
+              <span className="text-[10px] font-bold uppercase">Dark</span>
+            </button>
+            <button onClick={() => setTheme('system')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border ${theme === 'system' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800'}`}>
+              <Monitor size={20} />
+              <span className="text-[10px] font-bold uppercase">System</span>
+            </button>
           </div>
         </section>
       </div>
