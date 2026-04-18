@@ -335,7 +335,7 @@ export default function PatientSettings({ user }) {
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Relation</label>
                 <input type="text" value={newContact.relation} onChange={e => setNewContact({...newContact, relation: e.target.value})} className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm" placeholder="e.g. Sister" />
               </div>
-              <div>
+              <div className="pt-1">
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
                 <input 
                   type="tel" 
