@@ -141,7 +141,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
     }
   };
 
-  // DOB Component Helpers
+  // DOB Component Helpers - Standardized for Auto-fill support
   const years = Array.from({ length: 110 }, (_, i) => 2024 - i);
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
