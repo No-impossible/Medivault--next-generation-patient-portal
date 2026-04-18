@@ -17,6 +17,7 @@ import {
 import { useOutletContext } from 'react-router-dom';
 import { updatePatient } from '../supabaseClient';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from 'next-themes';
 
 const Toggle = ({ enabled, onClick }) => (
   <button 
