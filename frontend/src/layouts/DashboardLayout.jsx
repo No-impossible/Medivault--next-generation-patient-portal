@@ -96,7 +96,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
 
   const quickActions = [
     { name: t('action_book_consultation'), icon: <Plus size={16} />, bgClass: 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50', textClass: 'text-blue-700 dark:text-blue-300', iconBg: 'bg-blue-100 dark:bg-blue-800', action: () => navigate(`/dashboard/patient/book-consultation`) },
-    { name: t('action_order_medicine'), icon: <Plus size={16} />, bgClass: 'bg-accent/10 hover:bg-accent/90/10 dark:bg-teal-900/30 dark:hover:bg-teal-900/50', textClass: 'text-teal-700 dark:text-teal-300', iconBg: 'bg-accent/10 dark:bg-teal-800', action: () => navigate(`/dashboard/patient/order-medicine`) },
+    { name: t('action_order_medicine'), icon: <Plus size={16} />, bgClass: 'bg-teal-50 hover:bg-teal-100 dark:bg-teal-900/30 dark:hover:bg-teal-900/50', textClass: 'text-teal-700 dark:text-teal-300', iconBg: 'bg-teal-100 dark:bg-teal-800', action: () => navigate(`/dashboard/patient/order-medicine`) },
   ];
 
   return (
