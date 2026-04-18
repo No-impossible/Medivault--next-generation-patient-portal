@@ -120,7 +120,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
               <Heart className="h-5 w-5 text-white" fill="currentColor" />
             </div>
-            <span className="text-2xl font-black text-slate-800 tracking-tight">MediVault</span>
+            <span className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">MediVault</span>
 
           </div>
           <button className="md:hidden text-slate-500 dark:text-slate-400 dark:text-slate-500" onClick={() => setIsSidebarOpen(false)}>
