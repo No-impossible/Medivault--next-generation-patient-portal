@@ -328,7 +328,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             <div className="flex flex-col gap-3 w-full">
               <button 
                 onClick={handleLogout}
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 rounded-xl font-bold tracking-wide shadow-lg shadow-red-200 transition-all hover:-translate-y-0.5"
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 rounded-xl font-bold tracking-wide shadow-lg shadow-red-500/50 dark:shadow-red-900/80 transition-all hover:-translate-y-0.5"
               >
                 {t('logout_btn')}
               </button>
