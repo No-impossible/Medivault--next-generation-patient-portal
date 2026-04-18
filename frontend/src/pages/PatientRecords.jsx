@@ -11,6 +11,8 @@ export default function PatientRecords() {
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedAIReport, setSelectedAIReport] = useState(null);
+  const [pendingFile, setPendingFile] = useState(null);
+  const [uploadForm, setUploadForm] = useState({ name: '', category: 'General' });
 
   // Fetch real records on mount
   useEffect(() => {
@@ -213,11 +215,12 @@ export default function PatientRecords() {
                   </button>
                 </div>
               </div>
-              <h4 className="font-bold text-slate-800 dark:text-slate-100 truncate mb-1" title={record.name}>{record.name}</h4>
-              <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-4">
-                <span className="flex items-center gap-1"><ShieldCheck size={14} className="text-emerald-500"/> Secured</span>
-                <span>{record.size}</span>
-              </div>
+                <h4 className="font-bold text-slate-800 dark:text-slate-100 truncate mb-1" title={record.name}>{record.name}</h4>
+                <div className="flex items-center gap-3 text-xs font-medium mb-4">
+                  <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400"><ShieldCheck size={14} className="text-emerald-500"/> Secured</span>
+                  <span className="text-slate-500 dark:text-slate-400">{record.size}</span>
+                  <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full font-bold">{record.category || 'General'}</span>
+                </div>
               <div className="border-t border-slate-100 dark:border-slate-800 pt-4 flex items-center justify-between">
                 <div className="flex items-center text-xs text-slate-400 dark:text-slate-500 gap-1.5">
                   <Calendar size={14} />
