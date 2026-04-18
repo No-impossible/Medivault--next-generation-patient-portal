@@ -143,8 +143,8 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
                   ${isActive 
-                    ? `bg-${role === 'patient' ? 'blue' : 'teal'}-50 text-${role === 'patient' ? '[hsl(var(--secondary-foreground))]' : '[hsl(var(--accent))]'}` 
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    ? `bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary` 
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'
                   }
                 `}
               >
