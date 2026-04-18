@@ -10,6 +10,7 @@ import {
   ChevronRight,
   ShieldCheck,
   Check,
+  HeartPulse,
   Phone,
   X,
   Moon,
@@ -280,6 +281,7 @@ export default function PatientSettings({ user }) {
                 <option value="mr">मराठी</option>
                 <option value="ta">தமிழ்</option>
               </select>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Choose the language for your patient portal interface.</p>
             </div>
           </div>
         </section>
@@ -290,19 +292,20 @@ export default function PatientSettings({ user }) {
             Theme Preference
           </h3>
           <div className="grid grid-cols-3 gap-3">
-            <button onClick={() => setTheme('light')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border ${theme === 'light' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800'}`}>
+            <button onClick={() => setTheme('light')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all ${theme === 'light' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'}`}>
               <Sun size={20} />
-              <span className="text-[10px] font-bold uppercase">Light</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider">Light</span>
             </button>
-            <button onClick={() => setTheme('dark')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border ${theme === 'dark' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800'}`}>
+            <button onClick={() => setTheme('dark')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all ${theme === 'dark' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'}`}>
               <Moon size={20} />
-              <span className="text-[10px] font-bold uppercase">Dark</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider">Dark</span>
             </button>
-            <button onClick={() => setTheme('system')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border ${theme === 'system' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800'}`}>
+            <button onClick={() => setTheme('system')} className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all ${theme === 'system' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700'}`}>
               <Monitor size={20} />
-              <span className="text-[10px] font-bold uppercase">System</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider">System</span>
             </button>
           </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Personalize your view for day or night use.</p>
         </section>
       </div>
 
