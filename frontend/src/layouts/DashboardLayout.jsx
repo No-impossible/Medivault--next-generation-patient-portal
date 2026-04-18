@@ -198,7 +198,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
             {/* SOS Button */}
             <button 
               onClick={() => setIsSosModalOpen(true)}
-              className="group relative flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-full font-black text-xs uppercase tracking-widest shadow-lg shadow-red-200 transition-all hover:-translate-y-0.5"
+              className="group relative flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-full font-black text-xs uppercase tracking-widest shadow-lg shadow-red-500/50 dark:shadow-red-900/80 transition-all hover:-translate-y-0.5"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
