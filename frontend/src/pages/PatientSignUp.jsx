@@ -39,10 +39,9 @@ function Field({ label, id, type = 'text', value, onChange, placeholder, autoFil
           onChange={onChange}
           placeholder={placeholder}
           required={required}
-          className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none transition-all"
-          style={{ borderColor: autoFilled ? '#6ee7b7' : '#e5e7eb', background: autoFilled ? '#f0fdf4' : 'white' }}
-          onFocus={(e) => { if (!autoFilled) e.target.style.borderColor = 'hsl(var(--primary))'; }}
-          onBlur={(e) => { if (!autoFilled) e.target.style.borderColor = '#e5e7eb'; }}
+          className={`w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 placeholder-gray-400 focus:outline-none transition-all ${autoFilled ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-800' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
+          onFocus={(e) => { if (!autoFilled) e.target.classList.add('border-primary'); }}
+          onBlur={(e) => { if (!autoFilled) e.target.classList.remove('border-primary'); }}
         />
       )}
     </div>
@@ -249,8 +248,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
 
             {/* ── ABHA ID SECTION ── */}
             <div
-              className="rounded-2xl p-5 mb-2 border"
-              style={{ background: abhaFetched ? '#f0fdf4' : '#f5f6ff', borderColor: abhaFetched ? '#6ee7b7' : '#c7ccff' }}
+              className={`rounded-2xl p-5 mb-2 border transition-all ${abhaFetched ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800' : 'bg-indigo-50/50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-800'}`}
             >
               {/* Header row */}
               <div className="flex items-center gap-2 mb-3">
@@ -327,7 +325,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
                 <select
                   id="gender" value={form.gender} onChange={setField('gender')} required
                   className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
-                  style={{ borderColor: autoFilledFields.gender ? '#6ee7b7' : '#e5e7eb', background: autoFilledFields.gender ? '#f0fdf4' : 'white' }}
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.gender ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-800' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
                 >
                   <option value="">Select</option>
                   <option>Male</option><option>Female</option><option>Other</option>
@@ -337,7 +335,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
                 <select
                   id="blood-group" value={form.bloodGroup} onChange={setField('bloodGroup')} required
                   className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
-                  style={{ borderColor: autoFilledFields.bloodGroup ? '#6ee7b7' : '#e5e7eb', background: autoFilledFields.bloodGroup ? '#f0fdf4' : 'white' }}
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.bloodGroup ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-800' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
                 >
                   <option value="">Select</option>
                   {['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(bg => <option key={bg}>{bg}</option>)}
