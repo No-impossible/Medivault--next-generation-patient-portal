@@ -368,8 +368,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
               <div className="relative">
                 <input id="signup-password" type={showPassword ? 'text' : 'password'} value={form.password} onChange={setField('password')} placeholder="Min. 8 characters" required
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
-                  onFocus={(e) => e.target.style.borderColor='hsl(var(--primary))'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
+                  className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212] rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:border-primary transition-all transition-all duration-300"
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 transition-colors">
                   {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -403,8 +402,7 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Confirm Password</label>
               <div className="relative">
                 <input id="confirm-password" type={showConfirm ? 'text' : 'password'} value={form.confirmPassword} onChange={setField('confirmPassword')} placeholder="Repeat password" required
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
-                  onFocus={(e) => e.target.style.borderColor='hsl(var(--primary))'} onBlur={(e) => e.target.style.borderColor='#e5e7eb'}
+                  className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212] rounded-xl px-4 py-2.5 pr-12 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:border-primary transition-all transition-all duration-300"
                 />
                 <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 transition-colors">
                   {showConfirm ? <EyeOff size={17} /> : <Eye size={17} />}
