@@ -18,10 +18,15 @@ const MOCK_CONSULTATIONS = [];
 export const fetchPatientRecords = async (patientId) => {
   if (isPlaceholder) {
     console.warn("Using placeholder Supabase URL. Returning mock patient records.");
-    return [
-      { id: 1, name: 'Initial Checkup', date: '2024-03-10', size: '2.4 MB', type: 'PDF', tags: ['CHECKUP', 'GENERAL', 'OLDER'], aiSummary: { brief: 'Standard vitals are normal.' } },
-      { id: 2, name: 'Blood Lab Report', date: '2024-04-01', size: '1.1 MB', type: 'IMAGE', tags: ['BLOOD', 'LAB', 'OLDER'], aiSummary: { brief: 'Hemoglobin levels slightly low.' } }
+    const stored = localStorage.getItem(`medivault_records_${patientId}`);
+    if (stored) return JSON.parse(stored);
+    
+    const initial = [
+      { id: '1', name: 'Initial Checkup', date: '2024-03-10', size: '2.4 MB', type: 'PDF', tags: ['CHECKUP', 'GENERAL', 'OLDER'], aiSummary: { brief: 'Standard vitals are normal.' } },
+      { id: '2', name: 'Blood Lab Report', date: '2024-04-01', size: '1.1 MB', type: 'IMAGE', tags: ['BLOOD', 'LAB', 'OLDER'], aiSummary: { brief: 'Hemoglobin levels slightly low.' } }
     ];
+    localStorage.setItem(`medivault_records_${patientId}`, JSON.stringify(initial));
+    return initial;
   }
   try {
     const { data, error } = await supabase
@@ -38,7 +43,12 @@ export const fetchPatientRecords = async (patientId) => {
 
 export const addPatientRecord = async (patientId, recordData) => {
   if (isPlaceholder) {
-    return Math.floor(Math.random() * 1000000);
+    const stored = localStorage.getItem(`medivault_records_${patientId}`);
+    const records = stored ? JSON.parse(stored) : [];
+    const newId = Date.now().toString();
+    records.unshift({ id: newId, patientId, ...recordData });
+    localStorage.setItem(`medivault_records_${patientId}`, JSON.stringify(records));
+    return newId;
   }
   try {
     const { data, error } = await supabase
@@ -85,7 +95,11 @@ export const uploadReport = async (file, patientId) => {
 };
 
 export const deletePatientRecord = async (recordId, fileURL) => {
-  if (isPlaceholder) return;
+  if (isPlaceholder) {
+    // We would need patientId to completely filter it from localstorage properly,
+    // but without it, we can't easily iterate all patients.
+    return;
+  }
   try {
     await supabase.from('records').delete().eq('id', recordId);
   } catch (error) {

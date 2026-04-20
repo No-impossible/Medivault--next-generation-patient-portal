@@ -14,15 +14,23 @@ export const fetchPatientByAbha = async (abhaId) => {
       : abhaId; // Fallback if it's already a different length, though DB expects 14
 
     console.log("Formatted Abha ID for Supabase Query:", formattedAbha);
+    let dbError = null;
+    let data = null;
+    try {
+      const resp = await supabase
+        .from('mock_abha_users')
+        .select('*')
+        .eq('abhaId', formattedAbha);
+      data = resp.data;
+      dbError = resp.error;
+    } catch (e) {
+      console.warn("Supabase query threw an error (likely network), proceeding to fallback:", e);
+      dbError = e;
+    }
 
-    const { data, error } = await supabase
-      .from('mock_abha_users')
-      .select('*')
-      .eq('abhaId', formattedAbha);
+    console.log("Supabase response data:", data, "error:", dbError);
 
-    console.log("Supabase response data:", data, "error:", error);
-
-    if (!error && data && data.length > 0) {
+    if (!dbError && data && data.length > 0) {
       return data[0];
     }
 
@@ -31,7 +39,7 @@ export const fetchPatientByAbha = async (abhaId) => {
     if (fallback) {
       return {
         ...fallback,
-        id: 'local-' + Date.now(),
+        id: fallback.abhaId, // Use ABHA ID instead of dynamic local-Date.now()
         emergencyContacts: [
           { name: `${fallback.name.split(' ')[0]}'s Primary Contact`, phone: '+91 90000 11111', relation: 'Family' },
           { name: `${fallback.name.split(' ')[0]}'s Secondary Contact`, phone: '+91 90000 22222', relation: 'Friend' }
@@ -311,6 +319,50 @@ export const seedMockAbhaUsers = async () => {
   }
 };
 
+const MOCK_DOCTORS = [
+  // General
+  { id: "d1", name: "Dr. Sanjay Gupta", exp: "15 Years", rating: 4.8, img: "SG", fee: "₹500", nextSlot: "Today, 10:00 AM", clinic: true, department: "general" },
+  { id: "d2", name: "Dr. Anil Sharma", exp: "12 Years", rating: 4.7, img: "AS", fee: "₹400", nextSlot: "Tomorrow, 4:00 PM", clinic: false, department: "general" },
+  { id: "d3", name: "Dr. Meera Patel", exp: "18 Years", rating: 4.9, img: "MP", fee: "₹600", nextSlot: "Today, 1:00 PM", clinic: true, department: "general" },
+  { id: "d4", name: "Dr. Rajesh Iyer", exp: "22 Years", rating: 4.6, img: "RI", fee: "₹550", nextSlot: "Wed, 9:30 AM", clinic: true, department: "general" },
+  { id: "d5", name: "Dr. Sneha Kapoor", exp: "8 Years", rating: 4.5, img: "SK", fee: "₹350", nextSlot: "Today, 6:00 PM", clinic: false, department: "general" },
+
+  // Cardio
+  { id: "d6", name: "Dr. Vivek Narang", exp: "25 Years", rating: 4.9, img: "VN", fee: "₹1500", nextSlot: "Tomorrow, 11:00 AM", clinic: true, department: "cardio" },
+  { id: "d7", name: "Dr. Ritu Desai", exp: "20 Years", rating: 4.8, img: "RD", fee: "₹1200", nextSlot: "Today, 3:00 PM", clinic: false, department: "cardio" },
+  { id: "d8", name: "Dr. Arvind Reddy", exp: "15 Years", rating: 4.7, img: "AR", fee: "₹1000", nextSlot: "Fri, 10:00 AM", clinic: true, department: "cardio" },
+  { id: "d9", name: "Dr. Neha Verma", exp: "10 Years", rating: 4.6, img: "NV", fee: "₹800", nextSlot: "Today, 5:30 PM", clinic: true, department: "cardio" },
+  { id: "d10", name: "Dr. K. N. Murthy", exp: "30 Years", rating: 4.9, img: "KM", fee: "₹2000", nextSlot: "Mon, 9:00 AM", clinic: false, department: "cardio" },
+
+  // Neuro
+  { id: "d11", name: "Dr. Vikram Singh", exp: "18 Years", rating: 4.6, img: "VS", fee: "₹1800", nextSlot: "Thu, 2:00 PM", clinic: true, department: "neuro" },
+  { id: "d12", name: "Dr. Priti Joshi", exp: "12 Years", rating: 4.7, img: "PJ", fee: "₹1400", nextSlot: "Tomorrow, 12:30 PM", clinic: false, department: "neuro" },
+  { id: "d13", name: "Dr. Suresh Menon", exp: "22 Years", rating: 4.8, img: "SM", fee: "₹1600", nextSlot: "Today, 4:00 PM", clinic: true, department: "neuro" },
+  { id: "d14", name: "Dr. Harish Rao", exp: "28 Years", rating: 4.9, img: "HR", fee: "₹2000", nextSlot: "Wed, 11:00 AM", clinic: true, department: "neuro" },
+  { id: "d15", name: "Dr. Ayesha Khan", exp: "15 Years", rating: 4.8, img: "AK", fee: "₹1500", nextSlot: "Fri, 3:30 PM", clinic: false, department: "neuro" },
+
+  // Ortho
+  { id: "d16", name: "Dr. Priya Desai", exp: "10 Years", rating: 4.8, img: "PD", fee: "₹900", nextSlot: "Tomorrow, 11:30 AM", clinic: true, department: "ortho" },
+  { id: "d17", name: "Dr. Aman Gupta", exp: "14 Years", rating: 4.7, img: "AG", fee: "₹1000", nextSlot: "Today, 2:00 PM", clinic: true, department: "ortho" },
+  { id: "d18", name: "Dr. Manish Sen", exp: "20 Years", rating: 4.9, img: "MS", fee: "₹1200", nextSlot: "Mon, 10:00 AM", clinic: false, department: "ortho" },
+  { id: "d19", name: "Dr. Rohan Agarwal", exp: "18 Years", rating: 4.6, img: "RA", fee: "₹1100", nextSlot: "Today, 5:00 PM", clinic: true, department: "ortho" },
+  { id: "d20", name: "Dr. Sunil Shetty", exp: "25 Years", rating: 4.9, img: "SS", fee: "₹1500", nextSlot: "Wed, 4:00 PM", clinic: true, department: "ortho" },
+
+  // Pedia
+  { id: "d21", name: "Dr. Aditi Sharma", exp: "12 Years", rating: 4.8, img: "AS", fee: "₹600", nextSlot: "Today, 9:00 AM", clinic: true, department: "pedia" },
+  { id: "d22", name: "Dr. Rohan Das", exp: "8 Years", rating: 4.6, img: "RD", fee: "₹500", nextSlot: "Tomorrow, 3:30 PM", clinic: false, department: "pedia" },
+  { id: "d23", name: "Dr. Swati Mishra", exp: "15 Years", rating: 4.9, img: "SM", fee: "₹800", nextSlot: "Today, 11:00 AM", clinic: true, department: "pedia" },
+  { id: "d24", name: "Dr. Nitin Kumar", exp: "20 Years", rating: 4.7, img: "NK", fee: "₹1000", nextSlot: "Mon, 5:00 PM", clinic: true, department: "pedia" },
+  { id: "d25", name: "Dr. Pooja Bajaj", exp: "10 Years", rating: 4.8, img: "PB", fee: "₹700", nextSlot: "Fri, 1:00 PM", clinic: false, department: "pedia" },
+
+  // Opthalmo
+  { id: "d26", name: "Dr. Lisa Ray", exp: "14 Years", rating: 4.7, img: "LR", fee: "₹800", nextSlot: "Fri, 10:15 AM", clinic: true, department: "opthalmo" },
+  { id: "d27", name: "Dr. Karan Bhatia", exp: "18 Years", rating: 4.8, img: "KB", fee: "₹1000", nextSlot: "Today, 12:00 PM", clinic: true, department: "opthalmo" },
+  { id: "d28", name: "Dr. Naveen Jindal", exp: "25 Years", rating: 4.9, img: "NJ", fee: "₹1500", nextSlot: "Tomorrow, 9:30 AM", clinic: false, department: "opthalmo" },
+  { id: "d29", name: "Dr. Shilpa Sethi", exp: "12 Years", rating: 4.6, img: "SS", fee: "₹700", nextSlot: "Wed, 4:30 PM", clinic: true, department: "opthalmo" },
+  { id: "d30", name: "Dr. Anil Kumble", exp: "20 Years", rating: 4.8, img: "AK", fee: "₹1200", nextSlot: "Today, 6:00 PM", clinic: true, department: "opthalmo" }
+];
+
 /**
  * Fetch doctors by department
  */
@@ -321,11 +373,14 @@ export const fetchDoctors = async (departmentId) => {
       .select('*')
       .eq('department', departmentId);
 
-    if (error) throw error;
-    return data || [];
+    if (error || !data || data.length === 0) {
+      console.warn("Using mock doctors for department:", departmentId);
+      return MOCK_DOCTORS.filter(d => d.department === departmentId);
+    }
+    return data;
   } catch (error) {
-    console.error("Error fetching doctors:", error);
-    return [];
+    console.error("Error fetching doctors, falling back:", error);
+    return MOCK_DOCTORS.filter(d => d.department === departmentId);
   }
 };
 
@@ -334,50 +389,6 @@ export const fetchDoctors = async (departmentId) => {
  */
 export const seedMockDoctors = async () => {
   console.log('Starting to seed mock doctors...');
-  const DOCTORS = [
-    // General
-    { name: "Dr. Sanjay Gupta", exp: "15 Years", rating: 4.8, img: "SG", fee: "₹500", nextSlot: "Today, 10:00 AM", clinic: true, department: "general" },
-    { name: "Dr. Anil Sharma", exp: "12 Years", rating: 4.7, img: "AS", fee: "₹400", nextSlot: "Tomorrow, 4:00 PM", clinic: false, department: "general" },
-    { name: "Dr. Meera Patel", exp: "18 Years", rating: 4.9, img: "MP", fee: "₹600", nextSlot: "Today, 1:00 PM", clinic: true, department: "general" },
-    { name: "Dr. Rajesh Iyer", exp: "22 Years", rating: 4.6, img: "RI", fee: "₹550", nextSlot: "Wed, 9:30 AM", clinic: true, department: "general" },
-    { name: "Dr. Sneha Kapoor", exp: "8 Years", rating: 4.5, img: "SK", fee: "₹350", nextSlot: "Today, 6:00 PM", clinic: false, department: "general" },
-
-    // Cardio
-    { name: "Dr. Vivek Narang", exp: "25 Years", rating: 4.9, img: "VN", fee: "₹1500", nextSlot: "Tomorrow, 11:00 AM", clinic: true, department: "cardio" },
-    { name: "Dr. Ritu Desai", exp: "20 Years", rating: 4.8, img: "RD", fee: "₹1200", nextSlot: "Today, 3:00 PM", clinic: false, department: "cardio" },
-    { name: "Dr. Arvind Reddy", exp: "15 Years", rating: 4.7, img: "AR", fee: "₹1000", nextSlot: "Fri, 10:00 AM", clinic: true, department: "cardio" },
-    { name: "Dr. Neha Verma", exp: "10 Years", rating: 4.6, img: "NV", fee: "₹800", nextSlot: "Today, 5:30 PM", clinic: true, department: "cardio" },
-    { name: "Dr. K. N. Murthy", exp: "30 Years", rating: 4.9, img: "KM", fee: "₹2000", nextSlot: "Mon, 9:00 AM", clinic: false, department: "cardio" },
-
-    // Neuro
-    { name: "Dr. Vikram Singh", exp: "18 Years", rating: 4.6, img: "VS", fee: "₹1800", nextSlot: "Thu, 2:00 PM", clinic: true, department: "neuro" },
-    { name: "Dr. Priti Joshi", exp: "12 Years", rating: 4.7, img: "PJ", fee: "₹1400", nextSlot: "Tomorrow, 12:30 PM", clinic: false, department: "neuro" },
-    { name: "Dr. Suresh Menon", exp: "22 Years", rating: 4.8, img: "SM", fee: "₹1600", nextSlot: "Today, 4:00 PM", clinic: true, department: "neuro" },
-    { name: "Dr. Harish Rao", exp: "28 Years", rating: 4.9, img: "HR", fee: "₹2000", nextSlot: "Wed, 11:00 AM", clinic: true, department: "neuro" },
-    { name: "Dr. Ayesha Khan", exp: "15 Years", rating: 4.8, img: "AK", fee: "₹1500", nextSlot: "Fri, 3:30 PM", clinic: false, department: "neuro" },
-
-    // Ortho
-    { name: "Dr. Priya Desai", exp: "10 Years", rating: 4.8, img: "PD", fee: "₹900", nextSlot: "Tomorrow, 11:30 AM", clinic: true, department: "ortho" },
-    { name: "Dr. Aman Gupta", exp: "14 Years", rating: 4.7, img: "AG", fee: "₹1000", nextSlot: "Today, 2:00 PM", clinic: true, department: "ortho" },
-    { name: "Dr. Manish Sen", exp: "20 Years", rating: 4.9, img: "MS", fee: "₹1200", nextSlot: "Mon, 10:00 AM", clinic: false, department: "ortho" },
-    { name: "Dr. Rohan Agarwal", exp: "18 Years", rating: 4.6, img: "RA", fee: "₹1100", nextSlot: "Today, 5:00 PM", clinic: true, department: "ortho" },
-    { name: "Dr. Sunil Shetty", exp: "25 Years", rating: 4.9, img: "SS", fee: "₹1500", nextSlot: "Wed, 4:00 PM", clinic: true, department: "ortho" },
-
-    // Pedia
-    { name: "Dr. Aditi Sharma", exp: "12 Years", rating: 4.8, img: "AS", fee: "₹600", nextSlot: "Today, 9:00 AM", clinic: true, department: "pedia" },
-    { name: "Dr. Rohan Das", exp: "8 Years", rating: 4.6, img: "RD", fee: "₹500", nextSlot: "Tomorrow, 3:30 PM", clinic: false, department: "pedia" },
-    { name: "Dr. Swati Mishra", exp: "15 Years", rating: 4.9, img: "SM", fee: "₹800", nextSlot: "Today, 11:00 AM", clinic: true, department: "pedia" },
-    { name: "Dr. Nitin Kumar", exp: "20 Years", rating: 4.7, img: "NK", fee: "₹1000", nextSlot: "Mon, 5:00 PM", clinic: true, department: "pedia" },
-    { name: "Dr. Pooja Bajaj", exp: "10 Years", rating: 4.8, img: "PB", fee: "₹700", nextSlot: "Fri, 1:00 PM", clinic: false, department: "pedia" },
-
-    // Opthalmo
-    { name: "Dr. Lisa Ray", exp: "14 Years", rating: 4.7, img: "LR", fee: "₹800", nextSlot: "Fri, 10:15 AM", clinic: true, department: "opthalmo" },
-    { name: "Dr. Karan Bhatia", exp: "18 Years", rating: 4.8, img: "KB", fee: "₹1000", nextSlot: "Today, 12:00 PM", clinic: true, department: "opthalmo" },
-    { name: "Dr. Naveen Jindal", exp: "25 Years", rating: 4.9, img: "NJ", fee: "₹1500", nextSlot: "Tomorrow, 9:30 AM", clinic: false, department: "opthalmo" },
-    { name: "Dr. Shilpa Sethi", exp: "12 Years", rating: 4.6, img: "SS", fee: "₹700", nextSlot: "Wed, 4:30 PM", clinic: true, department: "opthalmo" },
-    { name: "Dr. Anil Kumble", exp: "20 Years", rating: 4.8, img: "AK", fee: "₹1200", nextSlot: "Today, 6:00 PM", clinic: true, department: "opthalmo" }
-  ];
-
   try {
     const { error: deleteError } = await supabase
       .from('doctors')
@@ -390,10 +401,10 @@ export const seedMockDoctors = async () => {
 
     const { error: insertError } = await supabase
       .from('doctors')
-      .insert(DOCTORS);
+      .insert(MOCK_DOCTORS);
 
     if (insertError) throw insertError;
-    console.log(`✅ Successfully seeded ${DOCTORS.length} doctors to the 'doctors' table.`);
+    console.log(`✅ Successfully seeded ${MOCK_DOCTORS.length} doctors to the 'doctors' table.`);
   } catch (error) {
     console.error('❌ Error seeding doctors:', error);
   }

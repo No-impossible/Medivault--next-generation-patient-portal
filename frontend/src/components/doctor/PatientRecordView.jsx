@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { fetchPatientRecords } from '../../supabaseClient';
 import { getTagStyle, refreshTemporalTags } from '../../services/aiTaggingService';
+import { generateGeneralReport } from '../../services/geminiService';
 
 // Tag pill component (consistent with patient UI)
 function TagPill({ tag, onClick, active }) {
@@ -49,6 +50,9 @@ export default function PatientRecordView({ patient }) {
   const [activeTagFilters, setActiveTagFilters] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [selectedRecord, setSelectedRecord] = useState(null);
+  
+  const [generalReport, setGeneralReport] = useState(null);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
   useEffect(() => {
     if (!patient?.id && !patient?.abhaId) return;
@@ -78,6 +82,19 @@ export default function PatientRecordView({ patient }) {
     const matchesSearch = !searchText || record.name.toLowerCase().includes(searchText.toLowerCase());
     return matchesTags && matchesSearch;
   });
+
+  const handleGenerateReport = async () => {
+    setIsGeneratingReport(true);
+    try {
+      const report = await generateGeneralReport(records);
+      setGeneralReport(report);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to generate report.");
+    } finally {
+      setIsGeneratingReport(false);
+    }
+  };
 
   return (
     <div className="h-full flex flex-col gap-6 md:flex-row bg-transparent">
@@ -178,6 +195,78 @@ export default function PatientRecordView({ patient }) {
             <span className="text-sm font-bold">New Consult</span>
           </div>
         </div>
+
+        {/* AI General Medical Overview Card */}
+        {records.length > 0 && (
+          <div className="bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-3xl p-6 border border-blue-100/50 dark:border-blue-900/30">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300 flex items-center gap-2">
+                <BrainCircuit size={18} /> AI Patient Overview
+              </h3>
+              {!generalReport && (
+                <button
+                  onClick={handleGenerateReport}
+                  disabled={isGeneratingReport}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  {isGeneratingReport ? <Loader2 size={14} className="animate-spin" /> : <Activity size={14} />}
+                  {isGeneratingReport ? 'Analyzing...' : 'Generate Report'}
+                </button>
+              )}
+            </div>
+            
+            {!generalReport && !isGeneratingReport && (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Click to generate a comprehensive AI summary based on all {records.length} uploaded records.
+              </p>
+            )}
+
+            {isGeneratingReport && (
+              <div className="flex flex-col items-center justify-center py-4 space-y-2">
+                <div className="flex gap-1 items-center">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+                <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Synthesizing Clinical Data...</p>
+              </div>
+            )}
+
+            {generalReport && (
+              <div className="mt-4 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                <div>
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Overall Summary</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed bg-white/50 dark:bg-black/20 p-3 rounded-xl border border-white dark:border-slate-800/50">
+                    {generalReport.summary}
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="text-xs font-bold text-red-600 dark:text-red-400 mb-1">Critical Alerts</h4>
+                    <ul className="space-y-1.5">
+                      {generalReport.criticalAlerts.map((alert, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/10 p-2 rounded-lg border border-red-100 dark:border-red-900/30">
+                          <AlertTriangle size={12} className="mt-0.5 shrink-0" /> {alert}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-1">Key Recommendations</h4>
+                    <ul className="space-y-1.5">
+                      {generalReport.keyRecommendations.map((rec, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/10 p-2 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
+                          <HeartPulse size={12} className="mt-0.5 shrink-0" /> {rec}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Records Section with Tag-Based Search */}
         <div className="bg-white dark:bg-[#1e1e1e] rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex-1">

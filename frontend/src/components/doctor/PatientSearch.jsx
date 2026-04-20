@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Loader2, AlertCircle, QrCode } from 'lucide-react';
 import PatientRecordView from './PatientRecordView';
 import { supabase } from '../../supabaseClient';
+import { MOCK_PATIENTS } from '../../services/healthService';
 
 export default function PatientSearch({ onScanClick, onSavePatient }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,20 +70,18 @@ export default function PatientSearch({ onScanClick, onSavePatient }) {
         console.warn('Falling back to local mock patient registry...');
         const query = searchQuery.toLowerCase();
         
-        // Import MOCK_PATIENTS from healthService (we can also define a smaller subset here)
-        const MOCK_REGISTRY = [
-          { abhaId: "91-0000-1111-2222", name: "Rahul Sharma", age: 28, dob: "1996-05-15", gender: "Male", mobile: "9876543210", address: "123 Tech Park, Bangalore", bloodGroup: "O+" },
-          { abhaId: "91-1122-3344-5566", name: "Aarav Sharma", age: 52, dob: "1972-03-10", gender: "Male", mobile: "9811223344", address: "42 MG Road, Pune", bloodGroup: "O+" },
-          { abhaId: "82-2233-4455-6677", name: "Priya Patel", age: 45, dob: "1979-11-20", gender: "Female", mobile: "9988776655", address: "15 Marine Drive, Mumbai", bloodGroup: "B+" }
-        ];
-
-        const found = MOCK_REGISTRY.find(p => 
+        // Use globally defined MOCK_PATIENTS from healthService
+        const found = MOCK_PATIENTS.find(p => 
           p.abhaId.toLowerCase().includes(query) || 
           p.name.toLowerCase().includes(query)
         );
 
         if (found) {
           data = [found];
+          dbError = null;
+        } else if (dbError) {
+          // It was not found in mock either, so clear dbError to avoid "network error" output 
+          // and instead show "No patient found" below.
           dbError = null;
         }
       }

@@ -97,11 +97,18 @@ export default function DoctorLogin() {
 
     if (isLogin) {
       // Supabase Authenticate
-      const { data, error } = await supabase
-        .from('doctors')
-        .select('*')
-        .eq('email', email)
-        .single();
+      let data, error;
+      try {
+        const result = await supabase
+          .from('doctors')
+          .select('*')
+          .eq('email', email)
+          .single();
+        data = result.data;
+        error = result.error;
+      } catch (err) {
+        error = err;
+      }
         
       if (error || !data) {
         // Fallback Check
@@ -122,11 +129,17 @@ export default function DoctorLogin() {
       }
     } else {
       // Registration: Check if existing
-      const { data: existing } = await supabase
-        .from('doctors')
-        .select('id')
-        .eq('email', email)
-        .single();
+      let existing;
+      try {
+        const result = await supabase
+          .from('doctors')
+          .select('id')
+          .eq('email', email)
+          .single();
+        existing = result.data;
+      } catch (err) {
+        existing = null;
+      }
         
       if (existing || fallbackProviders[email]) {
         alert('An account with this email already exists.');
@@ -143,13 +156,20 @@ export default function DoctorLogin() {
         password: password
       };
       
-      const { data: newDoc, error: insertError } = await supabase
-        .from('doctors')
-        .insert([newDoctorPayload])
-        .select()
-        .single();
+      let newDoc, insertError;
+      try {
+        const result = await supabase
+          .from('doctors')
+          .insert([newDoctorPayload])
+          .select()
+          .single();
+        newDoc = result.data;
+        insertError = result.error;
+      } catch (err) {
+        insertError = err;
+      }
         
-      if (insertError) {
+      if (insertError || !newDoc) {
         console.warn("Falling back to local storage: Supabase doctors table missing or failed", insertError);
         // Save to Fallback
         fallbackProviders[email] = newDoctorPayload;

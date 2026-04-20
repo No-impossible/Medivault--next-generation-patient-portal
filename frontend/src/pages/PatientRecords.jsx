@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, BrainCircuit, ExternalLink, X, Loader2, Image, FileType, Tag, Search, Filter } from 'lucide-react';
+import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, BrainCircuit, ExternalLink, X, Loader2, Image, FileType, Tag, Search, Filter, Activity, AlertTriangle, HeartPulse } from 'lucide-react';
 import { uploadReport, addPatientRecord, fetchPatientRecords, deletePatientRecord } from '../supabaseClient';
 import { useTranslation } from 'react-i18next';
 import { generateAITags, getTagStyle, refreshTemporalTags } from '../services/aiTaggingService';
+import { analyzeMedicalDocument, generateGeneralReport } from '../services/geminiService';
 
 // Tag pill component
 function TagPill({ tag, onClick, active, removable, onRemove }) {
@@ -32,50 +33,34 @@ export default function PatientRecords() {
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedAIReport, setSelectedAIReport] = useState(null);
-  const [pendingFile, setPendingFile] = useState(null);
-  const [uploadForm, setUploadForm] = useState({ name: '', category: 'General' });
   const [activeTagFilters, setActiveTagFilters] = useState([]);
   const [searchText, setSearchText] = useState('');
-  const [aiTagPreview, setAiTagPreview] = useState([]);
+  const [generalReport, setGeneralReport] = useState(null);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+  const [isLoadingRecords, setIsLoadingRecords] = useState(false);
 
   // Fetch real records on mount
   useEffect(() => {
     if (user?.id) {
-      fetchPatientRecords(user.id).then(fetched => {
-        if (fetched.length > 0) {
-          const refreshed = refreshTemporalTags(fetched);
+      setIsLoadingRecords(true);
+      const targetId = user.abhaId || user.id;
+      fetchPatientRecords(targetId).then(data => {
+        if (data) {
+          const refreshed = refreshTemporalTags(data);
           setRecords(prev => {
             const newIds = new Set(refreshed.map(f => f.id));
             const distinctPrev = prev.filter(p => !newIds.has(p.id));
             return [...distinctPrev, ...refreshed].sort((a, b) => new Date(b.date) - new Date(a.date));
           });
         }
+        setIsLoadingRecords(false);
       });
     }
   }, [user?.id, setRecords]);
 
-  // Live AI tag preview when user selects a file or changes category
-  useEffect(() => {
-    if (!pendingFile) { setAiTagPreview([]); return; }
-    const tags = generateAITags({
-      fileName: uploadForm.name,
-      category: uploadForm.category,
-      fileType: pendingFile.type,
-      uploadDate: new Date()
-    });
-    setAiTagPreview(tags);
-  }, [pendingFile, uploadForm.name, uploadForm.category]);
-
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setPendingFile(file);
-    setUploadForm({ name: file.name.split('.')[0], category: 'General' });
-  };
-
-  const confirmUpload = async () => {
-    if (!pendingFile) return;
-    const file = pendingFile;
 
     try {
       setIsUploading(true);
@@ -88,68 +73,13 @@ export default function PatientRecords() {
         fileURL = URL.createObjectURL(file);
       }
 
-      // Generate AI tags first
-      const aiTags = generateAITags({
-        fileName: uploadForm.name,
-        category: uploadForm.category,
-        fileType: file.type,
-        uploadDate: new Date()
-      });
-
-      // Generate AI brief based on tags
-      const isBlood = aiTags.includes('BLOOD');
-      const isXray = aiTags.includes('XRAY') || aiTags.includes('SCAN');
-      const isPrescription = aiTags.includes('PRESCRIPTION');
-      const isHeart = aiTags.includes('HEART');
-      const isEye = aiTags.includes('EYE');
-      const isBrain = aiTags.includes('BRAIN');
-      const isLung = aiTags.includes('LUNG');
-      const isKidney = aiTags.includes('KIDNEY');
-
-      let aiBrief = `This ${file.type.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation for ${user?.name || 'this patient'}. Overall indicators are mostly within normal limits, though continued monitoring is recommended.`;
-      let aiFindings = ["No acute abnormalities detected.", "Vitals and primary markers are stable.", "Follow-up suggested in 3-6 months if symptoms persist."];
-      let confidenceStr = "92%";
-
-      if (isBlood) {
-        aiBrief = `Complete Blood Count (CBC) and lipid panels have been analyzed. Hemoglobin and differential counts are stable.`;
-        aiFindings = ["RBC and WBC counts within optimal range.", "Mild variation in cholesterol levels detected.", "Consider dietary adjustments and hydration."];
-        confidenceStr = "96%";
-      } else if (isHeart) {
-        aiBrief = `Cardiovascular report analyzed. Cardiac rhythm and key vascular markers have been assessed.`;
-        aiFindings = ["Heart rate and rhythm within normal limits.", "Blood pressure parameters have been recorded.", "Continue prescribed cardiovascular medications."];
-        confidenceStr = "94%";
-      } else if (isEye) {
-        aiBrief = `Ophthalmology examination report analyzed. Visual acuity and ocular structures have been assessed.`;
-        aiFindings = ["No significant retinal abnormalities detected.", "Intraocular pressure within normal range.", "Follow-up examination recommended in 6-12 months."];
-        confidenceStr = "91%";
-      } else if (isBrain) {
-        aiBrief = `Neurological imaging analysis completed. Brain structures and neural pathways have been assessed.`;
-        aiFindings = ["No significant intracranial lesions identified.", "Cortical structures appear intact.", "Clinical correlation with symptoms recommended."];
-        confidenceStr = "88%";
-      } else if (isLung) {
-        aiBrief = `Pulmonary assessment completed. Lung fields and respiratory markers analyzed.`;
-        aiFindings = ["Lung fields are clear bilaterally.", "No evidence of consolidation or effusion.", "Pulmonary function within acceptable range."];
-        confidenceStr = "90%";
-      } else if (isKidney) {
-        aiBrief = `Renal function assessment analyzed. Kidney filtration rates and urinary markers evaluated.`;
-        aiFindings = ["Creatinine and BUN levels recorded.", "Urinalysis shows no significant proteinuria.", "Stay well hydrated and maintain low-sodium diet."];
-        confidenceStr = "93%";
-      } else if (isXray) {
-        aiBrief = `Radiological imaging analysis completed. Bone structures and joint spaces are preserved.`;
-        aiFindings = ["No fractures, dislocations, or lytic lesions seen.", "Soft tissues appear unremarkable.", "Suggest clinical correlation for localized pain."];
-        confidenceStr = "89%";
-      } else if (isPrescription) {
-        aiBrief = `Medical prescription scanned and mapped. Detected active pharmaceutical ingredients and dosages.`;
-        aiFindings = ["Prescribed medications logged successfully.", "No major drug-drug interactions detected among listed items.", "Adhere strictly to prescribed schedule."];
-        confidenceStr = "98%";
-      }
-
-      const mockAISummary = { brief: aiBrief, keyFindings: aiFindings, confidence: confidenceStr };
+      // Automatically generate AI metadata using Gemini
+      const aiAnalysis = await analyzeMedicalDocument(file);
 
       const extension = file.name.split('.').pop();
       const newRecordData = {
-        name: `${uploadForm.name}.${extension}`,
-        category: uploadForm.category,
+        name: `${aiAnalysis.name}.${extension}`,
+        category: aiAnalysis.category,
         size: (file.size / 1024).toFixed(1) + ' KB',
         date: new Date().toLocaleString('en-US', {
           year: 'numeric', month: 'short', day: 'numeric',
@@ -158,15 +88,16 @@ export default function PatientRecords() {
         uploadedAt: new Date().toISOString(),
         type: file.type || 'Document',
         fileURL,
-        aiSummary: mockAISummary,
-        tags: aiTags
+        aiSummary: aiAnalysis.aiSummary,
+        tags: aiAnalysis.aiTags
       };
 
       // Save to Supabase (tags are saved as part of recordData)
       let savedId = Date.now().toString();
       if (user?.id) {
         try {
-          savedId = await addPatientRecord(user.id, newRecordData);
+          const targetId = user.abhaId || user.id;
+          savedId = await addPatientRecord(targetId, newRecordData);
         } catch (dbErr) {
           console.error("Failed to add to database, using local id:", dbErr);
         }
@@ -176,7 +107,7 @@ export default function PatientRecords() {
       setRecords(prev => [newRecord, ...prev]);
 
       // Simulate full body extraction for specific files
-      if (aiTags.includes('CHECKUP') || aiTags.includes('BLOOD') || uploadForm.name.toLowerCase().includes('report')) {
+      if (aiAnalysis.aiTags.includes('CHECKUP') || aiAnalysis.aiTags.includes('BLOOD') || aiAnalysis.name.toLowerCase().includes('report')) {
         setTimeout(() => {
           const dynamicScore = 75 + (file.name.length % 20);
           setFullBodyReport({
@@ -190,7 +121,7 @@ export default function PatientRecords() {
               hemoglobin: { value: 14.5, status: 'Normal', benchmark: '13.8 - 17.2 g/dL' }
             }
           });
-          alert('MediVault AI instantly analyzed your Full Body Checkup! Your Health Score is now updated.');
+          alert('MediVault AI instantly analyzed your checkup! Your Health Score is now updated.');
         }, 1500);
       }
 
@@ -199,15 +130,28 @@ export default function PatientRecords() {
       alert("Failed to upload the document. Please try again.");
     } finally {
       setIsUploading(false);
-      setPendingFile(null);
       if (fileInputRef.current) fileInputRef.current.value = null;
+    }
+  };
+
+  const handleGenerateReport = async () => {
+    setIsGeneratingReport(true);
+    try {
+      const report = await generateGeneralReport(records);
+      setGeneralReport(report);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to generate report.");
+    } finally {
+      setIsGeneratingReport(false);
     }
   };
 
   const handleDeleteRecord = async (record) => {
     setRecords(prev => prev.filter(r => r.id !== record.id));
     try {
-      await deletePatientRecord(record.id, record.fileURL);
+      const targetId = user?.abhaId || user?.id || 'guest';
+      await deletePatientRecord(record.id, record.fileURL, targetId);
     } catch (error) {
       console.error("Failed to delete record from Supabase:", error);
       alert("Failed to permanently delete the file.");
@@ -248,6 +192,78 @@ export default function PatientRecords() {
         </button>
         <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
       </div>
+
+      {/* AI General Medical Overview Card */}
+      {records.length > 0 && (
+        <div className="bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-3xl p-6 border border-blue-100/50 dark:border-blue-900/30">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300 flex items-center gap-2">
+              <BrainCircuit size={18} /> AI Patient Overview
+            </h3>
+            {!generalReport && (
+              <button
+                onClick={handleGenerateReport}
+                disabled={isGeneratingReport}
+                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+              >
+                {isGeneratingReport ? <Loader2 size={16} className="animate-spin" /> : <Activity size={16} />}
+                {isGeneratingReport ? 'Analyzing...' : 'Generate AI Report'}
+              </button>
+            )}
+          </div>
+          
+          {!generalReport && !isGeneratingReport && (
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Click to generate a comprehensive AI summary based on all {records.length} of your uploaded records.
+            </p>
+          )}
+
+          {isGeneratingReport && (
+            <div className="flex flex-col items-center justify-center py-6 space-y-3">
+              <div className="flex gap-1.5 items-center">
+                <div className="w-2.5 h-2.5 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+              <p className="text-xs text-blue-500 font-bold uppercase tracking-widest">Synthesizing Clinical Data...</p>
+            </div>
+          )}
+
+          {generalReport && (
+            <div className="mt-4 space-y-4 animate-in slide-in-from-top-2 duration-300">
+              <div>
+                <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Overall Summary</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed bg-white/50 dark:bg-black/20 p-4 rounded-xl border border-white dark:border-slate-800/50">
+                  {generalReport.summary}
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-bold text-red-600 dark:text-red-400 mb-1.5">Critical Alerts</h4>
+                  <ul className="space-y-1.5">
+                    {generalReport.criticalAlerts.map((alert, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/10 p-3 rounded-xl border border-red-100 dark:border-red-900/30">
+                        <AlertTriangle size={16} className="mt-0.5 shrink-0" /> {alert}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-1.5">Key Recommendations</h4>
+                  <ul className="space-y-1.5">
+                    {generalReport.keyRecommendations.map((rec, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/10 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900/30">
+                        <HeartPulse size={16} className="mt-0.5 shrink-0" /> {rec}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Search + Tag Filter Bar */}
       {records.length > 0 && (
@@ -459,85 +475,7 @@ export default function PatientRecords() {
         </div>
       )}
 
-      {/* Upload Confirmation Modal */}
-      {pendingFile && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setPendingFile(null)} />
-          <div className="relative bg-white dark:bg-[#1e1e1e] rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
-            <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
-              <UploadCloud size={24} className="text-primary" />
-              Finalize Upload
-            </h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Record Name</label>
-                <input
-                  type="text"
-                  value={uploadForm.name}
-                  onChange={e => setUploadForm({...uploadForm, name: e.target.value})}
-                  className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none transition-all"
-                  placeholder="e.g. Blood Report 2024"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Medical Category</label>
-                <select
-                  value={uploadForm.category}
-                  onChange={e => setUploadForm({...uploadForm, category: e.target.value})}
-                  className="w-full bg-slate-50 dark:bg-[#121212] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none transition-all"
-                >
-                  <option>General</option>
-                  <option>Cardiology (Heart)</option>
-                  <option>Radiology (X-Ray/Scan)</option>
-                  <option>Ophthalmology (Eye)</option>
-                  <option>Laboratory (Blood/Tests)</option>
-                  <option>Orthopedics (Bones)</option>
-                  <option>Prescription</option>
-                </select>
-              </div>
-
-              {/* AI Tag Preview */}
-              {aiTagPreview.length > 0 && (
-                <div className="bg-primary/5 dark:bg-indigo-900/20 rounded-2xl p-4 border border-primary/10 dark:border-indigo-800">
-                  <div className="flex items-center gap-2 mb-2">
-                    <BrainCircuit size={14} className="text-primary" />
-                    <p className="text-[10px] text-primary uppercase font-black tracking-widest">AI Auto-Tags Preview</p>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {aiTagPreview.map(tag => <TagPill key={tag} tag={tag} />)}
-                  </div>
-                  <p className="text-[10px] text-slate-400 mt-2">Tags are saved and used by doctors to filter your records.</p>
-                </div>
-              )}
-
-              <div className="bg-slate-50 dark:bg-[#121212] rounded-2xl p-4 border border-slate-100 dark:border-slate-800">
-                <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">File Details</p>
-                <p className="text-xs text-slate-700 dark:text-slate-300 font-medium truncate">{pendingFile.name}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">{(pendingFile.size / 1024).toFixed(1)} KB · {pendingFile.type || 'Document'}</p>
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setPendingFile(null)}
-                  className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold py-3 rounded-xl hover:bg-slate-200 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirmUpload}
-                  disabled={isUploading}
-                  className="flex-1 bg-primary text-white font-bold py-3 rounded-xl hover:opacity-90 shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
-                >
-                  {isUploading ? <Loader2 size={18} className="animate-spin" /> : null}
-                  {isUploading ? 'Uploading...' : 'Confirm Save'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modals Handled Inside Same Container End */}
     </div>
   );
 }

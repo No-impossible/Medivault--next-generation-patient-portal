@@ -797,7 +797,10 @@ export default function DoctorDashboard() {
                 Cancel
               </button>
               <button 
-                onClick={() => navigate('/')}
+                onClick={() => {
+                  localStorage.removeItem('medivault_doctor_session');
+                  navigate('/');
+                }}
                 className="flex-1 py-3.5 px-4 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 shadow-md shadow-red-500/20 transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 Sign Out
