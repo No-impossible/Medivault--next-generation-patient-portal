@@ -108,7 +108,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             Your medical history.<br />
             <span style={{ color: 'hsl(var(--primary))' }}>Secured. Always accessible.</span>
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm leading-relaxed">
+          <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
             MediVault keeps all your reports, prescriptions, and health records in one encrypted, government-standard vault.
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
 
             </div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-white transition-colors">{t('login_welcome')}</h1>
-            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1 text-sm transition-colors">{t('login_subtitle')}</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">{t('login_subtitle')}</p>
           </div>
 
           {/* Social Buttons */}
@@ -162,7 +162,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           </div>
 
           {/* ABHA Login */}
-          <div className="bg-primary/10 dark:bg-indigo-900/30/50 dark:bg-indigo-900/10 rounded-2xl p-5 mb-6 border border-primary/30 dark:border-indigo-900/50 transition-colors">
+          <div className="bg-primary/10 dark:bg-indigo-900/30 rounded-2xl p-5 mb-6 border border-primary/30 dark:border-indigo-900/50 transition-colors">
             <div className="flex items-center gap-2 mb-3">
               <ShieldCheck size={16} className="text-primary" />
               <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Login with ABHA Account</p>
@@ -179,7 +179,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                 type="button"
                 onClick={handleAbhaLogin}
                 disabled={isLoading}
-                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shadow-primary/30/50 dark:shadow-none hover:translate-y-[-1px] transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white shadow-md shadow-primary/30 dark:shadow-none hover:translate-y-[-1px] transition-all disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), #6366f1)' }}
               >
                 {isLoading ? (
@@ -255,7 +255,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
             {/* Submit */}
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg shadow-primary/30/50 dark:shadow-none hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
+              className="w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg shadow-primary/30 dark:shadow-none hover:opacity-90 hover:-translate-y-0.5 transition-all mt-2"
               style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), #6366f1)' }}
             >
               {t('login_submit')}
@@ -263,7 +263,7 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
           </form>
 
           {/* Footer */}
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-6 transition-colors">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6 transition-colors">
             {t('login_new')}{' '}
             <button
               onClick={onSignUp}

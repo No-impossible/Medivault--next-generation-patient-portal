@@ -59,7 +59,7 @@ export default function PatientDashboard({ user }) {
             <div className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center bg-${stat.color}-50 text-${stat.color}-600`}>
               {stat.icon}
             </div>
-            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm font-medium">{stat.label}</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">{stat.label}</p>
             <p className="text-2xl font-black text-slate-800 dark:text-slate-100 mt-1">{stat.value}</p>
           </div>
         ))}
@@ -91,7 +91,7 @@ export default function PatientDashboard({ user }) {
               </p>
               <button 
                 onClick={() => navigate('/dashboard/patient/records')}
-                className="text-primary font-bold text-sm bg-primary/10 dark:bg-indigo-900/30 hover:bg-primary/90/10 px-6 py-2 rounded-xl transition-all"
+                className="text-primary font-bold text-sm bg-primary/10 dark:bg-indigo-900/30 hover:bg-primary/10 px-6 py-2 rounded-xl transition-all"
               >
                 {t('dash_upload_first')}
               </button>
@@ -111,7 +111,7 @@ export default function PatientDashboard({ user }) {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg hidden sm:block">{record.size}</span>
-                    <button onClick={() => record.fileURL && window.open(record.fileURL, '_blank')} className="text-slate-400 dark:text-slate-500 hover:text-primary p-2 bg-transparent hover:bg-primary/90/10 dark:bg-indigo-900/30 rounded-lg transition-colors"><Download size={18} /></button>
+                    <button onClick={() => record.fileURL && window.open(record.fileURL, '_blank')} className="text-slate-400 dark:text-slate-500 hover:text-primary p-2 bg-transparent hover:bg-primary/10 dark:bg-indigo-900/30 rounded-lg transition-colors"><Download size={18} /></button>
                   </div>
                 </div>
               ))}

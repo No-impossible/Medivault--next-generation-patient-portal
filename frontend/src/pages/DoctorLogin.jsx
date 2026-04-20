@@ -299,7 +299,7 @@ export default function DoctorLogin() {
                   <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name (with Title)</label>
                   <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <User className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                      <User className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <input
                       type="text"
@@ -317,7 +317,7 @@ export default function DoctorLogin() {
                   <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Medical Specialty</label>
                   <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Activity className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                      <Activity className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <select
                       required
@@ -340,7 +340,7 @@ export default function DoctorLogin() {
                   <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Gender</label>
                   <div className="relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Users className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                      <Users className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <select
                       required
@@ -425,7 +425,7 @@ export default function DoctorLogin() {
               <div className="flex gap-2">
                 <div className="relative flex-1 rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                    <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                   </div>
                   <input
                     type="email"
@@ -498,7 +498,7 @@ export default function DoctorLogin() {
               </div>
               <div className="relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                  <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                 </div>
                 <input
                   type={showPasswordText ? "text" : "password"}
@@ -513,7 +513,7 @@ export default function DoctorLogin() {
                   type="button"
                   tabIndex="-1"
                   onClick={() => setShowPasswordText(!showPasswordText)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
                 >
                   {showPasswordText ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -556,7 +556,7 @@ export default function DoctorLogin() {
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Confirm Password</label>
                 <div className="relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500" />
+                    <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                   </div>
                   <input
                     type={showConfirmPasswordText ? "text" : "password"}
@@ -580,7 +580,7 @@ export default function DoctorLogin() {
                       type="button"
                       tabIndex="-1"
                       onClick={() => setShowConfirmPasswordText(!showConfirmPasswordText)}
-                      className="text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none"
+                      className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
                     >
                       {showConfirmPasswordText ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -594,7 +594,7 @@ export default function DoctorLogin() {
 
             <button
               type="submit"
-              className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg shadow-accent/30/50 dark:shadow-none text-base font-bold text-white bg-gradient-to-r from-[hsl(var(--accent))] to-teal-500 hover:to-teal-400 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-2"
+              className="w-full flex justify-center items-center gap-2 py-3.5 px-4 rounded-xl shadow-lg shadow-accent/50 dark:shadow-none text-base font-bold text-white bg-gradient-to-r from-[hsl(var(--accent))] to-teal-500 hover:to-teal-400 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-2"
               disabled={!isLogin && (!isPasswordValid || !isConfirmMatch || !emailVerified || !licenseVerified)}
             >
               {isLogin ? 'Secure Access' : 'Register Securely'}

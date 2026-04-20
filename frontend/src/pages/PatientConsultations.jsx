@@ -36,7 +36,7 @@ export default function PatientConsultations() {
           </p>
           <button 
             onClick={() => navigate('/dashboard/patient/book-consultation')}
-            className="text-slate-700 dark:text-slate-300 font-bold bg-white dark:bg-[#1e1e1e] border-2 border-slate-200 dark:border-slate-700 hover:border-primary/30 hover:bg-primary/90/10 dark:bg-indigo-900/30 px-8 py-3 rounded-xl transition-all"
+            className="text-slate-700 dark:text-slate-300 font-bold bg-white dark:bg-[#1e1e1e] border-2 border-slate-200 dark:border-slate-700 hover:border-primary/30 hover:bg-primary/10 dark:bg-indigo-900/30 px-8 py-3 rounded-xl transition-all"
           >
             Find a Doctor
           </button>

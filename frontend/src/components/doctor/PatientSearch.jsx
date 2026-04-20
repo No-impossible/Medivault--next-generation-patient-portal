@@ -42,30 +42,60 @@ export default function PatientSearch({ onScanClick, onSavePatient }) {
         return;
       }
 
-      // Actual backend search query using Supabase.
-      // We look up by ABHA ID or partial name match.
-      const { data, error: dbError } = await supabase
-        .from('mock_abha_users')
-        .select('*')
-        .or(`abhaId.ilike.%${searchQuery}%,name.ilike.%${searchQuery}%`)
-        .limit(1);
+      let data = [];
+      let dbError = null;
+
+      // Check if we are using placeholder credentials
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+      const isPlaceholder = supabaseUrl.includes('placeholder.supabase.co');
+
+      if (!isPlaceholder) {
+        try {
+          const response = await supabase
+            .from('mock_abha_users')
+            .select('*')
+            .or(`abhaId.ilike.%${searchQuery}%,name.ilike.%${searchQuery}%`)
+            .limit(1);
+          data = response.data;
+          dbError = response.error;
+        } catch (netErr) {
+          console.error('Supabase Network Error:', netErr);
+          dbError = netErr;
+        }
+      }
+
+      // If we got an error or are using placeholders, fallback to mock data
+      if (isPlaceholder || dbError || !data || data.length === 0) {
+        console.warn('Falling back to local mock patient registry...');
+        const query = searchQuery.toLowerCase();
+        
+        // Import MOCK_PATIENTS from healthService (we can also define a smaller subset here)
+        const MOCK_REGISTRY = [
+          { abhaId: "91-0000-1111-2222", name: "Rahul Sharma", age: 28, dob: "1996-05-15", gender: "Male", mobile: "9876543210", address: "123 Tech Park, Bangalore", bloodGroup: "O+" },
+          { abhaId: "91-1122-3344-5566", name: "Aarav Sharma", age: 52, dob: "1972-03-10", gender: "Male", mobile: "9811223344", address: "42 MG Road, Pune", bloodGroup: "O+" },
+          { abhaId: "82-2233-4455-6677", name: "Priya Patel", age: 45, dob: "1979-11-20", gender: "Female", mobile: "9988776655", address: "15 Marine Drive, Mumbai", bloodGroup: "B+" }
+        ];
+
+        const found = MOCK_REGISTRY.find(p => 
+          p.abhaId.toLowerCase().includes(query) || 
+          p.name.toLowerCase().includes(query)
+        );
+
+        if (found) {
+          data = [found];
+          dbError = null;
+        }
+      }
 
       if (dbError) throw dbError;
 
       if (data && data.length > 0) {
         const p = data[0];
-
-        let age = 42; // default fallback
-        if (p.dob) {
-          const birthYear = new Date(p.dob).getFullYear();
-          age = new Date().getFullYear() - birthYear;
-        }
-
         setPatientData({
           id: p.id || p.abhaId,
           abhaId: p.abhaId,
           name: p.name,
-          age: age,
+          age: p.age || 42,
           gender: p.gender || 'Not specified',
           bloodGroup: p.bloodGroup || 'Not specified',
           phone: p.mobile || 'Not specified',
@@ -81,13 +111,13 @@ export default function PatientSearch({ onScanClick, onSavePatient }) {
       } else {
         setError('No patient found with the given ABHA ID or Name in the backend database.');
       }
-
     } catch (err) {
       console.error('Fetch Patient Error:', err);
-      setError('A database error occurred while fetching real patient records.');
+      setError('A connection error occurred. Please ensure your Supabase configuration is correct in the .env file.');
     } finally {
       setIsSearching(false);
     }
+
   };
 
   return (

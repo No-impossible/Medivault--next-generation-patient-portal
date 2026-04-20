@@ -421,7 +421,7 @@ export default function LandingPage({ t, i18n, scrollToEntry, onPatientLogin }) 
                   whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   className={`group relative overflow-hidden rounded-2xl border bg-background p-10 shadow-sm transition-all hover:shadow-xl ${feat.borderHover}`}
                 >
-                  <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-primary/5 group-hover:bg-primary/90/10 transition-all duration-300"></div>
+                  <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-all duration-300"></div>
                   <div className="relative space-y-4">
                     <div className={`w-16 h-16 ${feat.bgColor} ${feat.color} rounded-xl flex items-center justify-center mb-6`}>
                       {feat.icon}
