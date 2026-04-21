@@ -260,13 +260,30 @@ export default function DoctorDashboard() {
     }
   };
 
-  const handleAddAppointment = (newApt) => {
+  const handleAddAppointment = async (newApt) => { // async added
     const updated = [...appointments, newApt];
     setAppointments(updated);
     localStorage.setItem(storageKey, JSON.stringify(updated));
     setIsBooking(false);
-  };
 
+    try {
+      const { addConsultation } = await import('../supabaseClient');
+      const formattedDate = newApt.date instanceof Date 
+        ? newApt.date.toDateString() // To be readable and parsable
+        : new Date(newApt.date).toDateString();
+
+      await addConsultation(newApt.abhaId, {
+        doctorName: doctorData.name,
+        department: doctorData.specialization || 'General',
+        date: formattedDate,
+        time: newApt.time,
+        type: 'Clinic Visit',
+        status: 'upcoming'
+      });
+    } catch (err) {
+      console.error('Failed to sync appointment to patient dashboard:', err);
+    }
+  };
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-[#121212] font-sans text-slate-900 dark:text-white overflow-hidden">
       

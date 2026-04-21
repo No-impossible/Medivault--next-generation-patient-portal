@@ -108,10 +108,16 @@ export const deletePatientRecord = async (recordId, fileURL) => {
   }
 };
 
-export const fetchConsultations = async (patientId) => {
+export const fetchConsultations = async (patientId, abhaId = null) => {
   if (isPlaceholder) return [];
   try {
-    const { data, error } = await supabase.from('consultations').select('*').eq('patientId', patientId);
+    let query = supabase.from('consultations').select('*');
+    if (abhaId && patientId !== abhaId) {
+      query = query.or(`patientId.eq.${patientId},patientId.eq.${abhaId}`);
+    } else {
+      query = query.eq('patientId', patientId);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data;
   } catch (error) {

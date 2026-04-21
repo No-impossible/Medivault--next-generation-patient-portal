@@ -37,9 +37,11 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
     
     if (user?.id) {
       // 1. Fetch Consultations
-      fetchConsultations(user.id).then(fetched => {
+      fetchConsultations(user.id, user.abhaId).then(fetched => {
         if (fetched && fetched.length > 0) {
-          setConsultations(fetched.sort((a, b) => new Date(b.date) - new Date(a.date)));
+          // De-duplicate by id just in case
+          const uniqueFetched = Array.from(new Map(fetched.map(c => [c.id, c])).values());
+          setConsultations(uniqueFetched.sort((a, b) => new Date(b.date) - new Date(a.date)));
         }
       });
       // 2. Fetch Records (To initialize records in context directly and infer fullBodyReport)
