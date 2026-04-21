@@ -74,7 +74,7 @@ export default function PatientRecords() {
       }
 
       // Automatically generate AI metadata using Gemini
-      const aiAnalysis = await analyzeMedicalDocument(file);
+      const aiAnalysis = await analyzeMedicalDocument(file, user?.name);
 
       const extension = file.name.split('.').pop();
       const newRecordData = {

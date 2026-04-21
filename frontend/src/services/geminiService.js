@@ -25,7 +25,7 @@ const fileToGenerativePart = async (file) => {
   });
 };
 
-export const analyzeMedicalDocument = async (file) => {
+export const analyzeMedicalDocument = async (file, patientName = null) => {
   if (!ai) {
     console.warn('Gemini API Key missing, falling back to basic analysis.');
     return fallbackAnalysis(file);
@@ -35,6 +35,7 @@ export const analyzeMedicalDocument = async (file) => {
     const resultPart = await fileToGenerativePart(file);
     const prompt = `
       You are an expert medical AI analyst. Review the attached medical document/image.
+      ${patientName ? `CONTEXT: This document belongs to the patient named "${patientName}". If you refer to the patient in the summary or findings, use this name. Do NOT hallucinate other names.` : 'Do NOT hallucinate a patient name if one is not clearly visible.'}
       Extract and infer the following:
       1. A short generic "name" for the record (e.g. "Complete Blood Count", "Chest X-Ray").
       2. The medical category (e.g., General, Cardiology (Heart), Radiology (X-Ray/Scan), Ophthalmology (Eye), Laboratory (Blood/Tests), Orthopedics (Bones), Prescription).
@@ -79,11 +80,11 @@ export const analyzeMedicalDocument = async (file) => {
     };
   } catch (err) {
     console.error("Gemini API Error:", err);
-    return fallbackAnalysis(file);
+    return fallbackAnalysis(file, patientName, err);
   }
 };
 
-const fallbackAnalysis = (file) => {
+const fallbackAnalysis = (file, patientName = null, error = null) => {
   // Use existing AI tagging fallback
   const nameParts = file.name.split('.')[0].replace(/[-_]/g, ' ');
   let category = 'General';
@@ -92,7 +93,10 @@ const fallbackAnalysis = (file) => {
   
   const tags = generateAITags({ fileName: nameParts, category, fileType: file.type });
   
-  let aiBrief = `This ${file.type?.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation.`;
+  let aiBrief = `[API ERROR: ${error?.message || 'Unknown'}] This ${file.type?.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation${patientName ? ` for ${patientName}` : ''}.`;
+  if (!error && !ai) {
+    aiBrief = `[API KEY MISSING] Gemini Key not found in .env. Falling back. This ${file.type?.includes('image') ? 'imaging' : 'document'} report appears to be a standard clinical evaluation${patientName ? ` for ${patientName}` : ''}.`;
+  }
   let aiFindings = ["No acute abnormalities detected.", "Vitals and primary markers are stable."];
   let confidenceStr = "85%";
 
