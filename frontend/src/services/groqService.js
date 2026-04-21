@@ -1,22 +1,32 @@
 import { generateAITags } from './aiTaggingService';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import Tesseract from 'tesseract.js';
 
 // Use local worker bundled natively by Vite
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
 const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
-// Converts File object to base64 data URL mapping format recognized by Groq Vision
+// Converts File object to base64 data URL mapping format
 const fileToBase64DataUrl = async (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onloadend = () => {
-      resolve(reader.result);
-    };
+    reader.onloadend = () => resolve(reader.result);
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+};
+
+const extractImageTextLocally = async (imageSource) => {
+   try {
+      console.log("Running Tesseract OCR on image source...");
+      const { data: { text } } = await Tesseract.recognize(imageSource, 'eng');
+      return text;
+   } catch (e) {
+      console.warn("Tesseract OCR Failed", e);
+      return "";
+   }
 };
 
 // Smart PDF Parser
@@ -36,11 +46,12 @@ const processPdfFile = async (file) => {
   }
   
   if (fullText.trim().length > 50) {
-     return { type: 'text', content: fullText };
+     return fullText;
   }
   
-  // Path B: Rasterize up to 3 pages
-  const images = [];
+  // Path B: Rasterize up to 3 pages and OCR them locally!
+  console.log("No text layer in PDF. Rasterizing and running OCR internally...");
+  let ocrFullText = '';
   const maxImagePages = Math.min(numPages, 3);
   for (let i = 1; i <= maxImagePages; i++) {
     const page = await pdf.getPage(i);
@@ -53,10 +64,12 @@ const processPdfFile = async (file) => {
     const ctx = canvas.getContext('2d');
     
     await page.render({ canvasContext: ctx, viewport }).promise;
-    images.push(canvas.toDataURL('image/jpeg', 0.8));
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    const pageText = await extractImageTextLocally(dataUrl);
+    ocrFullText += `\n[PAGE ${i}]\n${pageText}`;
   }
   
-  return { type: 'images', content: images };
+  return ocrFullText;
 };
 
 const cleanJsonResponse = (text) => {
@@ -104,43 +117,32 @@ export const analyzeMedicalDocument = async (file, patientName = null) => {
       Respond strictly with the raw JSON. NO Markdown, no explanations.
     `;
 
-    let messages = [];
-    let targetModel = 'llama-3.2-90b-vision-preview';
+    let extractedTextContext = '';
 
     if (file.type && file.type === 'application/pdf') {
-      const pdfData = await processPdfFile(file);
-      
-      if (pdfData.type === 'text') {
-         targetModel = 'llama-3.3-70b-versatile'; // Use text model for extracted text
-         messages = [{ role: 'user', content: prompt + `\n\n--- DOCUMENT EXACT TEXT EXTRACTED ---\n${pdfData.content}` }];
-      } else {
-         messages = [
-            { 
-               role: 'user', 
-               content: [ 
-                  { type: 'text', text: prompt }, 
-                  ...pdfData.content.map(url => ({ type: 'image_url', image_url: { url } })) 
-               ] 
-            }
-         ];
-      }
+      extractedTextContext = await processPdfFile(file);
     } else {
+      // It's a standard image upload (.jpeg, .png). Pass directly to OCR!
       const dataUrl = await fileToBase64DataUrl(file);
-      messages = [
-         { role: 'user', content: [ { type: 'text', text: prompt }, { type: 'image_url', image_url: { url: dataUrl } } ] }
-      ];
+      extractedTextContext = await extractImageTextLocally(dataUrl);
     }
+
+    if (!extractedTextContext || extractedTextContext.trim() === '') {
+       throw new Error("Local OCR/Extraction failed to find any readable text.");
+    }
+
+    const messages = [{ 
+       role: 'user', 
+       content: prompt + `\n\n--- DOCUMENT EXACT TEXT EXTRACTED ---\n${extractedTextContext}` 
+    }];
 
     const payload = {
-       model: targetModel,
+       model: 'llama-3.3-70b-versatile',
        messages,
        temperature: 0.1,
-       max_tokens: 1024
+       max_tokens: 1024,
+       response_format: { type: "json_object" }
     };
-
-    if (targetModel === 'llama-3.3-70b-versatile') {
-       payload.response_format = { type: "json_object" };
-    }
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -177,7 +179,6 @@ export const analyzeMedicalDocument = async (file, patientName = null) => {
 };
 
 const fallbackAnalysis = (file, patientName = null, error = null) => {
-  // Use existing AI tagging fallback
   const nameParts = file.name.split('.')[0].replace(/[-_]/g, ' ');
   let category = 'General';
   if (nameParts.toLowerCase().includes('blood')) category = 'Laboratory (Blood/Tests)';
