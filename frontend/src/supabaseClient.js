@@ -15,24 +15,28 @@ const MOCK_CONSULTATIONS = [];
 /**
  * Fetch a patient record with fallback to mock data
  */
-export const fetchPatientRecords = async (patientId) => {
+export const fetchPatientRecords = async (patientId, abhaId = null) => {
   if (isPlaceholder) {
     console.warn("Using placeholder Supabase URL. Returning mock patient records.");
-    const stored = localStorage.getItem(`medivault_records_${patientId}`);
+    const targetId = patientId || abhaId;
+    const stored = localStorage.getItem(`medivault_records_${targetId}`);
     if (stored) return JSON.parse(stored);
     
     const initial = [
       { id: '1', name: 'Initial Checkup', date: '2024-03-10', size: '2.4 MB', type: 'PDF', tags: ['CHECKUP', 'GENERAL', 'OLDER'], aiSummary: { brief: 'Standard vitals are normal.' } },
       { id: '2', name: 'Blood Lab Report', date: '2024-04-01', size: '1.1 MB', type: 'IMAGE', tags: ['BLOOD', 'LAB', 'OLDER'], aiSummary: { brief: 'Hemoglobin levels slightly low.' } }
     ];
-    localStorage.setItem(`medivault_records_${patientId}`, JSON.stringify(initial));
+    localStorage.setItem(`medivault_records_${targetId}`, JSON.stringify(initial));
     return initial;
   }
   try {
-    const { data, error } = await supabase
-      .from('records')
-      .select('*')
-      .eq('patientId', patientId);
+    let query = supabase.from('records').select('*');
+    if (abhaId && patientId && patientId !== abhaId) {
+      query = query.or(`patientId.eq.${patientId},patientId.eq.${abhaId}`);
+    } else {
+      query = query.eq('patientId', patientId || abhaId);
+    }
+    const { data, error } = await query;
     if (error) throw error;
     return data;
   } catch (error) {
@@ -153,9 +157,9 @@ export const updatePatient = async (patientId, updates) => {
 /**
  * Fetch all records for a patient, optionally filtered by tags (used by doctor UI)
  */
-export const fetchPatientRecordsByTags = async (patientId, tags = []) => {
+export const fetchPatientRecordsByTags = async (patientId, tags = [], abhaId = null) => {
   if (isPlaceholder) {
-    const allRecords = await fetchPatientRecords(patientId);
+    const allRecords = await fetchPatientRecords(patientId, abhaId);
     if (!tags.length) return allRecords;
     return allRecords.filter(r => r.tags && tags.some(t => r.tags.includes(t)));
   }

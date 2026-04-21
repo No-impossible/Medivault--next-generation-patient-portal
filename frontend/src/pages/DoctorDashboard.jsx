@@ -155,7 +155,7 @@ export default function DoctorDashboard() {
             }
         }
 
-        const recs = await fetchPatientRecords(patientId);
+        const recs = await fetchPatientRecords(profileData?.id || patientId, patientId);
         
         setQrPatientData(profileData || { abhaId: patientId, name: 'Secure Patient', bloodGroup: 'Not specified' });
         setQrRecords(recs.slice(0, 5));

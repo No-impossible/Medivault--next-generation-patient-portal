@@ -58,7 +58,7 @@ export default function PatientRecordView({ patient }) {
     if (!patient?.id && !patient?.abhaId) return;
     setIsLoadingRecords(true);
     const patientId = patient.id || patient.abhaId;
-    fetchPatientRecords(patientId)
+    fetchPatientRecords(patient.id, patient.abhaId)
       .then(data => {
         const refreshed = refreshTemporalTags(data || []);
         setRecords(refreshed.sort((a, b) => new Date(b.date) - new Date(a.date)));

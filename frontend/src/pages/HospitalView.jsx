@@ -44,8 +44,8 @@ export default function HospitalView() {
         .eq('abhaId', patientId)
         .single();
 
-      // Fetch from records table using existing fn
-      const recs = await fetchPatientRecords(patientId);
+      // Fetch from records table using existing fn, checking both UUID and abhaId
+      const recs = await fetchPatientRecords(profileData?.id || patientId, patientId);
       
       setPatientData(profileData || { abhaId: patientId, name: 'Secure Patient' });
       // Keep only 5 most recent records

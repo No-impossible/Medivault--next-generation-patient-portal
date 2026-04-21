@@ -47,7 +47,7 @@ export default function DashboardLayout({ role, onLogout, user, setUser }) {
       // 2. Fetch Records (To initialize records in context directly and infer fullBodyReport)
       // Wait, records are actually fetched in PatientRecords, but we can do it here to have it globally available for fullBodyReport!
       import('../supabaseClient').then(({ fetchPatientRecords }) => {
-        fetchPatientRecords(user.id).then(fetchedRecs => {
+        fetchPatientRecords(user.id, user.abhaId).then(fetchedRecs => {
            setRecords(fetchedRecs);
            // Try to infer a full body report from the best/latest AI Summary
            const reportRec = fetchedRecs.find(r => r.name.toLowerCase().includes('checkup') || r.name.toLowerCase().includes('report'));

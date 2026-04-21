@@ -43,8 +43,7 @@ export default function PatientRecords() {
   useEffect(() => {
     if (user?.id) {
       setIsLoadingRecords(true);
-      const targetId = user.abhaId || user.id;
-      fetchPatientRecords(targetId).then(data => {
+      fetchPatientRecords(user.id, user.abhaId).then(data => {
         if (data) {
           const refreshed = refreshTemporalTags(data);
           setRecords(prev => {
