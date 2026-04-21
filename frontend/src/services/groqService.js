@@ -1,4 +1,9 @@
 import { generateAITags } from './aiTaggingService';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+
+// Use local worker bundled natively by Vite
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
 const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
@@ -14,9 +19,48 @@ const fileToBase64DataUrl = async (file) => {
   });
 };
 
+// Smart PDF Parser
+const processPdfFile = async (file) => {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const numPages = pdf.numPages;
+  
+  let fullText = '';
+  // Path A: Extract Text up to 20 pages
+  const maxTextPages = Math.min(numPages, 20);
+  for (let i = 1; i <= maxTextPages; i++) {
+    const page = await pdf.getPage(i);
+    const textContent = await page.getTextContent();
+    const pageText = textContent.items.map(item => item.str).join(' ');
+    fullText += pageText + '\n';
+  }
+  
+  if (fullText.trim().length > 50) {
+     return { type: 'text', content: fullText };
+  }
+  
+  // Path B: Rasterize up to 3 pages
+  const images = [];
+  const maxImagePages = Math.min(numPages, 3);
+  for (let i = 1; i <= maxImagePages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 1.5 });
+    
+    // Virtual Canvas rendering
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    images.push(canvas.toDataURL('image/jpeg', 0.8));
+  }
+  
+  return { type: 'images', content: images };
+};
+
 const cleanJsonResponse = (text) => {
   try {
-    // Sometimes LLMs wrap JSON in markdown markdown ticks like ```json ... ```
     let clean = text.trim();
     if (clean.startsWith('```json')) {
       clean = clean.replace(/^```json/, '').replace(/```$/, '').trim();
@@ -25,7 +69,7 @@ const cleanJsonResponse = (text) => {
     }
     return JSON.parse(clean);
   } catch (err) {
-    throw new Error('Failed to parse JSON response from Groq: ' + err.message);
+    throw new Error('Failed to parse JSON response: ' + err.message);
   }
 };
 
@@ -35,17 +79,9 @@ export const analyzeMedicalDocument = async (file, patientName = null) => {
     return fallbackAnalysis(file, patientName);
   }
 
-  // Groq Vision models typically only accept images natively (jpeg, png, webp)
-  if (file.type && file.type === 'application/pdf') {
-    console.warn('PDF files are not natively supported by Groq Vision in this environment. Falling back for this file.');
-    return fallbackAnalysis(file, patientName, new Error("PDF processing requires image conversion first."));
-  }
-
   try {
-    const dataUrl = await fileToBase64DataUrl(file);
-    
     const prompt = `
-      You are an expert medical AI analyst. Review the attached medical document/image.
+      You are an expert medical AI analyst. Review the attached medical document content.
       ${patientName ? `CONTEXT: This document belongs to the patient named "${patientName}". If you refer to the patient in the summary or findings, use this name. Do NOT hallucinate other names.` : 'Do NOT hallucinate a patient name if one is not clearly visible.'}
       Extract and infer the following:
       1. A short generic "name" for the record (e.g. "Complete Blood Count", "Chest X-Ray").
@@ -68,26 +104,51 @@ export const analyzeMedicalDocument = async (file, patientName = null) => {
       Respond strictly with the raw JSON. NO Markdown, no explanations.
     `;
 
+    let messages = [];
+    let targetModel = 'llama-3.2-90b-vision-preview';
+
+    if (file.type && file.type === 'application/pdf') {
+      const pdfData = await processPdfFile(file);
+      
+      if (pdfData.type === 'text') {
+         targetModel = 'llama-3.3-70b-versatile'; // Use text model for extracted text
+         messages = [{ role: 'user', content: prompt + `\n\n--- DOCUMENT EXACT TEXT EXTRACTED ---\n${pdfData.content}` }];
+      } else {
+         messages = [
+            { 
+               role: 'user', 
+               content: [ 
+                  { type: 'text', text: prompt }, 
+                  ...pdfData.content.map(url => ({ type: 'image_url', image_url: { url } })) 
+               ] 
+            }
+         ];
+      }
+    } else {
+      const dataUrl = await fileToBase64DataUrl(file);
+      messages = [
+         { role: 'user', content: [ { type: 'text', text: prompt }, { type: 'image_url', image_url: { url: dataUrl } } ] }
+      ];
+    }
+
+    const payload = {
+       model: targetModel,
+       messages,
+       temperature: 0.1,
+       max_tokens: 1024
+    };
+
+    if (targetModel === 'llama-3.3-70b-versatile') {
+       payload.response_format = { type: "json_object" };
+    }
+
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        model: 'llama-3.2-11b-vision-preview',
-        messages: [
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text: prompt },
-              { type: 'image_url', image_url: { url: dataUrl } }
-            ]
-          }
-        ],
-        temperature: 0.1,
-        max_tokens: 1024
-      })
+      body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
@@ -110,7 +171,7 @@ export const analyzeMedicalDocument = async (file, patientName = null) => {
       }
     };
   } catch (err) {
-    console.error("Groq API Error:", err);
+    console.error("Groq Analysis Error:", err);
     return fallbackAnalysis(file, patientName, err);
   }
 };
