@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { GoogleGenAI, Type } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: 'AIzaSyBHPQLZJDJmVCUxAoe17sZC6b3dqVy1yaA' });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function test() {
   try {
