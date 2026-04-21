@@ -4,7 +4,7 @@ import { FileText, UploadCloud, File, Calendar, Trash2, ShieldCheck, BrainCircui
 import { uploadReport, addPatientRecord, fetchPatientRecords, deletePatientRecord } from '../supabaseClient';
 import { useTranslation } from 'react-i18next';
 import { generateAITags, getTagStyle, refreshTemporalTags } from '../services/aiTaggingService';
-import { analyzeMedicalDocument, generateGeneralReport } from '../services/groqService';
+import { analyzeMedicalDocument, generateGeneralReport } from '../services/aiService';
 
 // Tag pill component
 function TagPill({ tag, onClick, active, removable, onRemove }) {

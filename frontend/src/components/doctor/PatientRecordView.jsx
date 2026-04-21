@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { fetchPatientRecords } from '../../supabaseClient';
 import { getTagStyle, refreshTemporalTags } from '../../services/aiTaggingService';
-import { generateGeneralReport } from '../../services/groqService';
+import { generateGeneralReport } from '../../services/aiService';
 
 // Tag pill component (consistent with patient UI)
 function TagPill({ tag, onClick, active }) {
