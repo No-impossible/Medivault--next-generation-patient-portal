@@ -72,8 +72,8 @@ export default function DoctorDashboard() {
   const [timeLeft, setTimeLeft] = useState(0);
 
   const handleSavePatient = (patientObj = qrPatientData, buttonId = 'save-patient-btn') => {
-    if (!patientObj) return;
-    const existingSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]');
+    if (!patientObj || patientObj.nativeEvent || patientObj.type === 'click') return;
+    const existingSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]').filter(p => p.name && p.abhaId);
     if (!existingSaved.some(p => p.abhaId === patientObj.abhaId)) {
         existingSaved.push({
             name: patientObj.name,
@@ -433,7 +433,7 @@ export default function DoctorDashboard() {
                   <div className="flex flex-wrap items-center gap-3">
                     <button 
                       id="save-patient-btn"
-                      onClick={handleSavePatient}
+                      onClick={() => handleSavePatient(qrPatientData, 'save-patient-btn')}
                       className="flex items-center justify-center gap-1.5 font-bold bg-white dark:bg-[#1e1e1e] text-emerald-600 px-4 py-1.5 rounded-lg text-sm tracking-wide shadow-sm hover:bg-emerald-50 dark:bg-emerald-900/20 hover:scale-105 active:scale-95 transition-all outline-none"
                     >
                       <Save size={16} /> Save to Practice
@@ -551,7 +551,7 @@ export default function DoctorDashboard() {
                         </div>
                       </div>
                       {(() => {
-                        const allSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]');
+                        const allSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]').filter(pt => pt.name && pt.abhaId);
                         const saved = allSaved.filter(pt => 
                           (pt.name && pt.name.toLowerCase().includes(profileSearchQuery.toLowerCase())) ||
                           (pt.abhaId && pt.abhaId.toLowerCase().includes(profileSearchQuery.toLowerCase()))
