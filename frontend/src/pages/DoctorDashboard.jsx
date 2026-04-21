@@ -25,6 +25,7 @@ import PatientSearch from '../components/doctor/PatientSearch';
 import AppointmentCalendar from '../components/doctor/AppointmentCalendar';
 import PatientRecordView from '../components/doctor/PatientRecordView';
 import QrScanner from '../components/ui/QrScanner';
+import PatientPrescriptionCard from '../components/doctor/PatientPrescriptionCard';
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
@@ -697,11 +698,63 @@ export default function DoctorDashboard() {
           )}
 
           {activeTab === 'prescriptions' && (
-            <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500">
-              <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
-                <FileText size={40} className="text-slate-300" />
+            <div className="flex flex-col h-full animate-in fade-in duration-500 max-w-5xl mx-auto w-full pt-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Patient Prescriptions</h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">View active prescriptions for your saved patients.</p>
+                </div>
+                <div className="relative w-full md:w-72">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
+                  <input 
+                    type="text" 
+                    placeholder="Search patients..." 
+                    value={profileSearchQuery}
+                    onChange={(e) => setProfileSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm"
+                  />
+                </div>
               </div>
-              <p className="text-lg font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500">Feature in development</p>
+              
+              {(() => {
+                const allSaved = JSON.parse(localStorage.getItem(`medivault_saved_${doctorData.email}`) || '[]').filter(pt => pt.name && pt.abhaId);
+                const saved = allSaved.filter(pt => 
+                  (pt.name && pt.name.toLowerCase().includes(profileSearchQuery.toLowerCase())) ||
+                  (pt.abhaId && pt.abhaId.toLowerCase().includes(profileSearchQuery.toLowerCase()))
+                );
+                
+                if (allSaved.length === 0) {
+                  return (
+                    <div className="flex flex-col items-center justify-center flex-1 text-slate-400 dark:text-slate-500 mt-12">
+                      <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mb-6 text-emerald-500 border-4 border-emerald-100 shadow-sm">
+                        <Users size={40} />
+                      </div>
+                      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-3">No Profiles Saved</h2>
+                      <p className="text-lg font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 max-w-md text-center">Use the Patient Lookup tab to scan and save patient records to your practice.</p>
+                    </div>
+                  );
+                }
+
+                if (saved.length === 0 && profileSearchQuery) {
+                  return (
+                    <div className="flex flex-col items-center justify-center flex-1 text-slate-400 dark:text-slate-500 mt-12">
+                      <div className="w-20 h-20 bg-slate-50 dark:bg-[#121212] rounded-full flex items-center justify-center mb-4 text-slate-400 dark:text-slate-500 border-2 border-slate-100 dark:border-slate-800">
+                        <Search size={32} />
+                      </div>
+                      <h2 className="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2">No Matches Found</h2>
+                      <p className="text-md font-medium text-slate-500 dark:text-slate-400 text-center">No saved patients matched "{profileSearchQuery}".</p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 custom-scrollbar overflow-y-auto pb-8 pr-2">
+                    {saved.map((pt, i) => (
+                      <PatientPrescriptionCard key={i} patient={pt} />
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           )}
             </>

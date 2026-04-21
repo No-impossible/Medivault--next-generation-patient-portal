@@ -176,3 +176,22 @@ export const fetchPatientRecordsByTags = async (patientId, tags = [], abhaId = n
     return [];
   }
 };
+
+export const fetchPatientPrescriptions = async (patientId, abhaId = null) => {
+  if (isPlaceholder) return [];
+  try {
+    let query = supabase.from('prescriptions').select('*');
+    if (abhaId && patientId && patientId !== abhaId) {
+      query = query.or(`patientId.eq.${patientId},patientId.eq.${abhaId}`);
+    } else {
+      query = query.eq('patientId', patientId || abhaId);
+    }
+    query = query.order('created_at', { ascending: false });
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching prescriptions:", error);
+    return [];
+  }
+};
