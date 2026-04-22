@@ -5,6 +5,7 @@ import { uploadReport, addPatientRecord, fetchPatientRecords, deletePatientRecor
 import { useTranslation } from 'react-i18next';
 import { generateAITags, getTagStyle, refreshTemporalTags } from '../services/aiTaggingService';
 import { analyzeMedicalDocument, generateGeneralReport } from '../services/aiService';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 // Tag pill component
 function TagPill({ tag, onClick, active, removable, onRemove }) {
@@ -175,6 +176,8 @@ export default function PatientRecords() {
 
   return (
     <div className="max-w-6xl w-full mx-auto space-y-8 animate-in fade-in duration-500">
+      {isUploading && <LoadingOverlay message="Analyzing Document" subtext="MediVault AI is extracting clinical findings and tagging your record..." />}
+      {isGeneratingReport && <LoadingOverlay message="Synthesizing Health Data" subtext="Chief Medical Officer AI is aggregating your history into a clinical report..." />}
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -210,7 +213,7 @@ export default function PatientRecords() {
               </button>
             )}
           </div>
-          
+
           {!generalReport && !isGeneratingReport && (
             <p className="text-sm text-slate-500 dark:text-slate-400">
               Click to generate a comprehensive AI summary based on all {records.length} of your uploaded records.
@@ -236,7 +239,7 @@ export default function PatientRecords() {
                   {generalReport.summary}
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <h4 className="text-sm font-bold text-red-600 dark:text-red-400 mb-1.5">Critical Alerts</h4>
@@ -340,11 +343,10 @@ export default function PatientRecords() {
             return (
               <div key={record.id} className="bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-primary/30 hover:shadow-xl hover:shadow-indigo-100/50 dark:hover:shadow-indigo-900/20 transition-all group flex flex-col">
                 <div className="flex justify-between items-start mb-3">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
-                    isPDF ? 'bg-red-50 text-red-500 dark:bg-red-900/20' :
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isPDF ? 'bg-red-50 text-red-500 dark:bg-red-900/20' :
                     isImage ? 'bg-blue-50 text-blue-500 dark:bg-blue-900/20' :
-                    'bg-primary/10 text-primary dark:bg-indigo-900/30'
-                  }`}>
+                      'bg-primary/10 text-primary dark:bg-indigo-900/30'
+                    }`}>
                     {isPDF ? <FileType size={24} /> : isImage ? <Image size={24} /> : <File size={24} />}
                   </div>
                   <div className="flex gap-2">
@@ -380,7 +382,7 @@ export default function PatientRecords() {
                 )}
 
                 <div className="flex items-center gap-3 text-xs font-medium mb-3">
-                  <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400"><ShieldCheck size={14} className="text-emerald-500"/> Secured</span>
+                  <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400"><ShieldCheck size={14} className="text-emerald-500" /> Secured</span>
                   <span className="text-slate-500 dark:text-slate-400">{record.size}</span>
                 </div>
 

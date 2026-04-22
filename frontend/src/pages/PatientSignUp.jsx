@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Eye, EyeOff, ArrowLeft, ShieldCheck, CheckCircle, Loader } from 'lucide-react';
 import { supabase } from '../supabaseClient';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 // Password requirements checker
 const validatePassword = (pass) => ({
@@ -12,10 +13,10 @@ const validatePassword = (pass) => ({
 
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
   </svg>
 );
 
@@ -92,10 +93,10 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
     }
     setAbhaError('');
     setAbhaFetching(true);
-    
+
     try {
       // The Seed formatting has format like 'xx-xxxx-xxxx-xxxx'
-      const formattedAbha = `${digits.slice(0,2)}-${digits.slice(2,6)}-${digits.slice(6,10)}-${digits.slice(10,14)}`;
+      const formattedAbha = `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6, 10)}-${digits.slice(10, 14)}`;
 
       const { data: dbData, error } = await supabase
         .from('mock_abha_users')
@@ -106,26 +107,26 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
 
       if (dbData && dbData.length > 0) {
         const data = dbData[0];
-        
-        setForm((prev) => ({ 
-          ...prev, 
-          name: data.name || '', 
+
+        setForm((prev) => ({
+          ...prev,
+          name: data.name || '',
           gender: data.gender || '',
           bloodGroup: data.bloodGroup || '',
           dob: data.dob || '',
           mobile: data.mobile || '',
           address: data.address || ''
         }));
-        
-        setAutoFilledFields({ 
-          name: !!data.name, 
-          gender: !!data.gender, 
+
+        setAutoFilledFields({
+          name: !!data.name,
+          gender: !!data.gender,
           bloodGroup: !!data.bloodGroup,
           dob: !!data.dob,
           mobile: !!data.mobile,
-          address: !!data.address 
+          address: !!data.address
         });
-        
+
         setAbhaFetched(true);
         setAbhaError('');
       } else {
@@ -165,6 +166,8 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
     }
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.dob) {
@@ -175,19 +178,26 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
       alert('Passwords do not match.');
       return;
     }
-    onSignUpSuccess({
-      id: form.email,
-      name: form.name,
-      email: form.email,
-      dob: form.dob,
-      mobile: form.mobile,
-      isAbhaLinked: abhaFetched,
-      abhaId: abhaId
-    });
+
+    setIsLoading(true);
+    // Simulate sign up for demonstration
+    setTimeout(() => {
+      onSignUpSuccess({
+        id: form.email,
+        name: form.name,
+        email: form.email,
+        dob: form.dob,
+        mobile: form.mobile,
+        isAbhaLinked: abhaFetched,
+        abhaId: abhaId
+      });
+      setIsLoading(false);
+    }, 2000);
   };
 
   return (
     <div className="h-screen flex overflow-hidden font-sans">
+      {isLoading && <LoadingOverlay message="Creating Your Vault" subtext="Securing your medical profile with AES-256 encryption..." />}
 
       {/* ───── LEFT PANEL ───── */}
       <div
@@ -348,27 +358,27 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
             {/* ── Auto-fillable fields ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Full Name" id="full-name" value={form.name} onChange={setField('name')} placeholder="As per health records" autoFilled={autoFilledFields.name} required />
-              
+
               <Field label="Date of Birth" id="dob-group" autoFilled={autoFilledFields.dob} required>
                 <div className="grid grid-cols-3 gap-2">
-                  <select 
-                    value={getDobParts().day} 
+                  <select
+                    value={getDobParts().day}
                     onChange={(e) => updateDob('day', parseInt(e.target.value))}
                     className={`border rounded-xl px-2 py-2.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.dob ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
                   >
                     <option value="">Day</option>
                     {days.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
-                  <select 
-                    value={getDobParts().month} 
+                  <select
+                    value={getDobParts().month}
                     onChange={(e) => updateDob('month', parseInt(e.target.value))}
                     className={`border rounded-xl px-2 py-2.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.dob ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
                   >
                     <option value="">Month</option>
                     {months.map((m, i) => <option key={m} value={i}>{m}</option>)}
                   </select>
-                  <select 
-                    value={getDobParts().year} 
+                  <select
+                    value={getDobParts().year}
                     onChange={(e) => updateDob('year', e.target.value)}
                     className={`border rounded-xl px-2 py-2.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.dob ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
                   >
@@ -380,7 +390,6 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <Field label="Gender" id="gender" autoFilled={autoFilledFields.gender} required>
                 <select
                   id="gender" value={form.gender} onChange={setField('gender')} required
-                  className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
                   className={`w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.gender ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-800' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
                 >
                   <option value="">Select</option>
@@ -390,23 +399,22 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               <Field label="Blood Group" id="blood-group" autoFilled={autoFilledFields.bloodGroup} required>
                 <select
                   id="blood-group" value={form.bloodGroup} onChange={setField('bloodGroup')} required
-                  className="w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all"
                   className={`w-full border rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none transition-all ${autoFilledFields.bloodGroup ? 'border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-800' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#121212]'}`}
                 >
                   <option value="">Select</option>
-                  {['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(bg => <option key={bg}>{bg}</option>)}
+                  {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(bg => <option key={bg}>{bg}</option>)}
                 </select>
               </Field>
             </div>
 
-            <Field 
-              label="Mobile Number" id="mobile" type="tel" 
-              value={form.mobile} 
+            <Field
+              label="Mobile Number" id="mobile" type="tel"
+              value={form.mobile}
               onChange={(e) => {
                 const val = e.target.value.replace(/\D/g, '').slice(0, 10);
                 setForm(prev => ({ ...prev, mobile: val }));
-              }} 
-              placeholder="10-digit mobile number" autoFilled={autoFilledFields.mobile} required 
+              }}
+              placeholder="10-digit mobile number" autoFilled={autoFilledFields.mobile} required
             />
             <Field label="Address" id="address" value={form.address} onChange={setField('address')} placeholder="City, State, PIN" autoFilled={autoFilledFields.address} />
 
@@ -434,22 +442,22 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
               {/* Password Requirements Guide */}
               {form.password && (
                 <div className="mt-3 grid grid-cols-2 gap-y-2 p-3 bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 rounded-xl">
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.length ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
-                     <CheckCircle size={10} fill={pwdValidation.length ? 'currentColor' : 'none'} className={pwdValidation.length ? 'opacity-100' : 'opacity-30'} />
-                     At least 8 characters
-                   </div>
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.upper ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
-                     <CheckCircle size={10} fill={pwdValidation.upper ? 'currentColor' : 'none'} className={pwdValidation.upper ? 'opacity-100' : 'opacity-30'} />
-                     Uppercase letter
-                   </div>
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.lower ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
-                     <CheckCircle size={10} fill={pwdValidation.lower ? 'currentColor' : 'none'} className={pwdValidation.lower ? 'opacity-100' : 'opacity-30'} />
-                     Lowercase letter
-                   </div>
-                   <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.special ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
-                     <CheckCircle size={10} fill={pwdValidation.special ? 'currentColor' : 'none'} className={pwdValidation.special ? 'opacity-100' : 'opacity-30'} />
-                     Special character
-                   </div>
+                  <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.length ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
+                    <CheckCircle size={10} fill={pwdValidation.length ? 'currentColor' : 'none'} className={pwdValidation.length ? 'opacity-100' : 'opacity-30'} />
+                    At least 8 characters
+                  </div>
+                  <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.upper ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
+                    <CheckCircle size={10} fill={pwdValidation.upper ? 'currentColor' : 'none'} className={pwdValidation.upper ? 'opacity-100' : 'opacity-30'} />
+                    Uppercase letter
+                  </div>
+                  <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.lower ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
+                    <CheckCircle size={10} fill={pwdValidation.lower ? 'currentColor' : 'none'} className={pwdValidation.lower ? 'opacity-100' : 'opacity-30'} />
+                    Lowercase letter
+                  </div>
+                  <div className={`text-[11px] flex items-center gap-1 ${pwdValidation.special ? 'text-emerald-600' : 'text-slate-400 dark:text-slate-500'}`}>
+                    <CheckCircle size={10} fill={pwdValidation.special ? 'currentColor' : 'none'} className={pwdValidation.special ? 'opacity-100' : 'opacity-30'} />
+                    Special character
+                  </div>
                 </div>
               )}
             </div>
@@ -472,9 +480,8 @@ export default function PatientSignUp({ onBack, onLogin, onSignUpSuccess }) {
             <button
               type="submit"
               disabled={!isPasswordValid}
-              className={`w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg transition-all mt-2 ${
-                isPasswordValid ? 'hover:opacity-90 hover:-translate-y-0.5' : 'opacity-50 cursor-not-allowed'
-              }`}
+              className={`w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide shadow-lg transition-all mt-2 ${isPasswordValid ? 'hover:opacity-90 hover:-translate-y-0.5' : 'opacity-50 cursor-not-allowed'
+                }`}
               style={{ background: isPasswordValid ? 'linear-gradient(135deg, hsl(var(--primary)), #6366f1)' : '#cbd5e1' }}
             >
               Create My Patient Account

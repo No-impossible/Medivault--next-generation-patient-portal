@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Heart, 
-  Stethoscope, 
-  Lock, 
-  User, 
-  Mail, 
-  ShieldCheck, 
-  ArrowRight, 
-  CheckCircle2, 
-  Loader2, 
-  MapPin, 
+import {
+  Heart,
+  Stethoscope,
+  Lock,
+  User,
+  Mail,
+  ShieldCheck,
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  MapPin,
   Activity,
   Users,
   Eye,
   EyeOff
 } from 'lucide-react';
 import { supabase } from '../supabaseClient';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 export default function DoctorLogin() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
-  
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [specialty, setSpecialty] = useState('');
@@ -37,7 +38,7 @@ export default function DoctorLogin() {
   // Verification States
   const [emailVerified, setEmailVerified] = useState(false);
   const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
-  
+
   const [licenseVerified, setLicenseVerified] = useState(false);
   const [isVerifyingLicense, setIsVerifyingLicense] = useState(false);
 
@@ -67,9 +68,11 @@ export default function DoctorLogin() {
     }, 1500);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate form based on mode
     if (!isLogin) {
       if (!isPasswordValid) {
@@ -90,107 +93,128 @@ export default function DoctorLogin() {
       }
     }
 
+    setIsLoading(true);
     let doctorData;
 
-    // Fallback dictionary for disconnected prototypes or missing tables
-    const fallbackProviders = JSON.parse(localStorage.getItem('medivault_mock_providers') || '{}');
+    try {
+      // Fallback dictionary for disconnected prototypes or missing tables
+      const fallbackProviders = JSON.parse(localStorage.getItem('medivault_mock_providers') || '{}');
 
-    if (isLogin) {
-      // Supabase Authenticate
-      let data, error;
-      try {
-        const result = await supabase
-          .from('doctors')
-          .select('*')
-          .eq('email', email)
-          .single();
-        data = result.data;
-        error = result.error;
-      } catch (err) {
-        error = err;
-      }
-        
-      if (error || !data) {
-        // Fallback Check
-        if (fallbackProviders[email]) {
-           doctorData = fallbackProviders[email];
+      if (isLogin) {
+        // Supabase Authenticate
+        let data, error;
+        try {
+          const result = await supabase
+            .from('doctors')
+            .select('*')
+            .eq('email', email)
+            .single();
+          data = result.data;
+          error = result.error;
+        } catch (err) {
+          error = err;
+        }
+
+        if (error || !data) {
+          // Fallback Check
+          if (fallbackProviders[email]) {
+            doctorData = fallbackProviders[email];
+          } else {
+            alert('Provider not found with this email. Please register or check your credentials.');
+            setIsLoading(false);
+            return;
+          }
         } else {
-           alert('Provider not found with this email. Please register or check your credentials.');
-           return;
+          doctorData = data;
+        }
+
+        // Simple mockup text password check
+        if (doctorData.password !== password) {
+          alert('Incorrect password.');
+          setIsLoading(false);
+          return;
         }
       } else {
-         doctorData = data;
+        // Registration: Check if existing
+        let existing;
+        try {
+          const result = await supabase
+            .from('doctors')
+            .select('id')
+            .eq('email', email)
+            .single();
+          existing = result.data;
+        } catch (err) {
+          existing = null;
+        }
+
+        if (existing || fallbackProviders[email]) {
+          alert('An account with this email already exists.');
+          setIsLoading(false);
+          return;
+        }
+
+        const newDoctorPayload = {
+          name: fullName,
+          email: email,
+          specialization: specialty,
+          gender: gender,
+          location: location,
+          licenseNumber: licenseNumber,
+          password: password
+        };
+
+        let newDoc, insertError;
+        try {
+          const result = await supabase
+            .from('doctors')
+            .insert([newDoctorPayload])
+            .select()
+            .single();
+          newDoc = result.data;
+          insertError = result.error;
+        } catch (err) {
+          insertError = err;
+        }
+
+        if (insertError || !newDoc) {
+          console.warn("Falling back to local storage: Supabase doctors table missing or failed", insertError);
+          // Save to Fallback
+          fallbackProviders[email] = newDoctorPayload;
+          localStorage.setItem('medivault_mock_providers', JSON.stringify(fallbackProviders));
+          doctorData = newDoctorPayload;
+        } else {
+          doctorData = newDoc;
+        }
       }
-      
-      // Simple mockup text password check
-      if (doctorData.password !== password) {
-        alert('Incorrect password.');
-        return;
-      }
-    } else {
-      // Registration: Check if existing
-      let existing;
-      try {
-        const result = await supabase
-          .from('doctors')
-          .select('id')
-          .eq('email', email)
-          .single();
-        existing = result.data;
-      } catch (err) {
-        existing = null;
-      }
-        
-      if (existing || fallbackProviders[email]) {
-        alert('An account with this email already exists.');
-        return;
-      }
-      
-      const newDoctorPayload = {
-        name: fullName,
-        email: email,
-        specialization: specialty,
-        gender: gender,
-        location: location,
-        licenseNumber: licenseNumber,
-        password: password
-      };
-      
-      let newDoc, insertError;
-      try {
-        const result = await supabase
-          .from('doctors')
-          .insert([newDoctorPayload])
-          .select()
-          .single();
-        newDoc = result.data;
-        insertError = result.error;
-      } catch (err) {
-        insertError = err;
-      }
-        
-      if (insertError || !newDoc) {
-        console.warn("Falling back to local storage: Supabase doctors table missing or failed", insertError);
-        // Save to Fallback
-        fallbackProviders[email] = newDoctorPayload;
-        localStorage.setItem('medivault_mock_providers', JSON.stringify(fallbackProviders));
-        doctorData = newDoctorPayload;
-      } else {
-        doctorData = newDoc;
-      }
+
+      // Persist login session
+      localStorage.setItem('medivault_doctor_session', JSON.stringify(doctorData));
+
+      // Simulate a small delay for the premium feel of "verifying credentials"
+      setTimeout(() => {
+        navigate('/doctor/dashboard', { state: doctorData });
+        setIsLoading(false);
+      }, 1500);
+
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred. Please try again.");
+      setIsLoading(false);
     }
-
-    // Persist login session
-    localStorage.setItem('medivault_doctor_session', JSON.stringify(doctorData));
-
-    navigate('/doctor/dashboard', { state: doctorData });
   };
 
   return (
     <div className="h-screen flex overflow-hidden font-sans">
-      
+      {isLoading && (
+        <LoadingOverlay
+          message={isLogin ? "Verifying Credentials" : "Registering Provider"}
+          subtext={isLogin ? "Authenticating with secure health networks..." : "Establishing your secure practice vault..."}
+        />
+      )}
+
       {/* ───── LEFT PANEL ───── */}
-      <div 
+      <div
         className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden px-12 py-12"
         style={{ background: 'linear-gradient(135deg, #a7f3d0 0%, #ecfdf5 60%, #d1fae5 100%)' }}
       >
@@ -213,22 +237,22 @@ export default function DoctorLogin() {
 
         {/* Interactive 3D Illustration Container */}
         <div className="relative w-80 h-80 mb-10 z-10 transition-all duration-700 ease-out hover:-translate-y-4 hover:scale-[1.02] cursor-pointer"
-             onMouseMove={(e) => {
-               const rect = e.currentTarget.getBoundingClientRect();
-               const x = e.clientX - rect.left - rect.width / 2;
-               const y = e.clientY - rect.top - rect.height / 2;
-               e.currentTarget.style.transform = `perspective(1000px) rotateY(${x / 10}deg) rotateX(${-y / 10}deg) scale3d(1.05, 1.05, 1.05)`;
-               e.currentTarget.style.transition = 'none';
-             }}
-             onMouseLeave={(e) => {
-               e.currentTarget.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`;
-               e.currentTarget.style.transition = 'transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-             }}>
-          
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            e.currentTarget.style.transform = `perspective(1000px) rotateY(${x / 10}deg) rotateX(${-y / 10}deg) scale3d(1.05, 1.05, 1.05)`;
+            e.currentTarget.style.transition = 'none';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`;
+            e.currentTarget.style.transition = 'transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+          }}>
+
           <div className="absolute inset-0 bg-gradient-to-tr from-teal-400 to-emerald-300 rounded-[2.5rem] opacity-20 blur-2xl transition-opacity duration-500 group-hover:opacity-40"></div>
-          
-          <div className="absolute inset-0 rounded-[2.5rem] bg-white p-2 shadow-2xl transition-all duration-500 ring-1 ring-white/50" 
-               style={{ boxShadow: '0 30px 60px -15px rgba(20, 184, 166, 0.4)' }}>
+
+          <div className="absolute inset-0 rounded-[2.5rem] bg-white p-2 shadow-2xl transition-all duration-500 ring-1 ring-white/50"
+            style={{ boxShadow: '0 30px 60px -15px rgba(20, 184, 166, 0.4)' }}>
             <div className="w-full h-full rounded-[2rem] overflow-hidden bg-accent/10 relative group/img">
               <img
                 src="/steth_hero.png"
@@ -250,12 +274,12 @@ export default function DoctorLogin() {
 
           {/* Floating UI Elements */}
           <div className="absolute -right-6 top-10 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-white flex items-center gap-3 animate-bounce shadow-teal-500/20" style={{ animationDuration: '3s' }}>
-             <div className="bg-emerald-100 p-2 rounded-full text-emerald-600"><CheckCircle2 size={16} /></div>
-             <div className="text-xs font-bold text-slate-700">Verified</div>
+            <div className="bg-emerald-100 p-2 rounded-full text-emerald-600"><CheckCircle2 size={16} /></div>
+            <div className="text-xs font-bold text-slate-700">Verified</div>
           </div>
           <div className="absolute -left-6 bottom-16 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-white flex items-center gap-3 animate-bounce shadow-teal-500/20" style={{ animationDuration: '4s', animationDelay: '1s' }}>
-             <div className="bg-blue-100 p-2 rounded-full text-blue-600"><ShieldCheck size={16} /></div>
-             <div className="text-xs font-bold text-slate-700">AES-256</div>
+            <div className="bg-blue-100 p-2 rounded-full text-blue-600"><ShieldCheck size={16} /></div>
+            <div className="text-xs font-bold text-slate-700">AES-256</div>
           </div>
         </div>
 
@@ -282,7 +306,7 @@ export default function DoctorLogin() {
 
       {/* ───── RIGHT PANEL ───── */}
       <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center px-6 py-12 bg-white dark:bg-[#121212] transition-colors duration-500 relative">
-        
+
         {/* Mobile back button */}
         <button
           onClick={() => navigate('/')}
@@ -310,7 +334,7 @@ export default function DoctorLogin() {
           </div>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
-            
+
             {/* -------------------- REGISTRATION FIELDS -------------------- */}
             {!isLogin && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2 animate-in fade-in duration-300">
@@ -400,13 +424,13 @@ export default function DoctorLogin() {
                       )}
                     </div>
 
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={handleVerifyLicense}
                       disabled={isVerifyingLicense || licenseVerified || !licenseNumber}
                       className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
-                        ${licenseVerified 
-                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 opacity-80 cursor-default' 
+                        ${licenseVerified
+                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 opacity-80 cursor-default'
                           : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 active:bg-slate-100'}
                         ${isVerifyingLicense ? 'opacity-70 cursor-wait' : ''}
                       `}
@@ -418,13 +442,13 @@ export default function DoctorLogin() {
 
                   </div>
 
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={handleVerifyLicense}
                     disabled={isVerifyingLicense || licenseVerified || !licenseNumber}
                     className={`px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
-                      ${licenseVerified 
-                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default' 
+                      ${licenseVerified
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default'
                         : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] dark:hover:bg-slate-800 active:bg-slate-100 dark:bg-slate-800'}
                       ${isVerifyingLicense ? 'opacity-70 cursor-wait' : ''}
                     `}
@@ -465,13 +489,13 @@ export default function DoctorLogin() {
 
                 {/* Verification Trigger Button */}
                 {!isLogin && (
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={handleVerifyEmail}
                     disabled={isVerifyingEmail || emailVerified || !email}
                     className={`px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none flex items-center gap-2 justify-center w-28 shrink-0
-                      ${emailVerified 
-                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default' 
+                      ${emailVerified
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 opacity-80 cursor-default'
                         : 'bg-white dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-[#121212] dark:hover:bg-slate-800 active:bg-slate-100 dark:bg-slate-800'}
                       ${isVerifyingEmail ? 'opacity-70 cursor-wait' : ''}
                     `}
@@ -538,7 +562,7 @@ export default function DoctorLogin() {
                   {showPasswordText ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              
+
               {/* Password Dynamic Constraints UI */}
               {!isLogin && showConfirmPassword && (
                 <div className="mt-3 grid grid-cols-2 gap-2 px-1">

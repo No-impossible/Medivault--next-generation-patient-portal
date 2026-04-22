@@ -26,6 +26,7 @@ import {
 import { fetchPatientRecords } from '../../supabaseClient';
 import { getTagStyle, refreshTemporalTags } from '../../services/aiTaggingService';
 import { generateGeneralReport } from '../../services/aiService';
+import LoadingOverlay from '../ui/LoadingOverlay';
 
 // Tag pill component (consistent with patient UI)
 function TagPill({ tag, onClick, active }) {
@@ -50,7 +51,7 @@ export default function PatientRecordView({ patient }) {
   const [activeTagFilters, setActiveTagFilters] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [selectedRecord, setSelectedRecord] = useState(null);
-  
+
   const [generalReport, setGeneralReport] = useState(null);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
@@ -98,6 +99,7 @@ export default function PatientRecordView({ patient }) {
 
   return (
     <div className="h-full flex flex-col gap-6 md:flex-row bg-transparent">
+      {isGeneratingReport && <LoadingOverlay message="Synthesizing Health Data" subtext="Analyzing patient history and records for clinical insights..." />}
 
       {/* Left Column: Demographics & Quick Info */}
       <div className="w-full md:w-1/3 flex flex-col gap-6">
@@ -214,7 +216,7 @@ export default function PatientRecordView({ patient }) {
                 </button>
               )}
             </div>
-            
+
             {!generalReport && !isGeneratingReport && (
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Click to generate a comprehensive AI summary based on all {records.length} uploaded records.
@@ -240,7 +242,7 @@ export default function PatientRecordView({ patient }) {
                     {generalReport.summary}
                   </p>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <h4 className="text-xs font-bold text-red-600 dark:text-red-400 mb-1">Critical Alerts</h4>
@@ -338,11 +340,10 @@ export default function PatientRecordView({ patient }) {
                     className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-[#121212] border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-800 hover:shadow-md transition-all group cursor-pointer"
                     onClick={() => setSelectedRecord(selectedRecord?.id === record.id ? null : record)}
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                      isPDF ? 'bg-red-50 text-red-500 dark:bg-red-900/20' :
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isPDF ? 'bg-red-50 text-red-500 dark:bg-red-900/20' :
                       isImage ? 'bg-blue-50 text-blue-500 dark:bg-blue-900/20' :
-                      'bg-primary/10 text-primary dark:bg-indigo-900/30'
-                    }`}>
+                        'bg-primary/10 text-primary dark:bg-indigo-900/30'
+                      }`}>
                       {isPDF ? <FileType size={20} /> : isImage ? <Image size={20} /> : <File size={20} />}
                     </div>
 
