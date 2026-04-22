@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Heart,
@@ -22,6 +22,15 @@ import LoadingOverlay from '../components/ui/LoadingOverlay';
 export default function DoctorLogin() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+
+  useEffect(() => {
+    const savedSession = localStorage.getItem('medivault_doctor_session');
+    if (savedSession) {
+      const doctorData = JSON.parse(savedSession);
+      navigate('/doctor/dashboard', { state: doctorData });
+    }
+  }, [navigate]);
+
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -351,6 +360,8 @@ export default function DoctorLogin() {
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                      name="fullName"
+                      autoComplete="name"
                       placeholder="e.g. Dr. Sarah Jenkins"
                     />
                   </div>
@@ -415,6 +426,7 @@ export default function DoctorLogin() {
                         value={licenseNumber}
                         onChange={(e) => { setLicenseNumber(e.target.value); setLicenseVerified(false); }}
                         className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-accent focus:border-accent sm:text-sm py-3 bg-slate-50 border transition-colors outline-none uppercase"
+                        name="licenseNumber"
                         placeholder="e.g. MCI/12/34567"
                       />
                       {licenseVerified && (
@@ -477,6 +489,8 @@ export default function DoctorLogin() {
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setEmailVerified(false); }}
                     className="pl-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                    name="email"
+                    autoComplete="username"
                     placeholder="doctor@hospital.com"
                   />
                   {/* Verified Icon Badge inside input if verified */}
@@ -524,6 +538,8 @@ export default function DoctorLogin() {
                     onChange={(e) => setLocation(e.target.value)}
                     className="pl-10 block w-full border-slate-300 rounded-xl focus:ring-accent focus:border-accent sm:text-sm py-3 bg-slate-50 border transition-colors outline-none"
 
+                    name="location"
+                    autoComplete="address-level2"
                     placeholder="e.g. Apollo Hospital, Bangalore"
                   />
                 </div>
@@ -551,6 +567,8 @@ export default function DoctorLogin() {
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setShowConfirmPassword(true)}
                   className="pl-10 pr-10 block w-full border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 focus:border-accent sm:text-sm py-3 bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-slate-100 transition-colors outline-none"
+                  name="password"
+                  autoComplete={isLogin ? "current-password" : "new-password"}
                   placeholder="••••••••"
                 />
                 <button

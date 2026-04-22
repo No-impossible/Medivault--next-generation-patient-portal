@@ -217,6 +217,8 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
               <input
                 id="patient-email"
                 type="email"
+                name="email"
+                autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
@@ -240,6 +242,8 @@ export default function PatientLogin({ onBack, onSignUp, t, i18n, onLoginSuccess
                 <input
                   id="patient-password"
                   type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
