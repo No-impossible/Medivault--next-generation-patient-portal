@@ -17,7 +17,8 @@ import {
   X,
   Save,
   UserCheck,
-  Heart
+  Heart,
+  Menu
 } from 'lucide-react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { supabase, fetchPatientRecords } from '../supabaseClient';
