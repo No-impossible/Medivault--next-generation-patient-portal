@@ -2,7 +2,7 @@
   <h1>MediVault 🏥</h1>
   <p><strong>Next-Generation Patient Portal & Medical Registry System</strong></p>
   <p>
-    <a href="https://medivault-ashy.vercel.app/">🚀 <b>Live Demo</b></a> •
+    <a href="https://medivault-healthcare.vercel.app/">🚀 <b>Live Demo</b></a> •
     <a href="#-key-features">Features</a> •
     <a href="#-tech-stack">Tech Stack</a> •
     <a href="#-getting-started">Getting Started</a>
