@@ -288,24 +288,37 @@ export default function DoctorDashboard() {
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-[#121212] font-sans text-slate-900 dark:text-white overflow-hidden">
 
-      {/* Sidebar sidebar bg-white dark:bg-slate-900 */}
-      <aside className="w-72 bg-gradient-to-b from-slate-900 to-slate-950 text-slate-300 flex flex-col transition-all duration-300 shadow-2xl z-20 border-r border-slate-800">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-b from-slate-900 to-slate-950 text-slate-300 flex flex-col transition-transform duration-300 ease-in-out shadow-2xl border-r border-slate-800 lg:relative lg:translate-x-0
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
         <div className="h-24 flex items-center px-8 border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-sm relative overflow-hidden">
           <div className="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
           <div className="flex items-center gap-3 text-emerald-400 cursor-pointer relative z-10 group" onClick={() => navigate('/')}>
             <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-emerald-500/20">
               <Heart className="h-5 w-5 text-white" fill="currentColor" />
-
             </div>
             <span className="text-2xl font-black text-white tracking-tight">MediVault</span>
           </div>
+          <button className="lg:hidden text-slate-400 hover:text-white ml-auto relative z-10" onClick={() => setIsSidebarOpen(false)}>
+            <X size={24} />
+          </button>
         </div>
 
         <div className="flex-1 overflow-y-auto py-8 flex flex-col gap-3 px-5 custom-scrollbar">
           <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-3 px-3">Clinical Operations</p>
 
           <button
-            onClick={() => { setActiveTab('lookup'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
+            onClick={() => { setActiveTab('lookup'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); setIsSidebarOpen(false); }}
             className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'lookup' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
@@ -316,7 +329,7 @@ export default function DoctorDashboard() {
           </button>
 
           <button
-            onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
+            onClick={() => { setActiveTab('patients'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); setIsSidebarOpen(false); }}
             className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'patients' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
@@ -327,7 +340,7 @@ export default function DoctorDashboard() {
           </button>
 
           <button
-            onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); }}
+            onClick={() => { setActiveTab('appointments'); setIsBooking(false); setSearchParams({}); setSelectedProfilePatient(null); setIsSidebarOpen(false); }}
             className={`flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm shadow-sm ${activeTab === 'appointments' && !token ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/30 border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white border border-transparent'}`}
           >
             <div className="flex items-center gap-3.5">
@@ -368,9 +381,15 @@ export default function DoctorDashboard() {
       <main className="flex-1 flex flex-col relative overflow-hidden bg-slate-50 dark:bg-[#121212]">
 
         {/* Top Header */}
-        <header className="h-24 bg-white dark:bg-[#1e1e1e]/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-8 sm:px-12 z-10 sticky top-0 shadow-sm">
-          <div className="animate-in fade-in slide-in-from-left-4 duration-500">
-            <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-800 drop-shadow-sm mb-1">
+        <header className="h-24 bg-white dark:bg-[#1e1e1e]/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-4 sm:px-8 lg:px-12 z-10 sticky top-0 shadow-sm">
+          <div className="flex items-center gap-4 animate-in fade-in slide-in-from-left-4 duration-500">
+            <button 
+              className="lg:hidden text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-800 drop-shadow-sm mb-1 truncate max-w-[200px] sm:max-w-none">
               {token ? 'Emergency Access View' : (
                 activeTab === 'lookup' ? 'Patient Lookup' :
                   activeTab === 'patients' ? 'Patient Profiles' :
@@ -431,7 +450,7 @@ export default function DoctorDashboard() {
                 {/* Temporary Access Banner */}
                 <div className="bg-emerald-500 text-white p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between shadow-lg shadow-emerald-200 border border-emerald-400 gap-4">
                   <div className="flex items-center gap-2 font-black tracking-wide"><ShieldCheck size={20} /> Temporary Emergency Access</div>
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <button
                       id="save-patient-btn"
                       onClick={() => handleSavePatient(qrPatientData, 'save-patient-btn')}
@@ -655,8 +674,8 @@ export default function DoctorDashboard() {
                   ) : (
                     <div className="grid gap-4 custom-scrollbar overflow-y-auto pb-8 pr-2">
                       {appointments.map((apt, idx) => (
-                        <div key={idx} className="bg-white dark:bg-[#1e1e1e] p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center justify-between hover:border-emerald-200 hover:shadow-md transition-all">
-                          <div className="flex items-center gap-5">
+                        <div key={idx} className="bg-white dark:bg-[#1e1e1e] p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-emerald-200 hover:shadow-md transition-all">
+                          <div className="flex items-center gap-4 sm:gap-5 w-full sm:w-auto">
                             <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl border border-blue-100">
                               {apt.patientName.charAt(0)}
                             </div>
@@ -668,8 +687,8 @@ export default function DoctorDashboard() {
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-6">
-                            <div className="text-right">
+                          <div className="flex flex-row sm:items-center gap-4 sm:gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                            <div className="text-left sm:text-right">
                               <p className="font-bold text-slate-800 dark:text-slate-100 flex items-center justify-end gap-1.5">
                                 <Calendar size={16} className="text-emerald-500" />
                                 {apt.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
