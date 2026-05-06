@@ -55,6 +55,7 @@ export default function DoctorDashboard() {
   const initials = getInitials(doctorData.name);
 
   const [activeTab, setActiveTab] = useState('lookup');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [selectedProfilePatient, setSelectedProfilePatient] = useState(null);
