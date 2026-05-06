@@ -1,5 +1,7 @@
 # MediVault 🏥
 
+**🚀 Live Demo: [https://medivault-ashy.vercel.app/](https://medivault-ashy.vercel.app/)**
+
 MediVault is a cutting-edge patient portal and medical registry system meticulously designed to streamline healthcare access, enhance document management, and empower both patients and healthcare providers.
 
 ## 🌟 Key Features
