@@ -7,6 +7,7 @@
     "build": "npm run build --prefix frontend",
     "lint": "npm run lint --prefix frontend",
     "preview": "npm run preview --prefix frontend",
-    "install-all": "npm install && npm install --prefix frontend"
+    "install-all": "npm install && npm install --prefix frontend",
+    "postinstall": "npm install --prefix frontend"
   }
 }
