@@ -15,6 +15,7 @@ MediVault is a cutting-edge patient portal and medical registry system meticulou
 
 ## 🌟 Key Features
 
+- **🧑‍💻Lead Developer**: Built by **Cody Yount** Healthcare IT Expert.
 - **🤖 AI-Powered Medical Analysis**: Integrated with **Google Gemini Vision** to analyze uploaded medical documents (PDFs/Images) and automatically generate clinical summaries, key findings, and intelligent tags (e.g., `HEART`, `BLOOD`).
 - **⚡ Instant Patient Overviews**: Powered by **Groq API (Llama 3)**, generating lightning-fast, unified medical reports aggregating a patient's entire medical history for doctors.
 - **🪪 ABHA & QR Integration**: Seamless connection with mock ABHA (Ayushman Bharat Health Account) IDs, complete with **QR Code Generation and Scanning** for rapid profile retrieval.
@@ -42,7 +43,7 @@ To run the MediVault project locally:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Avenger11764/medivault.git
+git clone https://github.com/No-impossible/Medivault--next-generation-patient-portal
 cd medivault
 ```
 
